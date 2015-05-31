@@ -1,0 +1,116 @@
+module Etudes
+{
+	interface Formation
+	{
+		readonly attribute string intitule;
+	};
+	typedef sequence<Formation> listFormations;
+	
+	interface Licence : Formation
+	{};
+	
+	typedef sequence<Licence> listLicences;
+	interface Master : Formation
+	{
+		attribute listLicences prerequis;
+	};
+
+	exception pasDiplomeException 
+	{
+		string nomEtudiant;
+		string nomDiplome;
+	};
+	
+	exception PropositionDoesNotExist
+	{
+		Formation nonProposee;
+	};
+	
+	exception NombreMaxDeVoeuxAtteint
+	{};
+
+	interface Resultat;
+	interface Universite;
+	interface Proposition
+	{
+		boolean isCompatible(in Resultat resultatEtudiant);
+		readonly attribute Universite universiteSource;
+		readonly attribute Master masterPropose;
+	};
+	
+	interface Etudiant;
+	typedef sequence<Etudiant> listEtudiant;
+	typedef sequence<Proposition> listPropositions;
+	interface Universite
+	{
+		listEtudiant getEtudiants();
+		boolean demanderConnexion(in string numEtudiant, in string motDePasse);
+		boolean demanderInscription(in string numEtudiant, in string motDePasse);
+		listPropositions getPropositionByFormation(in Formation _formation);
+		listLicences getPrerequis(in Formation _formation) raises (PropositionDoesNotExist);
+		oneway void creerProposition(in Formation _nouvelleFormation, in listLicences _prerequis);
+		oneway void majPrerequis(in Formation _formation, in listLicences _nouveauxPrerequis);
+		short getClassement(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
+	};
+	
+	typedef sequence<Universite> listUniversites;
+	interface Rectorat
+	{
+		boolean demanderConnexion(in string numEtudiant, in string motDePasse);
+		boolean demanderInscription(in string numEtudiant, in string motDePasse);
+		listUniversites getListUniversites();
+		listFormations getAccreditationsByUniversite(in Universite _universite);
+		listPropositions getPropositionByFormation(in Formation _formation);
+	};
+	
+	typedef sequence<Rectorat> listRectorats;
+	interface Ministere
+	{
+		listFormations getListFormations();
+		listRectorats getListRectorats();
+		listPropositions getPropositionByFormation(in Formation _formation);
+	};
+
+	exception diplomesDifferents 
+	{
+		string nomEtudiant;
+		string nomDiplome;
+		string nomEtudiantDiff;
+	};
+
+	interface Resultat
+	{
+		readonly attribute string codeObtention;
+		attribute float moyenne;
+		boolean betterThenPrerequis(in Proposition aComparer);
+	};
+	
+	interface Etudiant
+	{
+		attribute Resultat resultats;
+		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferents);
+	};
+	
+	interface Voeu
+	{
+		readonly attribute Universite universite;
+		readonly attribute Master formation;
+	
+		oneway void valider();
+		oneway void cloturer();
+		oneway void accepter();
+		oneway void refuser();
+		oneway void refuserDefinitevement();
+		oneway void majClassement(in short classement);
+	};
+	
+	typedef sequence<Voeu> listVoeux;
+	interface UtilVoeux
+	{
+		listVoeux getMeilleurePropositionByEtudiant(in Etudiant _etudiant);
+		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur) raises (NombreMaxDeVoeuxAtteint);
+		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
+		listVoeux getVoeuxByUniversite(in Universite _etudiant);
+		listVoeux getVoeuxByRectorat(in Rectorat _rectorat);
+	};
+};
