@@ -8,14 +8,19 @@ package Etudes;
 public interface RectoratOperations
 {
     /**
+     * Operation getEtudiantByNumero
+     */
+    public Etudes.Etudiant getEtudiantByNumero(String numEtudiant);
+
+    /**
      * Operation demanderConnexion
      */
-    public boolean demanderConnexion(String numEtudiant, String motDePasse);
+    public boolean demanderConnexion(Etudes.Etudiant etudiant, String motDePasse);
 
     /**
      * Operation demanderInscription
      */
-    public boolean demanderInscription(String numEtudiant, String motDePasse);
+    public boolean demanderInscription(Etudes.Etudiant etudiant, String motDePasse);
 
     /**
      * Operation getListUniversites

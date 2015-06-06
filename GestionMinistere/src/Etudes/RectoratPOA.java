@@ -39,6 +39,8 @@ public abstract class RectoratPOA extends org.omg.PortableServer.Servant
                 return _invoke_demanderInscription(_is, handler);
         } else if (opName.equals("getAccreditationsByUniversite")) {
                 return _invoke_getAccreditationsByUniversite(_is, handler);
+        } else if (opName.equals("getEtudiantByNumero")) {
+                return _invoke_getEtudiantByNumero(_is, handler);
         } else if (opName.equals("getListUniversites")) {
                 return _invoke_getListUniversites(_is, handler);
         } else if (opName.equals("getPropositionByFormation")) {
@@ -49,11 +51,25 @@ public abstract class RectoratPOA extends org.omg.PortableServer.Servant
     }
 
     // helper methods
-    private org.omg.CORBA.portable.OutputStream _invoke_demanderConnexion(
+    private org.omg.CORBA.portable.OutputStream _invoke_getEtudiantByNumero(
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
         String arg0_in = _is.read_string();
+
+        Etudes.Etudiant _arg_result = getEtudiantByNumero(arg0_in);
+
+        _output = handler.createReply();
+        Etudes.EtudiantHelper.write(_output,_arg_result);
+
+        return _output;
+    }
+
+    private org.omg.CORBA.portable.OutputStream _invoke_demanderConnexion(
+            final org.omg.CORBA.portable.InputStream _is,
+            final org.omg.CORBA.portable.ResponseHandler handler) {
+        org.omg.CORBA.portable.OutputStream _output;
+        Etudes.Etudiant arg0_in = Etudes.EtudiantHelper.read(_is);
         String arg1_in = _is.read_string();
 
         boolean _arg_result = demanderConnexion(arg0_in, arg1_in);
@@ -68,7 +84,7 @@ public abstract class RectoratPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        String arg0_in = _is.read_string();
+        Etudes.Etudiant arg0_in = Etudes.EtudiantHelper.read(_is);
         String arg1_in = _is.read_string();
 
         boolean _arg_result = demanderInscription(arg0_in, arg1_in);

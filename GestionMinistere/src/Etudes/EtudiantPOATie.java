@@ -87,4 +87,28 @@ public class EtudiantPOATie extends EtudiantPOA
         return _tie.estMeilleurQue( aComparer);
     }
 
+    /**
+     * Operation isInscrit
+     */
+    public boolean isInscrit()
+    {
+        return _tie.isInscrit();
+    }
+
+    /**
+     * Operation isMotDePasseCorrect
+     */
+    public boolean isMotDePasseCorrect(String motDePasse)
+    {
+        return _tie.isMotDePasseCorrect( motDePasse);
+    }
+
+    /**
+     * Operation getUniversite
+     */
+    public Etudes.Universite getUniversite()
+    {
+        return _tie.getUniversite();
+    }
+
 }

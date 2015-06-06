@@ -71,6 +71,23 @@ public class UniversitePOATie extends UniversitePOA
     }
 
     /**
+     * Operation getEtudiantByNumero
+     */
+    public Etudes.Etudiant getEtudiantByNumero(String numEtudiant)
+    {
+        return _tie.getEtudiantByNumero( numEtudiant);
+    }
+
+    /**
+     * Operation inscrire
+     */
+    public boolean inscrire(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu
+    {
+        return _tie.inscrire( etudiant,  motDePasse);
+    }
+
+    /**
      * Operation demanderConnexion
      */
     public boolean demanderConnexion(String numEtudiant, String motDePasse)
@@ -79,17 +96,9 @@ public class UniversitePOATie extends UniversitePOA
     }
 
     /**
-     * Operation demanderInscription
-     */
-    public boolean demanderInscription(String numEtudiant, String motDePasse)
-    {
-        return _tie.demanderInscription( numEtudiant,  motDePasse);
-    }
-
-    /**
      * Operation getPropositionByFormation
      */
-    public Etudes.Proposition[] getPropositionByFormation(Etudes.Formation formation)
+    public Etudes.Proposition getPropositionByFormation(Etudes.Formation formation)
     {
         return _tie.getPropositionByFormation( formation);
     }

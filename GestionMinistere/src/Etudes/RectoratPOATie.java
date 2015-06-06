@@ -63,19 +63,27 @@ public class RectoratPOATie extends RectoratPOA
     }
 
     /**
+     * Operation getEtudiantByNumero
+     */
+    public Etudes.Etudiant getEtudiantByNumero(String numEtudiant)
+    {
+        return _tie.getEtudiantByNumero( numEtudiant);
+    }
+
+    /**
      * Operation demanderConnexion
      */
-    public boolean demanderConnexion(String numEtudiant, String motDePasse)
+    public boolean demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
     {
-        return _tie.demanderConnexion( numEtudiant,  motDePasse);
+        return _tie.demanderConnexion( etudiant,  motDePasse);
     }
 
     /**
      * Operation demanderInscription
      */
-    public boolean demanderInscription(String numEtudiant, String motDePasse)
+    public boolean demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
     {
-        return _tie.demanderInscription( numEtudiant,  motDePasse);
+        return _tie.demanderInscription( etudiant,  motDePasse);
     }
 
     /**

@@ -21,9 +21,59 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
     private final static Class _opsClass = Etudes.RectoratOperations.class;
 
     /**
+     * Operation getEtudiantByNumero
+     */
+    public Etudes.Etudiant getEtudiantByNumero(String numEtudiant)
+    {
+        while(true)
+        {
+            if (!this._is_local())
+            {
+                org.omg.CORBA.portable.InputStream _input = null;
+                try
+                {
+                    org.omg.CORBA.portable.OutputStream _output = this._request("getEtudiantByNumero",true);
+                    _output.write_string(numEtudiant);
+                    _input = this._invoke(_output);
+                    Etudes.Etudiant _arg_ret = Etudes.EtudiantHelper.read(_input);
+                    return _arg_ret;
+                }
+                catch(org.omg.CORBA.portable.RemarshalException _exception)
+                {
+                    continue;
+                }
+                catch(org.omg.CORBA.portable.ApplicationException _exception)
+                {
+                    String _exception_id = _exception.getId();
+                    throw new org.omg.CORBA.UNKNOWN("Unexpected User Exception: "+ _exception_id);
+                }
+                finally
+                {
+                    this._releaseReply(_input);
+                }
+            }
+            else
+            {
+                org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("getEtudiantByNumero",_opsClass);
+                if (_so == null)
+                   continue;
+                Etudes.RectoratOperations _self = (Etudes.RectoratOperations) _so.servant;
+                try
+                {
+                    return _self.getEtudiantByNumero( numEtudiant);
+                }
+                finally
+                {
+                    _servant_postinvoke(_so);
+                }
+            }
+        }
+    }
+
+    /**
      * Operation demanderConnexion
      */
-    public boolean demanderConnexion(String numEtudiant, String motDePasse)
+    public boolean demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
     {
         while(true)
         {
@@ -33,7 +83,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 try
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("demanderConnexion",true);
-                    _output.write_string(numEtudiant);
+                    Etudes.EtudiantHelper.write(_output,etudiant);
                     _output.write_string(motDePasse);
                     _input = this._invoke(_output);
                     boolean _arg_ret = _input.read_boolean();
@@ -61,7 +111,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 Etudes.RectoratOperations _self = (Etudes.RectoratOperations) _so.servant;
                 try
                 {
-                    return _self.demanderConnexion( numEtudiant,  motDePasse);
+                    return _self.demanderConnexion( etudiant,  motDePasse);
                 }
                 finally
                 {
@@ -74,7 +124,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
     /**
      * Operation demanderInscription
      */
-    public boolean demanderInscription(String numEtudiant, String motDePasse)
+    public boolean demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
     {
         while(true)
         {
@@ -84,7 +134,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 try
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("demanderInscription",true);
-                    _output.write_string(numEtudiant);
+                    Etudes.EtudiantHelper.write(_output,etudiant);
                     _output.write_string(motDePasse);
                     _input = this._invoke(_output);
                     boolean _arg_ret = _input.read_boolean();
@@ -112,7 +162,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 Etudes.RectoratOperations _self = (Etudes.RectoratOperations) _so.servant;
                 try
                 {
-                    return _self.demanderInscription( numEtudiant,  motDePasse);
+                    return _self.demanderInscription( etudiant,  motDePasse);
                 }
                 finally
                 {
