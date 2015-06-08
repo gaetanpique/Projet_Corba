@@ -15,12 +15,14 @@ public interface RectoratOperations
     /**
      * Operation demanderConnexion
      */
-    public boolean demanderConnexion(Etudes.Etudiant etudiant, String motDePasse);
+    public void demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu;
 
     /**
      * Operation demanderInscription
      */
-    public boolean demanderInscription(Etudes.Etudiant etudiant, String motDePasse);
+    public void demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu;
 
     /**
      * Operation getListUniversites
@@ -35,6 +37,6 @@ public interface RectoratOperations
     /**
      * Operation getPropositionByFormation
      */
-    public Etudes.Proposition[] getPropositionByFormation(Etudes.Formation formation);
+    public Etudes.Proposition[] getPropositionByFormation(Etudes.Master formation);
 
 }

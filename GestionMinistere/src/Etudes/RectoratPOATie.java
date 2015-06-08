@@ -73,17 +73,19 @@ public class RectoratPOATie extends RectoratPOA
     /**
      * Operation demanderConnexion
      */
-    public boolean demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
+    public void demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu
     {
-        return _tie.demanderConnexion( etudiant,  motDePasse);
+        _tie.demanderConnexion( etudiant,  motDePasse);
     }
 
     /**
      * Operation demanderInscription
      */
-    public boolean demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
+    public void demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu
     {
-        return _tie.demanderInscription( etudiant,  motDePasse);
+        _tie.demanderInscription( etudiant,  motDePasse);
     }
 
     /**
@@ -105,7 +107,7 @@ public class RectoratPOATie extends RectoratPOA
     /**
      * Operation getPropositionByFormation
      */
-    public Etudes.Proposition[] getPropositionByFormation(Etudes.Formation formation)
+    public Etudes.Proposition[] getPropositionByFormation(Etudes.Master formation)
     {
         return _tie.getPropositionByFormation( formation);
     }

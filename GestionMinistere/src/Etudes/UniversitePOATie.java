@@ -81,24 +81,25 @@ public class UniversitePOATie extends UniversitePOA
     /**
      * Operation inscrire
      */
-    public boolean inscrire(Etudes.Etudiant etudiant, String motDePasse)
+    public void inscrire(Etudes.Etudiant etudiant, String motDePasse)
         throws Etudes.EtudiantInconnu
     {
-        return _tie.inscrire( etudiant,  motDePasse);
+        _tie.inscrire( etudiant,  motDePasse);
     }
 
     /**
-     * Operation demanderConnexion
+     * Operation connecter
      */
-    public boolean demanderConnexion(String numEtudiant, String motDePasse)
+    public void connecter(Etudes.Etudiant numEtudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu
     {
-        return _tie.demanderConnexion( numEtudiant,  motDePasse);
+        _tie.connecter( numEtudiant,  motDePasse);
     }
 
     /**
      * Operation getPropositionByFormation
      */
-    public Etudes.Proposition getPropositionByFormation(Etudes.Formation formation)
+    public Etudes.Proposition getPropositionByFormation(Etudes.Master formation)
     {
         return _tie.getPropositionByFormation( formation);
     }
@@ -106,7 +107,7 @@ public class UniversitePOATie extends UniversitePOA
     /**
      * Operation getPrerequis
      */
-    public Etudes.Licence[] getPrerequis(Etudes.Formation formation)
+    public Etudes.Licence[] getPrerequis(Etudes.Master formation)
         throws Etudes.PropositionDoesNotExist
     {
         return _tie.getPrerequis( formation);

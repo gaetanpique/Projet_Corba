@@ -73,7 +73,8 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
     /**
      * Operation demanderConnexion
      */
-    public boolean demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
+    public void demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu
     {
         while(true)
         {
@@ -86,8 +87,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                     Etudes.EtudiantHelper.write(_output,etudiant);
                     _output.write_string(motDePasse);
                     _input = this._invoke(_output);
-                    boolean _arg_ret = _input.read_boolean();
-                    return _arg_ret;
+                    return;
                 }
                 catch(org.omg.CORBA.portable.RemarshalException _exception)
                 {
@@ -96,6 +96,11 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 catch(org.omg.CORBA.portable.ApplicationException _exception)
                 {
                     String _exception_id = _exception.getId();
+                    if (_exception_id.equals(Etudes.EtudiantInconnuHelper.id()))
+                    {
+                        throw Etudes.EtudiantInconnuHelper.read(_exception.getInputStream());
+                    }
+
                     throw new org.omg.CORBA.UNKNOWN("Unexpected User Exception: "+ _exception_id);
                 }
                 finally
@@ -111,7 +116,8 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 Etudes.RectoratOperations _self = (Etudes.RectoratOperations) _so.servant;
                 try
                 {
-                    return _self.demanderConnexion( etudiant,  motDePasse);
+                    _self.demanderConnexion( etudiant,  motDePasse);
+                    return;
                 }
                 finally
                 {
@@ -124,7 +130,8 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
     /**
      * Operation demanderInscription
      */
-    public boolean demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
+    public void demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu
     {
         while(true)
         {
@@ -137,8 +144,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                     Etudes.EtudiantHelper.write(_output,etudiant);
                     _output.write_string(motDePasse);
                     _input = this._invoke(_output);
-                    boolean _arg_ret = _input.read_boolean();
-                    return _arg_ret;
+                    return;
                 }
                 catch(org.omg.CORBA.portable.RemarshalException _exception)
                 {
@@ -147,6 +153,11 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 catch(org.omg.CORBA.portable.ApplicationException _exception)
                 {
                     String _exception_id = _exception.getId();
+                    if (_exception_id.equals(Etudes.EtudiantInconnuHelper.id()))
+                    {
+                        throw Etudes.EtudiantInconnuHelper.read(_exception.getInputStream());
+                    }
+
                     throw new org.omg.CORBA.UNKNOWN("Unexpected User Exception: "+ _exception_id);
                 }
                 finally
@@ -162,7 +173,8 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 Etudes.RectoratOperations _self = (Etudes.RectoratOperations) _so.servant;
                 try
                 {
-                    return _self.demanderInscription( etudiant,  motDePasse);
+                    _self.demanderInscription( etudiant,  motDePasse);
+                    return;
                 }
                 finally
                 {
@@ -274,7 +286,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
     /**
      * Operation getPropositionByFormation
      */
-    public Etudes.Proposition[] getPropositionByFormation(Etudes.Formation formation)
+    public Etudes.Proposition[] getPropositionByFormation(Etudes.Master formation)
     {
         while(true)
         {
@@ -284,7 +296,7 @@ public class _RectoratStub extends org.omg.CORBA.portable.ObjectImpl
                 try
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("getPropositionByFormation",true);
-                    Etudes.FormationHelper.write(_output,formation);
+                    Etudes.MasterHelper.write(_output,formation);
                     _input = this._invoke(_output);
                     Etudes.Proposition[] _arg_ret = Etudes.listPropositionsHelper.read(_input);
                     return _arg_ret;

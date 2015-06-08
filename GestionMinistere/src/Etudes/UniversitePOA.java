@@ -31,10 +31,10 @@ public abstract class UniversitePOA extends org.omg.PortableServer.Servant
     private static final java.util.Map operationMap = new java.util.HashMap();
 
     static {
+            operationMap.put("connecter",
+                    new Operation_connecter());
             operationMap.put("creerProposition",
                     new Operation_creerProposition());
-            operationMap.put("demanderConnexion",
-                    new Operation_demanderConnexion());
             operationMap.put("getClassement",
                     new Operation_getClassement());
             operationMap.put("getEtudiantByNumero",
@@ -102,10 +102,9 @@ public abstract class UniversitePOA extends org.omg.PortableServer.Servant
 
         try
         {
-            boolean _arg_result = inscrire(arg0_in, arg1_in);
+            inscrire(arg0_in, arg1_in);
 
             _output = handler.createReply();
-            _output.write_boolean(_arg_result);
 
         }
         catch (Etudes.EtudiantInconnu _exception)
@@ -116,18 +115,25 @@ public abstract class UniversitePOA extends org.omg.PortableServer.Servant
         return _output;
     }
 
-    private org.omg.CORBA.portable.OutputStream _invoke_demanderConnexion(
+    private org.omg.CORBA.portable.OutputStream _invoke_connecter(
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        String arg0_in = _is.read_string();
+        Etudes.Etudiant arg0_in = Etudes.EtudiantHelper.read(_is);
         String arg1_in = _is.read_string();
 
-        boolean _arg_result = demanderConnexion(arg0_in, arg1_in);
+        try
+        {
+            connecter(arg0_in, arg1_in);
 
-        _output = handler.createReply();
-        _output.write_boolean(_arg_result);
+            _output = handler.createReply();
 
+        }
+        catch (Etudes.EtudiantInconnu _exception)
+        {
+            _output = handler.createExceptionReply();
+            Etudes.EtudiantInconnuHelper.write(_output,_exception);
+        }
         return _output;
     }
 
@@ -135,7 +141,7 @@ public abstract class UniversitePOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        Etudes.Formation arg0_in = Etudes.FormationHelper.read(_is);
+        Etudes.Master arg0_in = Etudes.MasterHelper.read(_is);
 
         Etudes.Proposition _arg_result = getPropositionByFormation(arg0_in);
 
@@ -149,7 +155,7 @@ public abstract class UniversitePOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        Etudes.Formation arg0_in = Etudes.FormationHelper.read(_is);
+        Etudes.Master arg0_in = Etudes.MasterHelper.read(_is);
 
         try
         {
@@ -256,13 +262,13 @@ public abstract class UniversitePOA extends org.omg.PortableServer.Servant
         }
     }
 
-    private static final class Operation_demanderConnexion extends AbstractOperation
+    private static final class Operation_connecter extends AbstractOperation
     {
         protected org.omg.CORBA.portable.OutputStream invoke(
                 final UniversitePOA target,
                 final org.omg.CORBA.portable.InputStream _is,
                 final org.omg.CORBA.portable.ResponseHandler handler) {
-            return target._invoke_demanderConnexion(_is, handler);
+            return target._invoke_connecter(_is, handler);
         }
     }
 

@@ -26,16 +26,6 @@ public interface EtudiantOperations
         throws Etudes.diplomesDifferents;
 
     /**
-     * Operation isInscrit
-     */
-    public boolean isInscrit();
-
-    /**
-     * Operation isMotDePasseCorrect
-     */
-    public boolean isMotDePasseCorrect(String motDePasse);
-
-    /**
      * Operation getUniversite
      */
     public Etudes.Universite getUniversite();

@@ -88,22 +88,6 @@ public class EtudiantPOATie extends EtudiantPOA
     }
 
     /**
-     * Operation isInscrit
-     */
-    public boolean isInscrit()
-    {
-        return _tie.isInscrit();
-    }
-
-    /**
-     * Operation isMotDePasseCorrect
-     */
-    public boolean isMotDePasseCorrect(String motDePasse)
-    {
-        return _tie.isMotDePasseCorrect( motDePasse);
-    }
-
-    /**
      * Operation getUniversite
      */
     public Etudes.Universite getUniversite()

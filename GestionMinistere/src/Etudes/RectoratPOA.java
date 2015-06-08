@@ -72,11 +72,18 @@ public abstract class RectoratPOA extends org.omg.PortableServer.Servant
         Etudes.Etudiant arg0_in = Etudes.EtudiantHelper.read(_is);
         String arg1_in = _is.read_string();
 
-        boolean _arg_result = demanderConnexion(arg0_in, arg1_in);
+        try
+        {
+            demanderConnexion(arg0_in, arg1_in);
 
-        _output = handler.createReply();
-        _output.write_boolean(_arg_result);
+            _output = handler.createReply();
 
+        }
+        catch (Etudes.EtudiantInconnu _exception)
+        {
+            _output = handler.createExceptionReply();
+            Etudes.EtudiantInconnuHelper.write(_output,_exception);
+        }
         return _output;
     }
 
@@ -87,11 +94,18 @@ public abstract class RectoratPOA extends org.omg.PortableServer.Servant
         Etudes.Etudiant arg0_in = Etudes.EtudiantHelper.read(_is);
         String arg1_in = _is.read_string();
 
-        boolean _arg_result = demanderInscription(arg0_in, arg1_in);
+        try
+        {
+            demanderInscription(arg0_in, arg1_in);
 
-        _output = handler.createReply();
-        _output.write_boolean(_arg_result);
+            _output = handler.createReply();
 
+        }
+        catch (Etudes.EtudiantInconnu _exception)
+        {
+            _output = handler.createExceptionReply();
+            Etudes.EtudiantInconnuHelper.write(_output,_exception);
+        }
         return _output;
     }
 
@@ -126,7 +140,7 @@ public abstract class RectoratPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        Etudes.Formation arg0_in = Etudes.FormationHelper.read(_is);
+        Etudes.Master arg0_in = Etudes.MasterHelper.read(_is);
 
         Etudes.Proposition[] _arg_result = getPropositionByFormation(arg0_in);
 

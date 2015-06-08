@@ -63,22 +63,6 @@ public class MasterPOATie extends MasterPOA
     }
 
     /**
-     * Read accessor for prerequis attribute
-     */
-    public Etudes.Licence[] prerequis()
-    {
-        return _tie.prerequis();
-    }
-
-    /**
-     * Write accessor for prerequis attribute
-     */
-    public void prerequis(Etudes.Licence[] value)
-    {
-        _tie.prerequis(value);
-    }
-
-    /**
      * Read accessor for intitule attribute
      */
     public String intitule()

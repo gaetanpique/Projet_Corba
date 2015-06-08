@@ -6,6 +6,7 @@ import java.util.HashMap;
 import Etudes.Etudiant;
 import Etudes.EtudiantInconnu;
 import Etudes.Formation;
+import Etudes.Master;
 import Etudes.Proposition;
 import Etudes.RectoratPOA;
 import Etudes.Universite;
@@ -22,6 +23,7 @@ public class RectoratImpl extends RectoratPOA {
 	 * 
 	 * @param String numEtudiant Le numéro de l'étudiant recherché
 	 * @return Etudiant L'étudiant si il appartient à ce rectorat, null si il n'a pas été trouvé
+	 * @author Gaetan
 	 */
 	@Override
 	public Etudiant getEtudiantByNumero(String numEtudiant) {
@@ -46,17 +48,20 @@ public class RectoratImpl extends RectoratPOA {
 	 * 
 	 * @param etudiant Etudiant L'étudiant qui éssait de se connecter
 	 * @param motDePasse String Le mot de passe entré lors de la demande de connexion
-	 * @return boolean Vrai si le mot de passe correspond au numéro étudiant envoyé, Faux sinon
+	 * @throws EtudiantInconnu Si il n'est pas inscrit, ou ne dépend pas de ce rectorat
+	 * @author Gaetan
 	 */
 	@Override
-	public boolean demanderConnexion(Etudiant etudiant, String motDePasse) {
-		if (etudiant.isInscrit() && etudiant.isMotDePasseCorrect(motDePasse))
+	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnu{
+		Universite univDeLetudiant = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
+		
+		if (univDeLetudiant == null)
 		{
-			return true;
+			throw new EtudiantInconnu();
 		}
 		else
 		{
-			return false;
+			univDeLetudiant.connecter(etudiant, motDePasse);
 		}
 	}
 
@@ -68,24 +73,25 @@ public class RectoratImpl extends RectoratPOA {
 	 * 
 	 * @param etudiant Etudiant L'étudiant qui essait de s'inscrire
 	 * @param motDePasse String Le mot de passe qu'il a saisi
-	 * @return boolean Vrai si l'inscription a bien eu lieu, faux sinon 
+	 * @throws EtudiantInconnu Si l'étudiant ne fait pas parti de ce rectorat, ou si il est déjà inscrit
+	 * @author Gaetan
 	 */
 	@Override
-	public boolean demanderInscription(Etudiant etudiant, String motDePasse) {
+	public void demanderInscription(Etudiant etudiant, String motDePasse) throws EtudiantInconnu {
 		Universite univDinscription = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
 		
+		//univDinscription == null <=> étudiant ne fait pas partie de ce rectorat
 		if (univDinscription == null)
 		{
-			return false;
+			throw new EtudiantInconnu();
 		}
 		else
 		{
 			try {
 				univDinscription.inscrire(etudiant, motDePasse);
-				return true;
 			} catch (EtudiantInconnu e) {
 				System.out.println("ERREUR : Etudiant n°" + e.numEtudiantInconnu + " inconnu de l'université " + e.nomUniversite);
-				return false;
+				throw e;
 			}
 		}
 	}
@@ -94,6 +100,7 @@ public class RectoratImpl extends RectoratPOA {
 	 * Cette méthode retourne l'ensemble des universités qui dépendent de ce rectorat
 	 * 
 	 * @return Universite[] Un tableau des unviersités
+	 * @author Gaetan
 	 */
 	@Override
 	public Universite[] getListUniversites() {
@@ -107,6 +114,7 @@ public class RectoratImpl extends RectoratPOA {
 	 * 
 	 * @param universite Universite L'université pour lesquelles on veut les accréditations
 	 * @return Formation[] La liste des accréditations
+	 * @author Gaetan
 	 */
 	@Override
 	public Formation[] getAccreditationsByUniversite(Universite universite) {
@@ -116,11 +124,12 @@ public class RectoratImpl extends RectoratPOA {
 	/**
 	 * Cette méthode retourne toutes les propositions des universités qui dépendent de ce rectorat pour la formation demandée
 	 * 
-	 * @param formation Formation La formation pour laquelle on veut récupérer les propositions
+	 * @param formation Master La formation pour laquelle on veut récupérer les propositions
 	 * @return Proposition[] Les propositions des universités de ce rectorat pour la formation passée en paramètre
+	 * @author Gaetan
 	 */
 	@Override
-	public Proposition[] getPropositionByFormation(Formation formation) {
+	public Proposition[] getPropositionByFormation(Master formation) {
 		ArrayList<Proposition> resultat = new ArrayList<Proposition>();
 		Proposition temp;
 		
