@@ -41,6 +41,7 @@ module Etudes
 		boolean isCompatible(in Resultat resultatEtudiant);
 		readonly attribute Universite universiteSource;
 		readonly attribute Master masterPropose;
+		attribute ListLicence prerequis;
 	};
 	
 	interface Etudiant;
@@ -84,12 +85,17 @@ module Etudes
 		string nomDiplome;
 		string nomEtudiantDiff;
 	};
+	
+	exception EtudiantDejaInscritException
+	{
+		string numEtudiant;
+	};
 
 	interface Resultat
 	{
 		readonly attribute string codeObtention;
 		attribute float moyenne;
-		boolean betterThenPrerequis(in Proposition aComparer);
+		boolean isValideForFormation(in Formation formation);
 	};
 	
 	interface Etudiant
