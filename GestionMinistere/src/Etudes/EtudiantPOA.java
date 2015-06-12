@@ -39,6 +39,8 @@ public abstract class EtudiantPOA extends org.omg.PortableServer.Servant
                 return _invoke__set_resultats(_is, handler);
         } else if (opName.equals("estMeilleurQue")) {
                 return _invoke_estMeilleurQue(_is, handler);
+        } else if (opName.equals("getUniversite")) {
+                return _invoke_getUniversite(_is, handler);
         } else {
             throw new org.omg.CORBA.BAD_OPERATION(opName);
         }
@@ -85,6 +87,19 @@ public abstract class EtudiantPOA extends org.omg.PortableServer.Servant
             _output = handler.createExceptionReply();
             Etudes.diplomesDifferentsHelper.write(_output,_exception);
         }
+        return _output;
+    }
+
+    private org.omg.CORBA.portable.OutputStream _invoke_getUniversite(
+            final org.omg.CORBA.portable.InputStream _is,
+            final org.omg.CORBA.portable.ResponseHandler handler) {
+        org.omg.CORBA.portable.OutputStream _output;
+
+        Etudes.Universite _arg_result = getUniversite();
+
+        _output = handler.createReply();
+        Etudes.UniversiteHelper.write(_output,_arg_result);
+
         return _output;
     }
 

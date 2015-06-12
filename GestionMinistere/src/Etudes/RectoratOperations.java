@@ -8,14 +8,21 @@ package Etudes;
 public interface RectoratOperations
 {
     /**
+     * Operation getEtudiantByNumero
+     */
+    public Etudes.Etudiant getEtudiantByNumero(String numEtudiant);
+
+    /**
      * Operation demanderConnexion
      */
-    public boolean demanderConnexion(String numEtudiant, String motDePasse);
+    public void demanderConnexion(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu;
 
     /**
      * Operation demanderInscription
      */
-    public boolean demanderInscription(String numEtudiant, String motDePasse);
+    public void demanderInscription(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu;
 
     /**
      * Operation getListUniversites
@@ -30,6 +37,6 @@ public interface RectoratOperations
     /**
      * Operation getPropositionByFormation
      */
-    public Etudes.Proposition[] getPropositionByFormation(Etudes.Formation formation);
+    public Etudes.Proposition[] getPropositionByFormation(Etudes.Master formation);
 
 }

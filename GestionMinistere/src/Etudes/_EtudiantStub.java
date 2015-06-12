@@ -162,4 +162,53 @@ public class _EtudiantStub extends org.omg.CORBA.portable.ObjectImpl
         }
     }
 
+    /**
+     * Operation getUniversite
+     */
+    public Etudes.Universite getUniversite()
+    {
+        while(true)
+        {
+            if (!this._is_local())
+            {
+                org.omg.CORBA.portable.InputStream _input = null;
+                try
+                {
+                    org.omg.CORBA.portable.OutputStream _output = this._request("getUniversite",true);
+                    _input = this._invoke(_output);
+                    Etudes.Universite _arg_ret = Etudes.UniversiteHelper.read(_input);
+                    return _arg_ret;
+                }
+                catch(org.omg.CORBA.portable.RemarshalException _exception)
+                {
+                    continue;
+                }
+                catch(org.omg.CORBA.portable.ApplicationException _exception)
+                {
+                    String _exception_id = _exception.getId();
+                    throw new org.omg.CORBA.UNKNOWN("Unexpected User Exception: "+ _exception_id);
+                }
+                finally
+                {
+                    this._releaseReply(_input);
+                }
+            }
+            else
+            {
+                org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("getUniversite",_opsClass);
+                if (_so == null)
+                   continue;
+                Etudes.EtudiantOperations _self = (Etudes.EtudiantOperations) _so.servant;
+                try
+                {
+                    return _self.getUniversite();
+                }
+                finally
+                {
+                    _servant_postinvoke(_so);
+                }
+            }
+        }
+    }
+
 }

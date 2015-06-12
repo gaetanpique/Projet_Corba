@@ -25,4 +25,9 @@ public interface EtudiantOperations
     public boolean estMeilleurQue(Etudes.Etudiant aComparer)
         throws Etudes.diplomesDifferents;
 
+    /**
+     * Operation getUniversite
+     */
+    public Etudes.Universite getUniversite();
+
 }

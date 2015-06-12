@@ -87,4 +87,12 @@ public class EtudiantPOATie extends EtudiantPOA
         return _tie.estMeilleurQue( aComparer);
     }
 
+    /**
+     * Operation getUniversite
+     */
+    public Etudes.Universite getUniversite()
+    {
+        return _tie.getUniversite();
+    }
+
 }

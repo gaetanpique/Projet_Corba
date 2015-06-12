@@ -13,24 +13,31 @@ public interface UniversiteOperations
     public Etudes.Etudiant[] getEtudiants();
 
     /**
-     * Operation demanderConnexion
+     * Operation getEtudiantByNumero
      */
-    public boolean demanderConnexion(String numEtudiant, String motDePasse);
+    public Etudes.Etudiant getEtudiantByNumero(String numEtudiant);
 
     /**
-     * Operation demanderInscription
+     * Operation inscrire
      */
-    public boolean demanderInscription(String numEtudiant, String motDePasse);
+    public void inscrire(Etudes.Etudiant etudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu;
+
+    /**
+     * Operation connecter
+     */
+    public void connecter(Etudes.Etudiant numEtudiant, String motDePasse)
+        throws Etudes.EtudiantInconnu;
 
     /**
      * Operation getPropositionByFormation
      */
-    public Etudes.Proposition[] getPropositionByFormation(Etudes.Formation formation);
+    public Etudes.Proposition getPropositionByFormation(Etudes.Master formation);
 
     /**
      * Operation getPrerequis
      */
-    public Etudes.Licence[] getPrerequis(Etudes.Formation formation)
+    public Etudes.Licence[] getPrerequis(Etudes.Master formation)
         throws Etudes.PropositionDoesNotExist;
 
     /**

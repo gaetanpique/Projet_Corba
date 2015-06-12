@@ -12,7 +12,6 @@ module Etudes
 	typedef sequence<Licence> listLicences;
 	interface Master : Formation
 	{
-		attribute listLicences prerequis;
 	};
 
 	exception pasDiplomeException 
@@ -24,6 +23,12 @@ module Etudes
 	exception PropositionDoesNotExist
 	{
 		Formation nonProposee;
+	};
+	
+	exception EtudiantInconnu
+	{
+		string numEtudiantInconnu;
+		string nomUniversite;
 	};
 	
 	exception NombreMaxDeVoeuxAtteint
@@ -40,27 +45,29 @@ module Etudes
 	
 	interface Etudiant;
 	typedef sequence<Etudiant> listEtudiant;
-	typedef sequence<Proposition> listPropositions;
 	interface Universite
 	{
 		listEtudiant getEtudiants();
-		boolean demanderConnexion(in string numEtudiant, in string motDePasse);
-		boolean demanderInscription(in string numEtudiant, in string motDePasse);
-		listPropositions getPropositionByFormation(in Formation _formation);
-		listLicences getPrerequis(in Formation _formation) raises (PropositionDoesNotExist);
+		Etudiant getEtudiantByNumero(in string numEtudiant);
+		void inscrire(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnu);
+		void connecter(in Etudiant numEtudiant, in string motDePasse) raises (EtudiantInconnu);
+		Proposition getPropositionByFormation(in Master _formation);
+		listLicences getPrerequis(in Master _formation) raises (PropositionDoesNotExist);
 		oneway void creerProposition(in Formation _nouvelleFormation, in listLicences _prerequis);
 		oneway void majPrerequis(in Formation _formation, in listLicences _nouveauxPrerequis);
 		short getClassement(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
 	};
 	
 	typedef sequence<Universite> listUniversites;
+	typedef sequence<Proposition> listPropositions;
 	interface Rectorat
 	{
-		boolean demanderConnexion(in string numEtudiant, in string motDePasse);
-		boolean demanderInscription(in string numEtudiant, in string motDePasse);
+		Etudiant getEtudiantByNumero(in string numEtudiant);
+		void demanderConnexion(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnu);
+		void demanderInscription(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnu);
 		listUniversites getListUniversites();
 		listFormations getAccreditationsByUniversite(in Universite _universite);
-		listPropositions getPropositionByFormation(in Formation _formation);
+		listPropositions getPropositionByFormation(in Master _formation);
 	};
 	
 	typedef sequence<Rectorat> listRectorats;
@@ -89,6 +96,7 @@ module Etudes
 	{
 		attribute Resultat resultats;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferents);
+		Universite getUniversite();
 	};
 	
 	interface Voeu
