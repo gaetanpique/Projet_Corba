@@ -144,7 +144,7 @@ public class UniversiteImpl extends UniversitePOA {
 		}
 		else
 		{
-			return proposition.getPrerequis();
+			return proposition.prerequis();
 		}
 	}
 

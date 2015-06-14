@@ -107,9 +107,9 @@ module Etudes
 	
 	interface Voeu
 	{
-		readonly attribute Universite universite;
-		readonly attribute Master formation;
-	
+		readonly attribute Proposition propositionCorrespondante;
+		readonly attribute Etudiant etudiantCorrespondant;
+		attribute short position;
 		oneway void valider();
 		oneway void cloturer();
 		oneway void accepter();
@@ -124,7 +124,6 @@ module Etudes
 		listVoeux getMeilleurePropositionByEtudiant(in Etudiant _etudiant);
 		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur) raises (NombreMaxDeVoeuxAtteint);
 		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
-		listVoeux getVoeuxByUniversite(in Universite _etudiant);
-		listVoeux getVoeuxByRectorat(in Rectorat _rectorat);
+		listVoeux getVoeuxByUniversite(in Universite _universite);
 	};
 };
