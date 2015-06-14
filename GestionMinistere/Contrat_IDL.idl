@@ -41,7 +41,7 @@ module Etudes
 		boolean isCompatible(in Resultat resultatEtudiant);
 		readonly attribute Universite universiteSource;
 		readonly attribute Master masterPropose;
-		attribute ListLicence prerequis;
+		attribute listLicences prerequis;
 	};
 	
 	interface Etudiant;
