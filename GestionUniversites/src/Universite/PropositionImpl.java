@@ -38,6 +38,7 @@ public class PropositionImpl extends PropositionPOA {
 
 	@Override
 	public void prerequis(Licence[] value) {
+System.out.println("Coucou");
 		// TODO Auto-generated method stub
 		
 	}
