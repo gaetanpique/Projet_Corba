@@ -33,8 +33,7 @@ public class PropositionImpl extends PropositionPOA {
 	@Override
 	public Licence[] prerequis() {
 		return prerequis.toArray(new Licence[prerequis.size()]);
-
-
 }
-}
+	}
+
 
