@@ -10,8 +10,7 @@ import Etudes.Universite;
 
 public class PropositionImpl extends PropositionPOA {
 	
-//	à déclarer dans l'IDL
-//	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
+	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
 
 	@Override
 	public boolean isCompatible(Resultat resultatEtudiant) {
@@ -29,6 +28,11 @@ public class PropositionImpl extends PropositionPOA {
 	public Master masterPropose() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Licence[] getPrerequis() {
+		return prerequis.toArray(new Licence[prerequis.size()]);
 	}
 	
 	/* a déclarer dans l'IDL

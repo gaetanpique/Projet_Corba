@@ -87,11 +87,11 @@ public class ResultatPOATie extends ResultatPOA
     }
 
     /**
-     * Operation betterThenPrerequis
+     * Operation isValideForFormation
      */
-    public boolean betterThenPrerequis(Etudes.Proposition aComparer)
+    public boolean isValideForFormation(Etudes.Formation formation)
     {
-        return _tie.betterThenPrerequis( aComparer);
+        return _tie.isValideForFormation( formation);
     }
 
 }

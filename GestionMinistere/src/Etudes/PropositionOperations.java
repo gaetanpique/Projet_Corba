@@ -24,4 +24,9 @@ public interface PropositionOperations
      */
     public Etudes.Master masterPropose();
 
+    /**
+     * Operation getPrerequis
+     */
+    public Etudes.Licence[] getPrerequis();
+
 }

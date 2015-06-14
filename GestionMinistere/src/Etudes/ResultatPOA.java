@@ -39,8 +39,8 @@ public abstract class ResultatPOA extends org.omg.PortableServer.Servant
                 return _invoke__get_moyenne(_is, handler);
         } else if (opName.equals("_set_moyenne")) {
                 return _invoke__set_moyenne(_is, handler);
-        } else if (opName.equals("betterThenPrerequis")) {
-                return _invoke_betterThenPrerequis(_is, handler);
+        } else if (opName.equals("isValideForFormation")) {
+                return _invoke_isValideForFormation(_is, handler);
         } else {
             throw new org.omg.CORBA.BAD_OPERATION(opName);
         }
@@ -78,13 +78,13 @@ public abstract class ResultatPOA extends org.omg.PortableServer.Servant
         return _output;
     }
 
-    private org.omg.CORBA.portable.OutputStream _invoke_betterThenPrerequis(
+    private org.omg.CORBA.portable.OutputStream _invoke_isValideForFormation(
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        Etudes.Proposition arg0_in = Etudes.PropositionHelper.read(_is);
+        Etudes.Formation arg0_in = Etudes.FormationHelper.read(_is);
 
-        boolean _arg_result = betterThenPrerequis(arg0_in);
+        boolean _arg_result = isValideForFormation(arg0_in);
 
         _output = handler.createReply();
         _output.write_boolean(_arg_result);

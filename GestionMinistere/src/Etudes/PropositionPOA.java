@@ -37,6 +37,8 @@ public abstract class PropositionPOA extends org.omg.PortableServer.Servant
                 return _invoke__get_masterPropose(_is, handler);
         } else if (opName.equals("_get_universiteSource")) {
                 return _invoke__get_universiteSource(_is, handler);
+        } else if (opName.equals("getPrerequis")) {
+                return _invoke_getPrerequis(_is, handler);
         } else if (opName.equals("isCompatible")) {
                 return _invoke_isCompatible(_is, handler);
         } else {
@@ -76,6 +78,19 @@ public abstract class PropositionPOA extends org.omg.PortableServer.Servant
         Etudes.Master arg = masterPropose();
         _output = handler.createReply();
         Etudes.MasterHelper.write(_output,arg);
+        return _output;
+    }
+
+    private org.omg.CORBA.portable.OutputStream _invoke_getPrerequis(
+            final org.omg.CORBA.portable.InputStream _is,
+            final org.omg.CORBA.portable.ResponseHandler handler) {
+        org.omg.CORBA.portable.OutputStream _output;
+
+        Etudes.Licence[] _arg_result = getPrerequis();
+
+        _output = handler.createReply();
+        Etudes.listLicencesHelper.write(_output,_arg_result);
+
         return _output;
     }
 

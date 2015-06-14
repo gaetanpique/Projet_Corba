@@ -1,4 +1,5 @@
 package Universite;
+import Etudes.Formation;
 import Etudes.Licence;
 import Etudes.Proposition;
 import Etudes.ResultatPOA;
@@ -35,7 +36,8 @@ public class ResultatImpl extends ResultatPOA {
 	}
 
 	@Override
-	public boolean betterThenPrerequis(Proposition aComparer) {
+	public boolean isValideForFormation(Formation formation) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 

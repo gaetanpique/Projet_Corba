@@ -1,6 +1,7 @@
 package Universite;
 
 import Etudes.Etudiant;
+import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
 import Etudes.Formation;
 import Etudes.Resultat;
@@ -46,12 +47,17 @@ public class EtudiantImpl extends EtudiantPOA {
 	
 	@Override
 	public boolean estMeilleurQue(Etudiant aComparer) throws diplomesDifferents {
-		Resultat res1 = this.resultats();
-		Resultat res2 = aComparer.resultats();
+		ResultatImpl res1 = (ResultatImpl) this.resultats();
+		ResultatImpl res2 = (ResultatImpl) aComparer.resultats();
 		
-		if (!res1. licence().equals(res2.getLicence()))
-				throw new diplomesDifferents();
-		return (res1.moyenne() > res2.moyenne());
+		if (!res1.getLicence().equals(res2.getLicence()))
+		{
+			throw new diplomesDifferents();
+		}
+		else
+		{
+			return (res1.moyenne() > res2.moyenne());
+		}
 	}
 	
 	/**
@@ -63,7 +69,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 */
 	public void inscrireEtudiant(String mdp) throws  EtudiantDejaInscritException{
 		if (this.motDePasse.equals(""))
-			throw new EtudiantDejaInscritException(this);
+			throw new EtudiantDejaInscritException(this.numero);
 		else setMotDePasse(mdp);
 	}
 	

@@ -86,4 +86,12 @@ public class PropositionPOATie extends PropositionPOA
         return _tie.masterPropose();
     }
 
+    /**
+     * Operation getPrerequis
+     */
+    public Etudes.Licence[] getPrerequis()
+    {
+        return _tie.getPrerequis();
+    }
+
 }

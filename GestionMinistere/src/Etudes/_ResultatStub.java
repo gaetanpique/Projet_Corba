@@ -149,9 +149,9 @@ public class _ResultatStub extends org.omg.CORBA.portable.ObjectImpl
     }
 
     /**
-     * Operation betterThenPrerequis
+     * Operation isValideForFormation
      */
-    public boolean betterThenPrerequis(Etudes.Proposition aComparer)
+    public boolean isValideForFormation(Etudes.Formation formation)
     {
         while(true)
         {
@@ -160,8 +160,8 @@ public class _ResultatStub extends org.omg.CORBA.portable.ObjectImpl
                 org.omg.CORBA.portable.InputStream _input = null;
                 try
                 {
-                    org.omg.CORBA.portable.OutputStream _output = this._request("betterThenPrerequis",true);
-                    Etudes.PropositionHelper.write(_output,aComparer);
+                    org.omg.CORBA.portable.OutputStream _output = this._request("isValideForFormation",true);
+                    Etudes.FormationHelper.write(_output,formation);
                     _input = this._invoke(_output);
                     boolean _arg_ret = _input.read_boolean();
                     return _arg_ret;
@@ -182,13 +182,13 @@ public class _ResultatStub extends org.omg.CORBA.portable.ObjectImpl
             }
             else
             {
-                org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("betterThenPrerequis",_opsClass);
+                org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("isValideForFormation",_opsClass);
                 if (_so == null)
                    continue;
                 Etudes.ResultatOperations _self = (Etudes.ResultatOperations) _so.servant;
                 try
                 {
-                    return _self.betterThenPrerequis( aComparer);
+                    return _self.isValideForFormation( formation);
                 }
                 finally
                 {

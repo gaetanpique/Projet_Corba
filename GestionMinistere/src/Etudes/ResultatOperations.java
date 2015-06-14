@@ -26,8 +26,8 @@ public interface ResultatOperations
     public void moyenne(float value);
 
     /**
-     * Operation betterThenPrerequis
+     * Operation isValideForFormation
      */
-    public boolean betterThenPrerequis(Etudes.Proposition aComparer);
+    public boolean isValideForFormation(Etudes.Formation formation);
 
 }

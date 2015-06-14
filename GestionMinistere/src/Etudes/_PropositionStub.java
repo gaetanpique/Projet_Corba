@@ -154,4 +154,53 @@ public class _PropositionStub extends org.omg.CORBA.portable.ObjectImpl
         }
     }
 
+    /**
+     * Operation getPrerequis
+     */
+    public Etudes.Licence[] getPrerequis()
+    {
+        while(true)
+        {
+            if (!this._is_local())
+            {
+                org.omg.CORBA.portable.InputStream _input = null;
+                try
+                {
+                    org.omg.CORBA.portable.OutputStream _output = this._request("getPrerequis",true);
+                    _input = this._invoke(_output);
+                    Etudes.Licence[] _arg_ret = Etudes.listLicencesHelper.read(_input);
+                    return _arg_ret;
+                }
+                catch(org.omg.CORBA.portable.RemarshalException _exception)
+                {
+                    continue;
+                }
+                catch(org.omg.CORBA.portable.ApplicationException _exception)
+                {
+                    String _exception_id = _exception.getId();
+                    throw new org.omg.CORBA.UNKNOWN("Unexpected User Exception: "+ _exception_id);
+                }
+                finally
+                {
+                    this._releaseReply(_input);
+                }
+            }
+            else
+            {
+                org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("getPrerequis",_opsClass);
+                if (_so == null)
+                   continue;
+                Etudes.PropositionOperations _self = (Etudes.PropositionOperations) _so.servant;
+                try
+                {
+                    return _self.getPrerequis();
+                }
+                finally
+                {
+                    _servant_postinvoke(_so);
+                }
+            }
+        }
+    }
+
 }
