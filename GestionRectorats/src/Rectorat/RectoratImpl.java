@@ -52,12 +52,12 @@ public class RectoratImpl extends RectoratPOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnu{
+	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException{
 		Universite univDeLetudiant = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
 		
 		if (univDeLetudiant == null)
 		{
-			throw new EtudiantInconnu();
+			throw new EtudiantInconnuException();
 		}
 		else
 		{
@@ -77,19 +77,19 @@ public class RectoratImpl extends RectoratPOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public void demanderInscription(Etudiant etudiant, String motDePasse) throws EtudiantInconnu {
+	public void demanderInscription(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException {
 		Universite univDinscription = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
 		
 		//univDinscription == null <=> étudiant ne fait pas partie de ce rectorat
 		if (univDinscription == null)
 		{
-			throw new EtudiantInconnu();
+			throw new EtudiantInconnuException();
 		}
 		else
 		{
 			try {
 				univDinscription.inscrire(etudiant, motDePasse);
-			} catch (EtudiantInconnu e) {
+			} catch (EtudiantInconnuException e) {
 				System.out.println("ERREUR : Etudiant n°" + e.numEtudiantInconnu + " inconnu de l'université " + e.nomUniversite);
 				throw e;
 			}

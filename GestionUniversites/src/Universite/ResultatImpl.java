@@ -13,6 +13,7 @@ import Etudes.ResultatPOA;
 	private Licence licence;
 	private float moyenne;
 	private Proposition proposition;
+	private String codeObtention;
 	
 	public Licence getLicence() {
 		return licence;
@@ -24,8 +25,7 @@ import Etudes.ResultatPOA;
 
 	@Override
 	public String codeObtention() {
-		// TODO Auto-generated method stub
-		return null;
+		return codeObtention;
 	}
 
 	@Override

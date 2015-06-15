@@ -16,6 +16,12 @@ import Etudes.diplomesDifferentsException;
 	private String motDePasse;
 	private Resultat resultats;
 	private Universite universite;
+	
+	public EtudiantImpl (String numE, Resultat resE, Universite univE){
+		this.numero = numE;
+		this.resultats = resE;
+		this.universite = univE;
+	}
 
 	@Override
 	public Resultat resultats() {
