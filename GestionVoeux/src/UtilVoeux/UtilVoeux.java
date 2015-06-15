@@ -40,7 +40,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 	public void soumettreVoeu(Proposition aSoumettre, Etudiant soumetteur) throws NombreMaxDeVoeuxAtteint 
 	{
 		// TODO Auto-generated method stub
-		if ()
+		if (1==1)
 		{
 			
 		}
