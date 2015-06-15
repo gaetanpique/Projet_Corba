@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import Etudes.Etudiant;
 import Etudes.EtudiantInconnu;
+import Etudes.EtudiantInconnuException;
 import Etudes.Formation;
 import Etudes.Master;
 import Etudes.Proposition;
@@ -28,6 +29,7 @@ public class RectoratImpl extends RectoratPOA {
 	@Override
 	public Etudiant getEtudiantByNumero(String numEtudiant) {
 		Etudiant result = null;
+		System.out.println("TEST DE COMMIT");
 		
 		for (Universite u : this.universites)
 		{
