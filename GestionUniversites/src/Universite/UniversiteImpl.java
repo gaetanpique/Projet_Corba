@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import Etudes.Etudiant;
 import Etudes.EtudiantInconnu;
+import Etudes.EtudiantInconnuException;
 import Etudes.Formation;
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.Proposition;
 import Etudes.PropositionDoesNotExist;
+import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
 import Etudes.UniversitePOA;
 import Etudes.pasDiplomeException;
@@ -67,12 +69,12 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public void inscrire(Etudiant etudiant, String motDePasse)
-			throws EtudiantInconnu {
+			throws EtudiantInconnuException {
 		EtudiantImpl etudiantAInscrire = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) etudiant));
 		
 		if (etudiantAInscrire == null)
 		{
-			throw new EtudiantInconnu(((EtudiantImpl) etudiant).getNumero(), this.nom);
+			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).getNumero(), this.nom);
 		}
 		else
 		{
@@ -89,18 +91,18 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public void connecter(Etudiant etudiant, String motDePasse) throws EtudiantInconnu {
+	public void connecter(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException {
 		EtudiantImpl etudiantAConnecter = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) etudiant));
 		
 		if (etudiantAConnecter == null)
 		{
-			throw new EtudiantInconnu(((EtudiantImpl) etudiant).getNumero(), this.nom);
+			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).getNumero(), this.nom);
 		}
 		else
 		{
 			if (!etudiantAConnecter.getMotDePasse().equals(motDePasse))
 			{
-				throw new EtudiantInconnu(((EtudiantImpl) etudiant).getNumero(), this.nom);
+				throw new EtudiantInconnuException(((EtudiantImpl) etudiant).getNumero(), this.nom);
 			}
 		}
 	}
@@ -135,12 +137,12 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public Licence[] getPrerequis(Master formation) throws PropositionDoesNotExist {
+	public Licence[] getPrerequis(Master formation) throws PropositionDoesNotExistException {
 		PropositionImpl proposition = (PropositionImpl) this.getPropositionByFormation(formation);
 		
 		if (proposition == null)
 		{
-			throw new PropositionDoesNotExist(formation);
+			throw new PropositionDoesNotExistException(formation);
 		}
 		else
 		{

@@ -29,23 +29,14 @@ public class PropositionImpl extends PropositionPOA {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public Licence[] prerequis() {
-		// TODO Auto-generated method stub
-		return null;
+		return prerequis.toArray(new Licence[prerequis.size()]);
+}
 	}
 
-	@Override
-	public void prerequis(Licence[] value) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/* a déclarer dans l'IDL
-	public Licence[] getPrerequis()
-	{
-		return this.prerequis.toArray(new Licence[this.prerequis.size()]);
-	}
-*/
+
+
+
 }
