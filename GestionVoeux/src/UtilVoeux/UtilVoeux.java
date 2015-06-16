@@ -81,12 +81,11 @@ class UtilVoeux extends UtilVoeuxPOA{
 		    {
 		        // hypothèse : le tableau est trié
 		        permut=false;
-		        for (int i =0;i<listeAOrdonner.size();i++)
+		        for (int i =0;i<listeAOrdonner.size()-1;i++)
 		        {
 		            // Teste si 2 éléments successifs sont dans le bon ordre ou non
 		            if (listeAOrdonner.get(i).position()> listeAOrdonner.get(i+1).position())
 		            {
-		                // s'ils ne le sont pas on échange leurs positions
 		            	voeuTemp=listeAOrdonner.get(i);
 		            	listeAOrdonner.set(i, listeAOrdonner.get(i+1));
 		            	listeAOrdonner.set(i+1, voeuTemp);
@@ -120,8 +119,9 @@ class UtilVoeux extends UtilVoeuxPOA{
 		if (cpt <5) 
 		{
 			VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
-
+			soumetteur.add(leVoeu);
 			listeVoeux.add(leVoeu);
+			
 		}
 		else
 		{
@@ -178,6 +178,8 @@ class UtilVoeux extends UtilVoeuxPOA{
 
 		return arrayVoeuxTemp.toArray(new Voeu[arrayVoeuxTemp.size()]);
 	}
+
+
 
 
 }

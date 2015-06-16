@@ -106,11 +106,13 @@ module Etudes
 		readonly attribute Etudiant etudiantCorrespondant;
 		attribute short position;
 		attribute string etatVoeu;
-		oneway void valider();
-		oneway void cloturer();
-		oneway void accepter();
-		oneway void refuser();
-		oneway void refuserDefinitevement();
+		oneway void reponseOUI();
+		oneway void reponseOUIMAIS();
+		oneway void reponseNONMAIS();
+		oneway void reponseNON();
+		oneway void accepterCandidature();
+		oneway void refuserCandidature();
+
 		oneway void majClassement(in short classement);
 	};
 	

@@ -1,11 +1,14 @@
 package UtilVoeux;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 
 import Etudes.Etudiant;
 import Etudes.Master;
 import Etudes.Proposition;
 import Etudes.Universite;
+import Etudes.Voeu;
 import Etudes.VoeuPOA;
 
 public class VoeuImpl extends VoeuPOA 
@@ -15,7 +18,8 @@ public class VoeuImpl extends VoeuPOA
 	private short position;
 	private String etatVoeu;
 	
-	public VoeuImpl() {
+	public VoeuImpl() 
+	{
 		// TODO Auto-generated constructor stub
 	}	
 	
@@ -26,6 +30,8 @@ public class VoeuImpl extends VoeuPOA
 		this.etudiantCorrespondant = soumetteur;
 		this.position = positionVoeu;
 	}
+	
+	
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 	
 
@@ -74,54 +80,78 @@ public class VoeuImpl extends VoeuPOA
 
 	
 	//---------------------------------METHODS-------------------------------//
+	
 	/**
 	 * Methode declenchee lors de la réponse de l'etudiant
 	 */
 	@Override
-	public void valider() {
-		// TODO Auto-generated method stub
-
+	public void reponseOUI() 
+	{
+		ArrayList<Voeu> listeVoeuTemp = new ArrayList<Voeu>();
+		this.etatVoeu("OUI");
+		listeVoeuTemp = (ArrayList<Voeu>) Arrays.asList(etudiantCorrespondant.listeVoeux());
+		for (Voeu v : listeVoeuTemp)
+		{
+			if (!v.equals(this))
+			{
+				v.reponseNON();
+			}
+		}
+		
+		
 	}
+
+
 	/**
 	 * Methode declenchee lors de la réponse de l'etudiant
 	 */
 	@Override
-	public void cloturer() {
-		// TODO Auto-generated method stub
-
+	public void reponseOUIMAIS() 
+	{
+		this.etatVoeu("OUI MAIS");		
 	}
+
+
 	/**
 	 * Methode declenchee lors de la réponse de l'etudiant
 	 */
 	@Override
-	public void refuserDefinitevement() {
-		// TODO Auto-generated method stub
+	public void reponseNONMAIS() 
+	{
+		this.etatVoeu("NON MAIS");
+	}
 
+
+	/**
+	 * Methode declenchee lors de la réponse de l'etudiant
+	 */
+	@Override
+	public void reponseNON() 
+	{
+		this.etatVoeu("NON");
 	}
 	
+	public void refuserCandidature() 
+	{
+		// TODO Auto-generated method stub
+		
+	}
+		
 	@Override
-	public void accepter() {
+	public void accepterCandidature() 
+	{
+		// TODO Auto-generated method stub
+		
+	}		
+	
+	@Override
+	public void majClassement(short classement) 
+	{
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
-	public void refuser() {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void majClassement(short classement) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-
-
-
+	
 
 
 }
