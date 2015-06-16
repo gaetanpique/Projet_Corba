@@ -140,12 +140,12 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @throws PropositionDoesNotExist 
 	 */
 	@Override
-	public Licence[] getPrerequis(Master formation) throws PropositionDoesNotExistException {
-		PropositionImpl proposition = (PropositionImpl) this.getPropositionByFormation(formation);
+	public Licence[] getPrerequis(Proposition p) throws PropositionDoesNotExistException {
+		PropositionImpl proposition = (PropositionImpl) p;
 		
 		if (proposition == null)
 		{
-			throw new PropositionDoesNotExistException(formation);
+			throw new PropositionDoesNotExistException(p.masterPropose());
 		}
 		else
 		{
@@ -162,10 +162,10 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Thibaut
 	 */
 	@Override
-	public void creerProposition(Master nouvelleFormation, Licence[] prerequis,Universite universite) {
+	public void creerProposition(Master nouvelleFormation, Licence[] prerequis, Universite universite) {
 		// TODO Auto-generated method stub
 		// crée un nouvelle proposition de formation 
-		PropositionImpl proposition = new PropositionImpl(nouvelleFormation, prerequis);
+		PropositionImpl proposition = new PropositionImpl(prerequis, universite, nouvelleFormation);
 		
 		/*
 		// test si la formation existe deja
@@ -188,12 +188,13 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Thibaut
 	 */
 	@Override
-	public void majPrerequis(Master formation, Licence[] nouveauxPrerequis) throws PropositionDoesNotExistException {
+	public void majPrerequis(Proposition p, Licence[] nouveauxPrerequis)
+			throws PropositionDoesNotExistException {
 		// TODO Auto-generated method stub
-		PropositionImpl proposition = (PropositionImpl) this.getPropositionByFormation(formation);
+		PropositionImpl proposition = (PropositionImpl) this.getPropositionByFormation(p.masterPropose());
 		if (proposition == null)
 		{
-			throw new PropositionDoesNotExistException(formation);
+			throw new PropositionDoesNotExistException(proposition.masterPropose());
 		}
 		else
 		{
@@ -212,18 +213,31 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @return short La liste des licences prérequise pour postuler
 	 * @author Thibaut
 	 */
-	@Override
-	public short getPositionEtudiant(Etudiant _etudiant) {
-		// TODO Auto-generated method stub
-		EtudiantImpl etudiantPosition = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) _etudiant));
-		// TODO Recupérer la position 
-		return 0;
-	}
+
 	
 	public boolean checkLicenceEtudiant(Etudiant _etudiant, Licence formation){
 		return false;
 		
 	}
+
+	/**
+	 * Retourne la position de l'etudiant pour la formation "formation" auquel il postule
+	 * 
+	 * Pré_requis : L'etudiant doit avoir un diplome (licence)
+	 * 
+	 * @param sujet Etudiant L'etudiant pour lequel on demande le classement
+	 * @return short La liste des licences prérequise pour postuler
+	 * @author Thibaut
+	 */
+	@Override
+	public short getPositionEtudiant(Etudiant sujet, Licence formation)
+			throws pasDiplomeException {
+		// TODO Auto-generated method stub
+				EtudiantImpl etudiantPosition = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) sujet));
+				// TODO Recupérer la position 
+				return 0;
+	}
+
 
 
 }
