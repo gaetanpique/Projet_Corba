@@ -12,8 +12,15 @@ import Etudes.ResultatPOA;
 
 	private Licence licence;
 	private float moyenne;
-	private Proposition proposition;
 	private String codeObtention;
+	private short position;
+	
+	public ResultatImpl(Licence l, float m, String c, short p){
+		licence = l;
+		moyenne = m;
+		codeObtention = c;
+		position = p;
+	}
 	
 	public Licence getLicence() {
 		return licence;
@@ -56,8 +63,7 @@ import Etudes.ResultatPOA;
 
 	@Override
 	public short position() {
-		// TODO Auto-generated method stub
-		return 0;
+		return position;
 	}
 
 }

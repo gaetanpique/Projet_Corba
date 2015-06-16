@@ -1,12 +1,17 @@
 package Universite;
 
+import java.util.ArrayList;
+
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
 import Etudes.Formation;
+import Etudes.Licence;
+import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
 import Etudes.Resultat;
 import Etudes.Universite;
+import Etudes.Voeu;
 import Etudes.diplomesDifferents;
 import Etudes.diplomesDifferentsException;
 
@@ -16,6 +21,7 @@ import Etudes.diplomesDifferentsException;
 	private String motDePasse;
 	private Resultat resultats;
 	private Universite universite;
+	private ArrayList<Voeu> listeVoeux;
 	
 	public EtudiantImpl (String numE, Resultat resE, Universite univE){
 		this.numero = numE;
@@ -23,6 +29,11 @@ import Etudes.diplomesDifferentsException;
 		this.universite = univE;
 	}
 
+	@Override
+	public Voeu[] listeVoeux() {
+		return listeVoeux.toArray(new Voeu[listeVoeux.size()]);
+	}
+	
 	@Override
 	public Resultat resultats() {
 		return resultats;
@@ -93,19 +104,48 @@ import Etudes.diplomesDifferentsException;
 		return r.isValideForProposition(p);
 	}
 
-	@Override
-	public short getPositionEtudiant() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-
 	/**
-	 * Cette méthode vérifie si un résultat est valide pour une formation donnée.
+	 * Cette méthode retourne l'attribut position du résultat de l'étudiant
 	 * 
 	 * 
-	 * @return validité du résultat.
+	 * @return attribut position de l'étudiant sur son résultat
 	 * @author Baptiste
 	 */
-	//public int getPosition
+	@Override
+	public short getPositionEtudiant() {
+		// appel interne au projet donc pas de méthode CORBA
+		ResultatImpl res = (ResultatImpl) this.resultats();
+		return res.position();
+	}
+
+	/**
+	 * Cette méthode ajoute un voeu à la liste de l'étudiant
+	 * prérequis : la liste ne doit pas contenir plus de 4 voeux (limite de voeux à 5)
+	 * 
+	 * @exception : NombreMaxDeVoeuxAtteintException
+	 * @author Baptiste
+	 */
+	@Override
+	public void addVoeuEtudiant(Voeu v) throws NombreMaxDeVoeuxAtteintException {
+		if (listeVoeux.size() == 5)
+		{
+			throw new NombreMaxDeVoeuxAtteintException();
+		}
+		else
+		{
+			listeVoeux.add(v);
+		}
+	}
+	
+	/**
+	 * Cette méthode vérifie si un étudiant a la Licence entrée en paramètre
+	 * 
+	 * @return resultat de la vérification
+	 * @author Baptiste
+	 */
+	public boolean checkLicence(Licence l){
+		ResultatImpl res1 = (ResultatImpl) this.resultats();
+		return (res1.getLicence()._equals(l));
+	}
+
 }
