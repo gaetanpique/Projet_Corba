@@ -12,6 +12,7 @@ import Etudes.Proposition;
 import Etudes.PropositionDoesNotExist;
 import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
+import Etudes.Universite;
 import Etudes.UniversitePOA;
 import Etudes.diplomesDifferents;
 import Etudes.pasDiplomeException;
@@ -136,6 +137,7 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @param formation Master Le master pour lequel on demande les prérequis
 	 * @return Licence[] La liste des licences prérequise pour postuler
 	 * @author Gaetan
+	 * @throws PropositionDoesNotExist 
 	 */
 	@Override
 	public Licence[] getPrerequis(Master formation) throws PropositionDoesNotExistException {
@@ -154,17 +156,17 @@ public class UniversiteImpl extends UniversitePOA {
 	/**
 	 * Effectue une proposition de formation 
 	 * 
-	 * @param nouvelleFormation Formation La nouvelle formation proposé
+	 * @param nouvelleFormation Master Le master proposé
 	 * @param prerequis Licence[] L'ensemeble des formations prérequisent
+	 * @param universite Universite l'universite de la proposition
 	 * @author Thibaut
 	 */
 	@Override
-	public void creerProposition(Formation nouvelleFormation, Licence[] prerequis) 
-			throws formationDejaExistantException{
+	public void creerProposition(Master nouvelleFormation, Licence[] prerequis,Universite universite) {
 		// TODO Auto-generated method stub
-		// test si la formation existe deja
-		PropositionImpl proposition = new PropositionImpl (nouvelleFormation, prerequis);
-		FormationImpl imp = (FormationImpl) nouvelleFormation;
+		// crée un nouvelle proposition de formation 
+		PropositionImpl proposition = new PropositionImpl(nouvelleFormation, prerequis);
+		
 		/*
 		// test si la formation existe deja
 		for (Proposition p : this.mastersProposes)
@@ -173,16 +175,30 @@ public class UniversiteImpl extends UniversitePOA {
 			{
 				throw new formationDejaExistantException();
 			}
-		}	*/
-		
-
+		}	
+		*/
 	}
+	
+	
 	/**
+	 * Effectue une proposition de formation 
 	 * 
+	 * @param formation Master Le master de la proposition
+	 * @param nouveauxPrerequis Licence[] La nouvelle liste de prérequis 
+	 * @author Thibaut
 	 */
 	@Override
-	public void majPrerequis(Formation formation, Licence[] nouveauxPrerequis) {
+	public void majPrerequis(Master formation, Licence[] nouveauxPrerequis) throws PropositionDoesNotExistException {
 		// TODO Auto-generated method stub
+		PropositionImpl proposition = (PropositionImpl) this.getPropositionByFormation(formation);
+		if (proposition == null)
+		{
+			throw new PropositionDoesNotExistException(formation);
+		}
+		else
+		{
+			//proposition.addPrerequis(nouveauxPrerequis);
+		}
 		
 	}
 
@@ -204,16 +220,10 @@ public class UniversiteImpl extends UniversitePOA {
 		return 0;
 	}
 	
-	public boolean checkLicenceEtudiant(Licence formation) throws pasDiplomeException{
+	public boolean checkLicenceEtudiant(Etudiant _etudiant, Licence formation){
 		return false;
 		
 	}
 
-	@Override
-	public short getClassementEtudiant(Etudiant sujet, Licence formation)
-			throws pasDiplomeException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 }

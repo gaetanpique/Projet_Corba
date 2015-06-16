@@ -14,10 +14,10 @@ import Etudes.Universite;
 public class PropositionImpl extends PropositionPOA {
 	
 	private Formation _formation;
-	
 	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
 	private Universite universiteSource;
 	private Master masterProposé;
+
 	
 	public PropositionImpl() {
 		super();
@@ -66,7 +66,14 @@ public class PropositionImpl extends PropositionPOA {
 	
 	@Override
 	public Licence[] prerequis() {
-		return prerequis.toArray(new Licence[prerequis.size()]);
+		return _prerequis.toArray(new Licence[_prerequis.size()]);
 }
+/*
+	@Override
+	public Licence[] getPrerequis() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	*/
 	}
 
