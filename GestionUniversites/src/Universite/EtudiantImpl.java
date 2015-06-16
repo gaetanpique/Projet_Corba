@@ -92,4 +92,20 @@ import Etudes.diplomesDifferentsException;
 		ResultatImpl r = (ResultatImpl)this.resultats();
 		return r.isValideForProposition(p);
 	}
+
+	@Override
+	public short getPositionEtudiant() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+
+	/**
+	 * Cette méthode vérifie si un résultat est valide pour une formation donnée.
+	 * 
+	 * 
+	 * @return validité du résultat.
+	 * @author Baptiste
+	 */
+	//public int getPosition
 }

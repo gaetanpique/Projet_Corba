@@ -12,11 +12,7 @@ public class PropositionImpl extends PropositionPOA {
 	
 	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
 
-	@Override
-	public boolean isCompatible(Resultat resultatEtudiant) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 
 	@Override
 	public Universite universiteSource() {

@@ -164,7 +164,7 @@ public class UniversiteImpl extends UniversitePOA {
 	}
 
 	@Override
-	public short getClassement(Etudiant sujet, Licence formation)
+	public short getClassementEtudiant(Etudiant sujet, Licence formation)
 			throws pasDiplomeException {
 		// TODO Auto-generated method stub
 		return 0;
