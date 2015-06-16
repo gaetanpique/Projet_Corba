@@ -119,7 +119,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 		if (cpt <5) 
 		{
 			VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
-			soumetteur.add(leVoeu);
+			soumetteur.addVoeuEtudiant(leVoeu);
 			listeVoeux.add(leVoeu);
 			
 		}
