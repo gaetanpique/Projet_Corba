@@ -110,6 +110,7 @@ module Etudes
 		readonly attribute Proposition propositionCorrespondante;
 		readonly attribute Etudiant etudiantCorrespondant;
 		attribute short position;
+		attribute string etatVoeu;
 		oneway void valider();
 		oneway void cloturer();
 		oneway void accepter();
@@ -122,7 +123,7 @@ module Etudes
 	interface UtilVoeux
 	{
 		listVoeux getMeilleurePropositionByEtudiant(in Etudiant _etudiant);
-		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur) raises (NombreMaxDeVoeuxAtteintException);
+		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur, in short position) raises (NombreMaxDeVoeuxAtteintException);
 		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
 		listVoeux getVoeuxByUniversite(in Universite _universite);
 	};

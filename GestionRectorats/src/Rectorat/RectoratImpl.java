@@ -60,7 +60,7 @@ public class RectoratImpl extends RectoratPOA {
 		
 		if (univDeLetudiant == null)
 		{
-			throw new EtudiantInconnuException(etudiant, etudiant.);
+			throw new EtudiantInconnuException();
 		}
 		else
 		{
