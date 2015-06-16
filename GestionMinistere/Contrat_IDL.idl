@@ -21,6 +21,13 @@ module Etudes
 		string nomDiplome;
 	};
 	
+	interface Proposition;
+	
+	exception prerequisDejaExistantException
+	{
+		Proposition proposition;
+	};
+	
 	exception PropositionDoesNotExistException
 	{
 		Formation nonProposee;
@@ -42,7 +49,7 @@ module Etudes
 		readonly attribute Universite universiteSource;
 		readonly attribute Master masterPropose;
 		readonly attribute listLicences prerequis;
-		void addPrerequis(in Licence l);
+		void addPrerequis(in Licence l) raises(prerequisDejaExistantException);
 	};
 	
 	interface Etudiant;

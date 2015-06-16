@@ -10,6 +10,7 @@ import Etudes.Master;
 import Etudes.PropositionPOA;
 import Etudes.Resultat;
 import Etudes.Universite;
+import Etudes.prerequisDejaExistantException;
 
 public class PropositionImpl extends PropositionPOA {
 	
@@ -68,12 +69,14 @@ public class PropositionImpl extends PropositionPOA {
 	public Licence[] prerequis() {
 		return _prerequis.toArray(new Licence[_prerequis.size()]);
 }
-/*
+
+
+
 	@Override
-	public Licence[] getPrerequis() {
+	public void addPrerequis(Licence l) throws prerequisDejaExistantException{
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
-	*/
+
 	}
 
