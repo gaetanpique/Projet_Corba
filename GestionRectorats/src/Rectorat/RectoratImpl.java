@@ -52,6 +52,7 @@ public class RectoratImpl extends RectoratPOA {
 	 * @param motDePasse String Le mot de passe entré lors de la demande de connexion
 	 * @throws EtudiantInconnu Si il n'est pas inscrit, ou ne dépend pas de ce rectorat
 	 * @author Gaetan
+	 * @throws EtudiantInconnuException 
 	 */
 	@Override
 	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException{
@@ -59,7 +60,7 @@ public class RectoratImpl extends RectoratPOA {
 		
 		if (univDeLetudiant == null)
 		{
-			throw new EtudiantInconnuException();
+			throw new EtudiantInconnuException(etudiant, etudiant.);
 		}
 		else
 		{
