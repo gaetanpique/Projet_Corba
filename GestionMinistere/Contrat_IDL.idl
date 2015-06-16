@@ -39,7 +39,6 @@ module Etudes
 	interface Universite;
 	interface Proposition
 	{
-		boolean isCompatible(in Resultat resultatEtudiant);
 		readonly attribute Universite universiteSource;
 		readonly attribute Master masterPropose;
 		readonly attribute listLicences prerequis;
@@ -57,7 +56,7 @@ module Etudes
 		listLicences getPrerequis(in Master _formation) raises (PropositionDoesNotExistException);
 		oneway void creerProposition(in Formation _nouvelleFormation, in listLicences _prerequis);
 		oneway void majPrerequis(in Formation _formation, in listLicences _nouveauxPrerequis);
-		short getClassement(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
+		short getClassementEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
 	};
 	
 	typedef sequence<Universite> listUniversites;
@@ -95,13 +94,15 @@ module Etudes
 	interface Resultat
 	{
 		readonly attribute string codeObtention;
-		attribute float moyenne;
+		readonly attribute float moyenne;
+		readonly attribute short position;
 	};
 	
 	interface Etudiant
 	{
 		attribute Resultat resultats;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
+		short getPositionEtudiant();
 		Universite getUniversite();
 	};
 	

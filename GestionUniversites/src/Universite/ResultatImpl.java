@@ -33,10 +33,6 @@ import Etudes.ResultatPOA;
 		return moyenne;
 	}
 
-	@Override
-	public void moyenne(float value) {
-		moyenne = value;
-	}
 
 	/**
 	 * Cette méthode vérifie si la licence du résultat est présente 
@@ -56,6 +52,12 @@ import Etudes.ResultatPOA;
 				return true;
 		}		
 		return false;
+	}
+
+	@Override
+	public short position() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
