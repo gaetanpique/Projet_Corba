@@ -70,32 +70,3 @@ public class PropositionImpl extends PropositionPOA {
 }
 	}
 
-<<<<<<< Upstream, based on origin/master
-
-
-
-<<<<<<< Upstream, based on origin/master
-
-=======
-=======
-	@Override
-	public void prerequis(Licence[] value) {
-		// TODO Auto-generated method stub
-		this._prerequis=value;
-	}
-
-	@Override
-	public Licence[] getPrerequis() {
-		// TODO Auto-generated method stub
-		return this._prerequis;
-	}
-	
-	/* a déclarer dans l'IDL
-	public Licence[] getPrerequis()
-	{
-		return this.prerequis.toArray(new Licence[this.prerequis.size()]);
-	}
-*/
->>>>>>> d7dbf68 Implementation UniversiteImpl & PropositionImpl
-}
->>>>>>> 867a963 Implementation UniversiteImpl & PropositionImpl
