@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import Etudes.EtudiantDejaInscritException;
+import Etudes.Formation;
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.PropositionPOA;
@@ -12,9 +13,23 @@ import Etudes.Universite;
 
 public class PropositionImpl extends PropositionPOA {
 	
+	private Formation _formation;
+	
 	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
 	private Universite universiteSource;
 	private Master masterProposé;
+	
+	public PropositionImpl() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public PropositionImpl(Formation formation, Licence[] pr) {
+		super();
+		// TODO Auto-generated constructor stub
+		this._formation = formation;
+		this.prerequis = (ArrayList<Licence>) Arrays.asList(pr);
+	}
 
 	/**
 	 * Constructeur de Proposition avec une ArrayList<Licence> pour les prérequis
@@ -55,7 +70,32 @@ public class PropositionImpl extends PropositionPOA {
 }
 	}
 
+<<<<<<< Upstream, based on origin/master
 
 
 
+<<<<<<< Upstream, based on origin/master
 
+=======
+=======
+	@Override
+	public void prerequis(Licence[] value) {
+		// TODO Auto-generated method stub
+		this._prerequis=value;
+	}
+
+	@Override
+	public Licence[] getPrerequis() {
+		// TODO Auto-generated method stub
+		return this._prerequis;
+	}
+	
+	/* a déclarer dans l'IDL
+	public Licence[] getPrerequis()
+	{
+		return this.prerequis.toArray(new Licence[this.prerequis.size()]);
+	}
+*/
+>>>>>>> d7dbf68 Implementation UniversiteImpl & PropositionImpl
+}
+>>>>>>> 867a963 Implementation UniversiteImpl & PropositionImpl

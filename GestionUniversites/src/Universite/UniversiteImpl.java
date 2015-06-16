@@ -13,6 +13,7 @@ import Etudes.PropositionDoesNotExist;
 import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
 import Etudes.UniversitePOA;
+import Etudes.diplomesDifferents;
 import Etudes.pasDiplomeException;
 
 public class UniversiteImpl extends UniversitePOA {
@@ -149,17 +150,62 @@ public class UniversiteImpl extends UniversitePOA {
 			return proposition.prerequis();
 		}
 	}
-
+	
+	/**
+	 * Effectue une proposition de formation 
+	 * 
+	 * @param nouvelleFormation Formation La nouvelle formation proposé
+	 * @param prerequis Licence[] L'ensemeble des formations prérequisent
+	 * @author Thibaut
+	 */
 	@Override
-	public void creerProposition(Formation nouvelleFormation,
-			Licence[] prerequis) {
+	public void creerProposition(Formation nouvelleFormation, Licence[] prerequis) 
+			throws formationDejaExistantException{
+		// TODO Auto-generated method stub
+		// test si la formation existe deja
+		PropositionImpl proposition = new PropositionImpl (nouvelleFormation, prerequis);
+		FormationImpl imp = (FormationImpl) nouvelleFormation;
+		/*
+		// test si la formation existe deja
+		for (Proposition p : this.mastersProposes)
+		{
+			if (p.masterPropose() == nouvelleFormation)
+			{
+				throw new formationDejaExistantException();
+			}
+		}	*/
+		
+
+	}
+	/**
+	 * 
+	 */
+	@Override
+	public void majPrerequis(Formation formation, Licence[] nouveauxPrerequis) {
 		// TODO Auto-generated method stub
 		
 	}
 
+
+	/**
+	 * Retourne la position de l'etudiant pour la formation "formation" auquel il postule
+	 * 
+	 * Pré_requis : L'etudiant doit avoir un diplome (licence)
+	 * 
+	 * @param sujet Etudiant L'etudiant pour lequel on demande le classement
+	 * @return short La liste des licences prérequise pour postuler
+	 * @author Thibaut
+	 */
 	@Override
-	public void majPrerequis(Formation formation, Licence[] nouveauxPrerequis) {
+	public short getPositionEtudiant(Etudiant _etudiant) {
 		// TODO Auto-generated method stub
+		EtudiantImpl etudiantPosition = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) _etudiant));
+		// TODO Recupérer la position 
+		return 0;
+	}
+	
+	public boolean checkLicenceEtudiant(Licence formation) throws pasDiplomeException{
+		return false;
 		
 	}
 
