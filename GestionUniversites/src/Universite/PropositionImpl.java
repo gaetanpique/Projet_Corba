@@ -7,6 +7,7 @@ import Etudes.EtudiantDejaInscritException;
 import Etudes.Formation;
 import Etudes.Licence;
 import Etudes.Master;
+import Etudes.Proposition;
 import Etudes.PropositionPOA;
 import Etudes.Resultat;
 import Etudes.Universite;
@@ -14,23 +15,10 @@ import Etudes.prerequisDejaExistantException;
 
 public class PropositionImpl extends PropositionPOA {
 	
-	private Formation _formation;
 	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
 	private Universite universiteSource;
 	private Master masterProposé;
 
-	
-	public PropositionImpl() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	public PropositionImpl(Formation formation, Licence[] pr) {
-		super();
-		// TODO Auto-generated constructor stub
-		this._formation = formation;
-		this.prerequis = (ArrayList<Licence>) Arrays.asList(pr);
-	}
 
 	/**
 	 * Constructeur de Proposition avec une ArrayList<Licence> pour les prérequis
@@ -67,14 +55,26 @@ public class PropositionImpl extends PropositionPOA {
 	
 	@Override
 	public Licence[] prerequis() {
-		return _prerequis.toArray(new Licence[_prerequis.size()]);
+		return prerequis.toArray(new Licence[prerequis.size()]);
 }
 
 
-
+	/**
+	 * Ajoute une licence à la liste des prérequis d'une proposition
+	 * 
+	 * @exception prerequisDejaExiistantException : la licence en paramètre est déjà présente dans la liste
+	 * @author Baptiste
+	 */
 	@Override
 	public void addPrerequis(Licence l) throws prerequisDejaExistantException{
-		// TODO Auto-generated method stub
+		if(prerequis.contains(l))
+		{
+			throw new prerequisDejaExistantException((Proposition) this);
+		}
+		else
+		{
+			prerequis.add(l);
+		}
 		
 	}
 
