@@ -90,6 +90,7 @@ public class VoeuImpl extends VoeuPOA
 		ArrayList<Voeu> listeVoeuTemp = new ArrayList<Voeu>();
 		this.etatVoeu("OUI");
 		listeVoeuTemp = (ArrayList<Voeu>) Arrays.asList(etudiantCorrespondant.listeVoeux());
+		//TODO Remplacer la methode asList par la methode correspondant dans Util
 		for (Voeu v : listeVoeuTemp)
 		{
 			if (!v.equals(this))
@@ -97,8 +98,6 @@ public class VoeuImpl extends VoeuPOA
 				v.reponseNON();
 			}
 		}
-		
-		
 	}
 
 
@@ -108,7 +107,8 @@ public class VoeuImpl extends VoeuPOA
 	@Override
 	public void reponseOUIMAIS() 
 	{
-		this.etatVoeu("OUI MAIS");		
+		this.etatVoeu("OUI MAIS");
+		
 	}
 
 

@@ -63,6 +63,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 			}
 		}
 		return listeMeilleurVoeu.toArray(new Voeu[listeMeilleurVoeu.size()]);
+		//TODO a changer par la methode de l'util
 	}
 	
 	/**
@@ -118,7 +119,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 		if (cpt <5) 
 		{
 			VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
-			soumetteur.addVoeuEtudiant(leVoeu);
+			soumetteur.addVoeuEtudiant((Voeu)leVoeu);
 			listeVoeux.add(leVoeu);
 			
 		}
@@ -150,6 +151,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 		}
 
 		return arrayVoeuxTemp.toArray(new Voeu[arrayVoeuxTemp.size()]);
+		//TODO A modifier avec la classe util
 	}
 
 
@@ -176,6 +178,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 		}
 
 		return arrayVoeuxTemp.toArray(new Voeu[arrayVoeuxTemp.size()]);
+		//TODO a modifier par la méthode de la classe utile
 	}
 
 
