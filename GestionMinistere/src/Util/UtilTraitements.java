@@ -24,7 +24,7 @@ public class UtilTraitements {
 	 * @param tab : tableau à tranformer
 	 * @return ArrayList d'Object
 	 */
-	public static ArrayList<?> ToTableau(Object[] tab){
+	public static ArrayList<?> ToArray(Object[] tab){
 		ArrayList<Object> array = new ArrayList<Object>();
 		for (int i = 0 ; i < tab.length ; i++){
 			array.add(tab[i]);
