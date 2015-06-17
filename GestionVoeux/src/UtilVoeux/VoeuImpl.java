@@ -8,7 +8,6 @@ import Etudes.Etudiant;
 import Etudes.Master;
 import Etudes.Proposition;
 import Etudes.Universite;
-import Etudes.Voeu;
 import Etudes.VoeuPOA;
 
 public class VoeuImpl extends VoeuPOA 
@@ -87,11 +86,11 @@ public class VoeuImpl extends VoeuPOA
 	@Override
 	public void reponseOUI() 
 	{
-		ArrayList<Voeu> listeVoeuTemp = new ArrayList<Voeu>();
+		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
 		this.etatVoeu("OUI");
-		listeVoeuTemp = (ArrayList<Voeu>) Arrays.asList(etudiantCorrespondant.listeVoeux());
+		listeVoeuTemp = (ArrayList<VoeuImpl>) Arrays.asList(etudiantCorrespondant.listeVoeux());
 		//TODO Remplacer la methode asList par la methode correspondant dans Util
-		for (Voeu v : listeVoeuTemp)
+		for (VoeuImpl v : listeVoeuTemp)
 		{
 			if (!v.equals(this))
 			{
@@ -133,7 +132,7 @@ public class VoeuImpl extends VoeuPOA
 	
 	public void refuserCandidature() 
 	{
-		// TODO Auto-generated method stub
+		this.etatVoeu("");
 		
 	}
 		

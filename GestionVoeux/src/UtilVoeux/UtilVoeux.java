@@ -1,6 +1,7 @@
 package UtilVoeux;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import Etudes.Etudiant;
 import Etudes.NombreMaxDeVoeuxAtteint;
@@ -9,11 +10,11 @@ import Etudes.Proposition;
 import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
+import Util.UtilTraitements;
 
 class UtilVoeux extends UtilVoeuxPOA{
 
 	private ArrayList<VoeuImpl> listeVoeux = new ArrayList<VoeuImpl>();
-	private VoeuImpl voeuCourant;
 
 	public UtilVoeux()  
 	{
@@ -62,8 +63,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 				listeMeilleurVoeu.add(v);
 			}
 		}
-		return listeMeilleurVoeu.toArray(new Voeu[listeMeilleurVoeu.size()]);
-		//TODO a changer par la methode de l'util
+		return (Voeu[]) UtilTraitements.ToTableau(listeMeilleurVoeu);
 	}
 	
 	/**
@@ -119,7 +119,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 		if (cpt <5) 
 		{
 			VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
-			soumetteur.addVoeuEtudiant((Voeu)leVoeu);
+			soumetteur.addVoeuEtudiant(leVoeu._this());
 			listeVoeux.add(leVoeu);
 			
 		}
@@ -144,14 +144,14 @@ class UtilVoeux extends UtilVoeuxPOA{
 		for (int i =0; i< listeVoeux.size();i++) 
 		{
 			if (listeVoeux.get(i).etudiantCorrespondant().equals(etudiant))
+				//TODO verifier que le point equals fonctionne
 			{
-				arrayVoeuxTemp.add((Voeu) listeVoeux.get(i));
+				arrayVoeuxTemp.add(listeVoeux.get(i)._this());
 			}
 
 		}
 
-		return arrayVoeuxTemp.toArray(new Voeu[arrayVoeuxTemp.size()]);
-		//TODO A modifier avec la classe util
+		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuxTemp);
 	}
 
 
@@ -177,8 +177,35 @@ class UtilVoeux extends UtilVoeuxPOA{
 
 		}
 
-		return arrayVoeuxTemp.toArray(new Voeu[arrayVoeuxTemp.size()]);
-		//TODO a modifier par la méthode de la classe utile
+		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuxTemp);
+	}
+
+	/**
+	 * Cette méthode permet de retourner un tableau de voeu concernant les universites d'un rectorat
+	 * Elle parcourt les universite d'un rectorat pour ensuite recuperer les voeux de chacune d'elles 
+	 * @param Rectorat rectoratConcerne : le rectorat en question
+	 * @return Voeu[] : le tableau des voeux concernant le rectorat
+	 * @author Memer
+	 */
+	@Override
+	public Voeu[] getVoeuxByRectorat(Rectorat rectoratConcerne) 
+	{
+		
+		ArrayList<Universite> arrayUniversiteTemp = new ArrayList<Universite>();
+		ArrayList<Voeu> arrayVoeuTemp = new ArrayList<Voeu>();
+		arrayUniversiteTemp = (ArrayList<Universite>) UtilTraitements.ToArray(rectoratConcerne.getListUniversites());
+		
+		
+		for ( int i = 0; i < arrayUniversiteTemp.size()-1; i++)
+		{
+			arrayVoeuTemp.addAll(arrayVoeuTemp.size(), (Collection<? extends Voeu>) UtilTraitements.ToArray(this.getVoeuxByUniversite(arrayUniversiteTemp.get(i))));
+			//Cette manipulation permet de transformer le tableau fourni par voeu en arraylist puis de la caster
+			//pour l'ajouter a la fin de l'arraylist
+			
+		}
+		
+		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuTemp);
+			
 	}
 
 

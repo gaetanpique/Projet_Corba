@@ -117,6 +117,7 @@ module Etudes
 		readonly attribute Proposition propositionCorrespondante;
 		readonly attribute Etudiant etudiantCorrespondant;
 		attribute short position;
+		attribute short classementEtudiant;
 		attribute string etatVoeu;
 		oneway void reponseOUI();
 		oneway void reponseOUIMAIS();
@@ -147,5 +148,6 @@ module Etudes
 		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur, in short position) raises (NombreMaxDeVoeuxAtteintException);
 		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
 		listVoeux getVoeuxByUniversite(in Universite _universite);
+		listVoeux getVoeuxByRectorat(in Rectorat rectoratConcerne);
 	};
 };
