@@ -48,7 +48,7 @@ module Etudes
 	{
 		readonly attribute Universite universiteSource;
 		readonly attribute Master masterPropose;
-		readonly attribute listLicences prerequis;
+		attribute listLicences prerequis;
 		void addPrerequis(in Licence l) raises(prerequisDejaExistantException);
 	};
 	

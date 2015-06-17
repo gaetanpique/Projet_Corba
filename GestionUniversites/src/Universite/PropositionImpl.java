@@ -1,15 +1,13 @@
 package Universite;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 
-import Etudes.EtudiantDejaInscritException;
-import Etudes.Formation;
+import Util.UtilTraitements;
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.Proposition;
 import Etudes.PropositionPOA;
-import Etudes.Resultat;
 import Etudes.Universite;
 import Etudes.prerequisDejaExistantException;
 
@@ -37,7 +35,7 @@ public class PropositionImpl extends PropositionPOA {
 	 * @author Baptiste
 	 */
 	public PropositionImpl(Licence[] p, Universite u, Master m){
-		prerequis = (ArrayList<Licence>) Arrays.asList(p);
+		prerequis = (ArrayList<Licence>) UtilTraitements.ToArray(p);
 		universiteSource = u;
 		masterProposé = m;
 	}
@@ -56,8 +54,13 @@ public class PropositionImpl extends PropositionPOA {
 	@Override
 	public Licence[] prerequis() {
 		return prerequis.toArray(new Licence[prerequis.size()]);
-}
+	}
 
+	@Override
+	public void prerequis(Licence[] value) {
+		prerequis.clear();
+		prerequis.addAll((Collection<? extends Licence>) UtilTraitements.ToArray(value));		
+	}
 
 	/**
 	 * Ajoute une licence à la liste des prérequis d'une proposition

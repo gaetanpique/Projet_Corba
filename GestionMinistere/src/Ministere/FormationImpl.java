@@ -23,6 +23,7 @@ import Etudes.FormationPOA;
 	 * @return true : intitulés identiques / false : intitulés différents
 	 * @author Baptiste
 	 */
+	@Override
 	public boolean _equals(Formation formation) {
 		return (this.intitule().equals(formation.intitule()));
 	}
