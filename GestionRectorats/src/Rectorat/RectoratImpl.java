@@ -1,23 +1,105 @@
 package Rectorat;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.Policy;
+import org.omg.CosNaming.NamingContext;
+import org.omg.PortableServer.LifespanPolicyValue;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
+
 import Etudes.Etudiant;
-import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
 import Etudes.Formation;
 import Etudes.Master;
+import Etudes.Ministere;
+import Etudes.MinistereHelper;
 import Etudes.Proposition;
 import Etudes.RectoratPOA;
 import Etudes.Universite;
 
-public class RectoratImpl extends RectoratPOA {
+class RectoratImpl extends RectoratPOA {
+	
+	private ORB orb;
 	
 	private ArrayList<Universite> universites = new ArrayList<Universite>();
 	
 	private HashMap<Universite, ArrayList<Formation>> accreditations = new HashMap<Universite, ArrayList<Formation>>();
 	
+	private String nom;
+	
+	private Ministere ministere;
+	
+	public static void main(String[] args) {
+		new RectoratImpl(args[0]);
+	}
+
+	public RectoratImpl(String nom)
+	{
+		super();
+		this.nom = nom;
+		// Intialisation de l'orb
+		this.orb = org.omg.CORBA.ORB.init(new String[0], null);
+
+		this.enregisterDansPOA();
+		this.referencerAupresDuMinistere();
+		
+		this.orb.run();
+	}
+	
+	private void referencerAupresDuMinistere() {
+		try {
+			// Recuperation du naming service
+			org.omg.CosNaming.NamingContext nameRoot = org.omg.CosNaming.NamingContextHelper
+					.narrow(orb.resolve_initial_references("NameService"));
+
+			// Construction du nom a rechercher
+			org.omg.CosNaming.NameComponent[] nameToFind = new org.omg.CosNaming.NameComponent[1];
+			nameToFind[0] = new org.omg.CosNaming.NameComponent("Ministere", "");
+
+			// Recherche aupres du naming service
+			org.omg.CORBA.Object distantMinistere = nameRoot.resolve(nameToFind);
+
+			// Casting de l'objet CORBA au type convertisseur euro
+			this.ministere = MinistereHelper.narrow(distantMinistere);
+			
+			this.ministere.referencer(this._this());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void enregisterDansPOA() {
+		try {
+			// Recuperation du POA
+			POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+
+			Policy[] rectoratPOAPolicies = { rootPOA.create_lifespan_policy(LifespanPolicyValue.PERSISTENT) };
+			POA rectoratPOA = rootPOA.create_POA("Rectorat_POA", rootPOA.the_POAManager(), rectoratPOAPolicies);
+			rectoratPOA.activate_object(this);
+
+			// Activer le POA manager
+			rectoratPOA.the_POAManager().activate();
+
+			 // Enregistrement dans le service de nommage
+			 // Recuperation du naming service 
+			 NamingContext nameRoot = org.omg.CosNaming.NamingContextHelper.narrow(orb.resolve_initial_references("NameService"));
+
+			 // Construction du nom a enregistrer
+			 org.omg.CosNaming.NameComponent[] nameToRegister = new  org.omg.CosNaming.NameComponent[1]; 
+			 nameToRegister[0] = new org.omg.CosNaming.NameComponent("Rectorat_" + this.nom,"");
+
+			 // Enregistrement de l'objet CORBA dans le service de noms
+			 nameRoot.rebind(nameToRegister,rectoratPOA.servant_to_reference(this));
+
+			 System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Rectorat_" + this.nom + " référencé et opérationnel.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Cette méthode recherche l'étudiant correspondant au numéro demandé
@@ -98,6 +180,18 @@ public class RectoratImpl extends RectoratPOA {
 			}
 		}
 	}
+	
+	@Override
+	public void referencer(Universite universiteConnecte) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dereferencer(Universite universiteDeconnecte) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	/**
 	 * Cette méthode retourne l'ensemble des universités qui dépendent de ce rectorat
@@ -147,4 +241,11 @@ public class RectoratImpl extends RectoratPOA {
 		
 		return resultat.toArray(new Proposition[resultat.size()]);
 	}
+
+	@Override
+	public String nom() {
+		return this.nom;
+	}
+
+	
 }

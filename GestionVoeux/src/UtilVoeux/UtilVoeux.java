@@ -6,7 +6,6 @@ import Etudes.Etudiant;
 import Etudes.NombreMaxDeVoeuxAtteint;
 import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
-import Etudes.Rectorat;
 import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;

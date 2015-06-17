@@ -3,13 +3,11 @@ package Universite;
 import java.util.ArrayList;
 
 import Etudes.Etudiant;
-import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
 import Etudes.Formation;
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.Proposition;
-import Etudes.PropositionDoesNotExist;
 import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
 import Etudes.Universite;

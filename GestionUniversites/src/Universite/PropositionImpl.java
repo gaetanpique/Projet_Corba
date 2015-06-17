@@ -55,7 +55,7 @@ public class PropositionImpl extends PropositionPOA {
 	public Licence[] prerequis() {
 		return prerequis.toArray(new Licence[prerequis.size()]);
 	}
-
+	
 	@Override
 	public void prerequis(Licence[] value) {
 		prerequis.clear();
@@ -80,6 +80,5 @@ public class PropositionImpl extends PropositionPOA {
 		}
 		
 	}
-
-	}
+}
 
