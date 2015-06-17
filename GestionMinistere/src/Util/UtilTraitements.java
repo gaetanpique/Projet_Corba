@@ -10,7 +10,7 @@ public class UtilTraitements {
 	 * @param array : ArrayList à tranformer
 	 * @return tableau d'Object
 	 */
-	public static Object[] ToTableau(ArrayList<Object> array){
+	public static Object[] ToTableau(ArrayList<?> array){
 		Object[] tab = new Object[array.size()];
 		for (int i = 0 ; i < array.size() ; i++){
 			tab[i] = array.get(i);
@@ -24,7 +24,7 @@ public class UtilTraitements {
 	 * @param tab : tableau à tranformer
 	 * @return ArrayList d'Object
 	 */
-	public static ArrayList<Object> ToTableau(Object[] tab){
+	public static ArrayList<?> ToTableau(Object[] tab){
 		ArrayList<Object> array = new ArrayList<Object>();
 		for (int i = 0 ; i < tab.length ; i++){
 			array.add(tab[i]);

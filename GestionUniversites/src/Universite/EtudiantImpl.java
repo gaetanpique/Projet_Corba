@@ -31,7 +31,7 @@ import Etudes.diplomesDifferentsException;
 
 	@Override
 	public Voeu[] listeVoeux() {
-		return listeVoeux.toArray(new Voeu[listeVoeux.size()]);
+		return (Voeu[]) Util.UtilTraitements.ToTableau(listeVoeux);
 	}
 	
 	@Override
