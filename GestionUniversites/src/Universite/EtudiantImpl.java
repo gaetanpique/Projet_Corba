@@ -1,18 +1,17 @@
 package Universite;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import Util.UtilTraitements;
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
-import Etudes.Formation;
 import Etudes.Licence;
-import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
 import Etudes.Resultat;
 import Etudes.Universite;
 import Etudes.Voeu;
-import Etudes.diplomesDifferents;
 import Etudes.diplomesDifferentsException;
 
  class EtudiantImpl extends EtudiantPOA {
@@ -117,25 +116,6 @@ import Etudes.diplomesDifferentsException;
 		ResultatImpl res = (ResultatImpl) this.resultats();
 		return res.position();
 	}
-
-	/**
-	 * Cette méthode ajoute un voeu à la liste de l'étudiant
-	 * prérequis : la liste ne doit pas contenir plus de 4 voeux (limite de voeux à 5)
-	 * 
-	 * @exception : NombreMaxDeVoeuxAtteintException
-	 * @author Baptiste
-	 */
-	@Override
-	public void addVoeuEtudiant(Voeu v) throws NombreMaxDeVoeuxAtteintException {
-		if (listeVoeux.size() == 5)
-		{
-			throw new NombreMaxDeVoeuxAtteintException();
-		}
-		else
-		{
-			listeVoeux.add(v);
-		}
-	}
 	
 	/**
 	 * Cette méthode vérifie si un étudiant a la Licence entrée en paramètre
@@ -148,4 +128,9 @@ import Etudes.diplomesDifferentsException;
 		return (res1.getLicence()._equals(l));
 	}
 
+	@Override
+	public void listeVoeux(Voeu[] value) {
+		listeVoeux.clear();
+		listeVoeux.addAll((Collection<? extends Voeu>) UtilTraitements.ToArray(value));	
+	}
 }

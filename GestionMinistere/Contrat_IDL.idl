@@ -133,11 +133,10 @@ module Etudes
 	interface Etudiant
 	{
 		attribute Resultat resultats;
-		readonly attribute listVoeux listeVoeux;
+		attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		short getPositionEtudiant();
 		Universite getUniversite();
-		void addVoeuEtudiant(in Voeu v) raises (NombreMaxDeVoeuxAtteintException);
 		
 		
 	};
