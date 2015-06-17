@@ -181,22 +181,24 @@ public class UniversiteImpl extends UniversitePOA {
 	/**
 	 * Effectue une proposition de formation 
 	 * 
-	 * @param formation Master Le master de la proposition
+	 * @param proposition Proposition Le master de la proposition
 	 * @param nouveauxPrerequis Licence[] La nouvelle liste de prérequis 
 	 * @author Thibaut
 	 */
 	@Override
-	public void majPrerequis(Proposition p, Licence[] nouveauxPrerequis)
+	public void majPrerequis(Proposition proposition, Licence[] nouveauxPrerequis)
 			throws PropositionDoesNotExistException {
 		// TODO Auto-generated method stub
-		PropositionImpl proposition = (PropositionImpl) this.getPropositionByFormation(p.masterPropose());
-		if (proposition == null)
+		// test si la formation existe deja
+		PropositionImpl p = (PropositionImpl) proposition;
+		
+		if (p == null)
 		{
-			throw new PropositionDoesNotExistException(proposition.masterPropose());
+			throw new PropositionDoesNotExistException(p.masterPropose());
 		}
 		else
 		{
-			//proposition.addPrerequis(nouveauxPrerequis);
+			p.prerequis(nouveauxPrerequis);
 		}
 		
 	}
