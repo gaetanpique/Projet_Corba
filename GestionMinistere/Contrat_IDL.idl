@@ -54,8 +54,10 @@ module Etudes
 	
 	interface Etudiant;
 	typedef sequence<Etudiant> listEtudiant;
+	typedef sequence<Proposition> listPropositions;
 	interface Universite
 	{
+		attribute listPropositions listeDesPropositions;
 		listEtudiant getEtudiants();
 		Etudiant getEtudiantByNumero(in string numEtudiant);
 		void inscrire(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException);
@@ -69,7 +71,6 @@ module Etudes
 	};
 	
 	typedef sequence<Universite> listUniversites;
-	typedef sequence<Proposition> listPropositions;
 	interface Rectorat
 	{
 		readonly attribute string nom;
@@ -149,5 +150,7 @@ module Etudes
 		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
 		listVoeux getVoeuxByUniversite(in Universite _universite);
 		listVoeux getVoeuxByRectorat(in Rectorat rectoratConcerne);
+		oneway void classerVoeuxParProposition(in Proposition p);
+		oneway void classerVoeuxParUniversite(in Universite u);
 	};
 };

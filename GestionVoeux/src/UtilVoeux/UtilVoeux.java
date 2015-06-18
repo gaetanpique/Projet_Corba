@@ -1,12 +1,16 @@
 package UtilVoeux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import Etudes.Etudiant;
 import Etudes.NombreMaxDeVoeuxAtteint;
 import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
+import Etudes.Rectorat;
 import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
@@ -38,7 +42,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
 		ArrayList<VoeuImpl> listeMeilleurVoeu = new ArrayList<VoeuImpl>();
 		boolean meilleurVoeuTrouve = false;
-		
+
 		for (VoeuImpl v : listeVoeux)
 		{
 
@@ -48,16 +52,16 @@ class UtilVoeux extends UtilVoeuxPOA{
 			}
 
 		}
-		
+
 		listeVoeuTemp = getListeVoeuxOrdonnee(listeVoeuTemp);
 		for (VoeuImpl v : listeVoeuTemp)
 		{
 
 			if (v.etatVoeu().equals("Accepte"))
-				{
-					meilleurVoeuTrouve = true;
-					listeMeilleurVoeu.add(v);
-				}
+			{
+				meilleurVoeuTrouve = true;
+				listeMeilleurVoeu.add(v);
+			}
 			else if (!meilleurVoeuTrouve);
 			{
 				listeMeilleurVoeu.add(v);
@@ -65,7 +69,7 @@ class UtilVoeux extends UtilVoeuxPOA{
 		}
 		return (Voeu[]) UtilTraitements.ToTableau(listeMeilleurVoeu);
 	}
-	
+
 	/**
 	 * Cette methode trie une arraylist de Voeux par leur position
 	 * @param listeAOrdonner (assez explicite non ?)
@@ -76,25 +80,25 @@ class UtilVoeux extends UtilVoeuxPOA{
 	{
 		VoeuImpl voeuTemp;
 		boolean permut;
-		 
-		    do
-		    {
-		        // hypothèse : le tableau est trié
-		        permut=false;
-		        for (int i =0;i<listeAOrdonner.size()-1;i++)
-		        {
-		            // Teste si 2 éléments successifs sont dans le bon ordre ou non
-		            if (listeAOrdonner.get(i).position()> listeAOrdonner.get(i+1).position())
-		            {
-		            	voeuTemp=listeAOrdonner.get(i);
-		            	listeAOrdonner.set(i, listeAOrdonner.get(i+1));
-		            	listeAOrdonner.set(i+1, voeuTemp);
-		                permut=true;
-		            }
-		        }
-		    }
-		    while(permut);
-		 return listeAOrdonner;
+
+		do
+		{
+			// hypothèse : le tableau est trié
+			permut=false;
+			for (int i =0;i<listeAOrdonner.size()-1;i++)
+			{
+				// Teste si 2 éléments successifs sont dans le bon ordre ou non
+				if (listeAOrdonner.get(i).position()> listeAOrdonner.get(i+1).position())
+				{
+					voeuTemp=listeAOrdonner.get(i);
+					listeAOrdonner.set(i, listeAOrdonner.get(i+1));
+					listeAOrdonner.set(i+1, voeuTemp);
+					permut=true;
+				}
+			}
+		}
+		while(permut);
+		return listeAOrdonner;
 	}
 
 	/**
@@ -111,22 +115,25 @@ class UtilVoeux extends UtilVoeuxPOA{
 	{
 		Integer cpt=0;
 
-  	for (VoeuImpl v : listeVoeux)
+		for (VoeuImpl v : listeVoeux)
 		{
-			if (v.etudiantCorrespondant().equals(soumetteur)) {cpt++;};
-		}
+			{
 
-		if (cpt <5) 
-		{
-			VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
-			soumetteur.addVoeuEtudiant(leVoeu._this());
-			listeVoeux.add(leVoeu);
-			
+				if (v.etudiantCorrespondant().equals(soumetteur)) {cpt++;};
+			}
+
+			if (cpt <5) 
+			{
+				VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
+				listeVoeux.add(leVoeu);
+
+			}
+			else
+			{
+				throw new NombreMaxDeVoeuxAtteintException();
+			}
 		}
-		else
-		{
-			throw new NombreMaxDeVoeuxAtteintException();
-		}
+		soumetteur.listeVoeux((Voeu[]) UtilTraitements.ToTableau(listeVoeux));
 	}
 
 	/**
@@ -167,14 +174,16 @@ class UtilVoeux extends UtilVoeuxPOA{
 	public Voeu[] getVoeuxByUniversite(Universite _universite) 
 	{
 		ArrayList<Voeu> arrayVoeuxTemp = new ArrayList<Voeu>();
+		ArrayList<Proposition> arrayPropositionTemp = new ArrayList<Proposition>();
 
-		for (int i =0; i< listeVoeux.size();i++) 
+		arrayPropositionTemp = (ArrayList<Proposition>) UtilTraitements.ToArray(_universite.listeDesPropositions());
+
+		for (Voeu v : arrayVoeuxTemp)
 		{
-			if (listeVoeux.get(i).propositionCorrespondante().universiteSource().equals(_universite))
+			if (arrayPropositionTemp.contains(v.propositionCorrespondante()))
 			{
-				arrayVoeuxTemp.add((Voeu) listeVoeux.get(i));
+				arrayVoeuxTemp.add(v);
 			}
-
 		}
 
 		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuxTemp);
@@ -190,25 +199,66 @@ class UtilVoeux extends UtilVoeuxPOA{
 	@Override
 	public Voeu[] getVoeuxByRectorat(Rectorat rectoratConcerne) 
 	{
-		
+
 		ArrayList<Universite> arrayUniversiteTemp = new ArrayList<Universite>();
 		ArrayList<Voeu> arrayVoeuTemp = new ArrayList<Voeu>();
 		arrayUniversiteTemp = (ArrayList<Universite>) UtilTraitements.ToArray(rectoratConcerne.getListUniversites());
-		
-		
+
+
 		for ( int i = 0; i < arrayUniversiteTemp.size()-1; i++)
 		{
 			arrayVoeuTemp.addAll(arrayVoeuTemp.size(), (Collection<? extends Voeu>) UtilTraitements.ToArray(this.getVoeuxByUniversite(arrayUniversiteTemp.get(i))));
 			//Cette manipulation permet de transformer le tableau fourni par voeu en arraylist puis de la caster
 			//pour l'ajouter a la fin de l'arraylist
-			
+
 		}
-		
+
 		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuTemp);
-			
+
 	}
 
+	/**
+	 * Cette méthode permet de classer tous les voeux associés à une proposition particulière
+	 * @param Proposition p : La proposition en question
+	 * @return void
+	 * @author Memer
+	 */
+	@Override
+	public void classerVoeuxParProposition(Proposition p)
+	{
+		ArrayList<VoeuImpl> arrayVoeuTemp = new ArrayList<VoeuImpl>();
+		for(VoeuImpl v : listeVoeux)
+		{
+			if (v.propositionCorrespondante().equals(p))
+			{
+				//Les voeux implémentent Comparable ce qui permet d'utiliser
+				//la méthode sort de la classe ArrayList
+				arrayVoeuTemp.sort(null);
+			}
+		}
+		//Parcours de l'arrayList triée pour donner le classement du voeu égale à son index+1
+		for (short i = 0; i < arrayVoeuTemp.size()-1;i++)
+		{
+			arrayVoeuTemp.get(i).classementEtudiant((short) (i+1));
 
+		}
+
+	}
+
+	/**
+	 * Cette méthode permet de classer tous les voeux associés à une université particulière
+	 * @param Universite u : L'universite en question
+	 * @return void
+	 * @author Memer
+	 */
+	@Override
+	public void classerVoeuxParUniversite(Universite u)
+	{
+		for(Proposition p : u.listeDesPropositions())
+		{
+			classerVoeuxParProposition(p);
+		}
+	}
 
 
 }

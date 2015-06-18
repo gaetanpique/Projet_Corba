@@ -71,10 +71,11 @@ import Etudes.diplomesDifferentsException;
 		{
 			throw new diplomesDifferentsException();
 		}
-		else
+		else if (res1.moyenne() == res2.moyenne())
 		{
-			return (res1.moyenne() > res2.moyenne());
+			return (res1.position() > res2.position());
 		}
+		else return (res1.moyenne() > res2.moyenne());
 	}
 	
 	/**

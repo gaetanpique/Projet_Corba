@@ -2,6 +2,7 @@ package Universite;
 
 import java.util.ArrayList;
 
+import Util.UtilTraitements;
 import Etudes.Etudiant;
 import Etudes.EtudiantInconnuException;
 import Etudes.Formation;
@@ -23,8 +24,21 @@ public class UniversiteImpl extends UniversitePOA {
 	
 	private ArrayList<EtudiantImpl> etudiants;
 	
-	private ArrayList<Proposition> mastersProposes; 
+	private ArrayList<Proposition> listeDesPropositions; 
 
+
+	@Override
+	public Proposition[] listeDesPropositions() {
+		// TODO Auto-generated method stub
+		return (Proposition[]) UtilTraitements.ToTableau(listeDesPropositions);
+	}
+
+	@Override
+	public void listeDesPropositions(Proposition[] value) {
+		// TODO Auto-generated method stub
+		this.listeDesPropositions = (ArrayList<Proposition>) UtilTraitements.ToArray(value);
+	}
+	
 	/**
 	 * Cette méthode retourne la liste des étudiants qui ont étudié au sein de cette université
 	 * 
@@ -116,7 +130,7 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public Proposition getPropositionByFormation(Master formation){
-		for (Proposition p : this.mastersProposes)
+		for (Proposition p : this.listeDesPropositions)
 		{
 			if (p.masterPropose() == formation)
 			{
@@ -237,7 +251,4 @@ public class UniversiteImpl extends UniversitePOA {
 				// TODO Recupérer la position 
 				return 0;
 	}
-
-
-
 }
