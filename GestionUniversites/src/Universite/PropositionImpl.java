@@ -1,32 +1,41 @@
 package Universite;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
-import Util.UtilTraitements;
+import org.omg.CORBA.ORB;
+
 import Etudes.Licence;
 import Etudes.Master;
+import Etudes.MasterHelper;
 import Etudes.Proposition;
 import Etudes.PropositionPOA;
-import Etudes.Universite;
 import Etudes.prerequisDejaExistantException;
+import Util.UtilConnexion;
+import Util.UtilTraitements;
 
-public class PropositionImpl extends PropositionPOA {
+class PropositionImpl extends PropositionPOA {
 	
 	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
-	private Universite universiteSource;
-	private Master masterProposé;
-
+	private Master masterPropose;
 
 	/**
 	 * Constructeur de Proposition avec une ArrayList<Licence> pour les prérequis
 	 * 
 	 * @author Baptiste
 	 */
-	public PropositionImpl(ArrayList<Licence> p, Universite u, Master m){
+	public PropositionImpl(ArrayList<Licence> p, String nomUniversite, String intituleMaster){
 		prerequis = p;
-		universiteSource = u;
-		masterProposé = m;
+		
+		// Intialisation de l'orb
+		ORB orb = UtilConnexion.connexionAuNammingService(this, "Proposition_" + nomUniversite + "_" + intituleMaster);
+				
+		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Master_" + intituleMaster);
+		this.masterPropose = MasterHelper.narrow(result);
+		
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + nomUniversite + "_" + intituleMaster + " référencé et opérationnel.");
+		orb.run();
 	}
 	
 	/**
@@ -34,21 +43,13 @@ public class PropositionImpl extends PropositionPOA {
 	 * 
 	 * @author Baptiste
 	 */
-	public PropositionImpl(Licence[] p, Universite u, Master m){
-		prerequis = (ArrayList<Licence>) UtilTraitements.ToArray(p);
-		universiteSource = u;
-		masterProposé = m;
-	}
-	
-	
-	@Override
-	public Universite universiteSource() {
-		return universiteSource;
+	public PropositionImpl(Licence[] p, String nomUniversite, String intituleMaster){
+		this((ArrayList<Licence>) UtilTraitements.ToArray(p), nomUniversite, intituleMaster);
 	}
 
 	@Override
 	public Master masterPropose() {
-		return masterProposé;
+		return masterPropose;
 	}
 	
 	@Override

@@ -1,20 +1,25 @@
 package Universite;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import org.omg.CORBA.ORB;
 
 import Util.UtilTraitements;
 import Etudes.Etudiant;
+import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
-import Etudes.Formation;
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.Proposition;
+import Etudes.PropositionDoesNotExist;
 import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
+import Etudes.RectoratHelper;
 import Etudes.Universite;
 import Etudes.UniversitePOA;
-import Etudes.diplomesDifferents;
 import Etudes.pasDiplomeException;
+import Util.UtilConnexion;
 
 public class UniversiteImpl extends UniversitePOA {
 	
@@ -25,6 +30,31 @@ public class UniversiteImpl extends UniversitePOA {
 	private ArrayList<EtudiantImpl> etudiants;
 	
 	private ArrayList<Proposition> listeDesPropositions; 
+	
+	public static void main(String[] args) {
+		new UniversiteImpl(args[0], args[1]);
+		
+		//new EtudiantImpl("012345", new ResultatImpl(), creee);
+	}
+	
+	public UniversiteImpl(String _nomUniversite, String _nomRectoratReference)
+	{
+		super();
+		this.nom = _nomUniversite;
+		this.etudiants = new ArrayList<EtudiantImpl>();
+		this.listeDesPropositions = new ArrayList<Proposition>();
+		
+		// Intialisation de l'orb
+		ORB orb = UtilConnexion.connexionAuNammingService(this, "Universite_" + this.nom);
+		
+		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Rectorat_" + _nomRectoratReference);
+		this.rectoratDappartenance = RectoratHelper.narrow(result);
+		
+		this.rectoratDappartenance.referencer(this._this());
+		
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Universite_" + this.nom + " référencé et opérationnel.");
+		orb.run();
+	}
 
 
 	@Override
@@ -59,6 +89,8 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public Etudiant getEtudiantByNumero(String numEtudiant) {
+		System.out.println("Universite_" + this.nom + ".getEtudiantByNumero(" + numEtudiant + ")");
+		
 		Etudiant result = null;
 		
 		for (EtudiantImpl e : this.etudiants)
@@ -174,21 +206,21 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Thibaut
 	 */
 	@Override
-	public void creerProposition(Master nouvelleFormation, Licence[] prerequis, Universite universite) {
-		// TODO Auto-generated method stub
-		// crée un nouvelle proposition de formation 
-		PropositionImpl proposition = new PropositionImpl(prerequis, universite, nouvelleFormation);
+	public void creerProposition(String intituleMaster, Licence[] prerequis) {
 		
-		/*
 		// test si la formation existe deja
-		for (Proposition p : this.mastersProposes)
+		for (Proposition p : this.listeDesPropositions)
 		{
-			if (p.masterPropose() == nouvelleFormation)
+			if (p.masterPropose().intitule().equals(intituleMaster))
 			{
-				throw new formationDejaExistantException();
+				throw new formationDejaProposeException();
+			}
+			else
+			{
+				// crée un nouvelle proposition de formation 
+				this.listeDesPropositions.add(new PropositionImpl(prerequis, this.nom, intituleMaster));
 			}
 		}	
-		*/
 	}
 	
 	
@@ -246,9 +278,13 @@ public class UniversiteImpl extends UniversitePOA {
 	@Override
 	public short getPositionEtudiant(Etudiant sujet, Licence formation)
 			throws pasDiplomeException {
-		// TODO Auto-generated method stub
 				EtudiantImpl etudiantPosition = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) sujet));
 				// TODO Recupérer la position 
 				return 0;
+	}
+
+	public void referencer(EtudiantImpl etudiantAAjouter) {
+		this.etudiants.add(etudiantAAjouter);
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Universite_ " + this.nom + ".referencer(EtudiantImpl) :");
 	}
 }

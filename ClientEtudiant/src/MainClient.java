@@ -32,12 +32,15 @@ public class MainClient {
 		
 		System.out.println("Choisi : " + choisi.nom());
 		
+		choisi.getEtudiantByNumero(numEtudiantSaisi);
+		
+		/*
 		try {
 			choisi.demanderConnexion(choisi.getEtudiantByNumero(this.numEtudiantSaisi), this.motDePasseSaisi);
 			System.out.println("Connexion réussie");
 		} catch (EtudiantInconnuException e) {
 			System.out.println("ERREUR : L'étudiant numéro " + e.numEtudiantInconnu + " n'est pas connu du rectorat " + e.nomUniversite + ".");
-		}
+		}*/
 	}
 	
 	public void seConnecter()

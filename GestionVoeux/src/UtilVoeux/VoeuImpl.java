@@ -2,16 +2,19 @@ package UtilVoeux;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
+import java.util.Calendar;
+
+import org.omg.CORBA.ORB;
 
 import Util.UtilTraitements;
 import Etudes.Etudiant;
-import Etudes.Master;
+import Etudes.EtudiantHelper;
+import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
-import Etudes.Universite;
 import Etudes.Voeu;
 import Etudes.VoeuPOA;
 import Etudes.diplomesDifferentsException;
+import Util.UtilConnexion;
  
 public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 {
@@ -21,17 +24,30 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	private short position;
 	private String etatVoeu;
 	
-	public VoeuImpl() 
+	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu) 
 	{
-		// TODO Auto-generated constructor stub
-	}	
+		this(p, numEtudiant, positionVoeu, "initial");
+	}
 	
-	
-	public VoeuImpl(Proposition aSoumettre, Etudiant soumetteur, short positionVoeu) 
+	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, String etatVoeu) 
 	{
-		this.propositionCorrespondante = aSoumettre;
-		this.etudiantCorrespondant = soumetteur;
-		this.position = positionVoeu;
+		try {
+			this.propositionCorrespondante = p;
+			this.position = positionVoeu;
+			this.etatVoeu = etatVoeu;
+
+			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Etu_" + numEtudiant);
+			this.etudiantCorrespondant = EtudiantHelper.narrow(result);
+
+			ORB orb = UtilConnexion.connexionAuNammingService(this, "Voeu_"	+ numEtudiant + "_" + p.masterPropose().intitule());
+
+			this.etudiantCorrespondant.addVoeuEtudiant(this._this());
+
+			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Voeu_" + numEtudiant + "_"	+ p.masterPropose().intitule() + " référencé et opérationnel.");
+			orb.run();
+		} catch (NombreMaxDeVoeuxAtteintException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

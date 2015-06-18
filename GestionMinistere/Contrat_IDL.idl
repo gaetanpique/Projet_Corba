@@ -46,7 +46,6 @@ module Etudes
 	interface Universite;
 	interface Proposition
 	{
-		readonly attribute Universite universiteSource;
 		readonly attribute Master masterPropose;
 		attribute listLicences prerequis;
 		void addPrerequis(in Licence l) raises(prerequisDejaExistantException);
@@ -64,7 +63,7 @@ module Etudes
 		void connecter(in Etudiant numEtudiant, in string motDePasse) raises (EtudiantInconnuException);
 		Proposition getPropositionByFormation(in Master _formation);
 		listLicences getPrerequis(in Proposition p) raises (PropositionDoesNotExistException);
-		oneway void creerProposition(in Master m, in listLicences _prerequis, in Universite universite);
+		oneway void creerProposition(in string intituleMaster, in listLicences _prerequis);
 		oneway void majPrerequis(in Proposition p, in listLicences _nouveauxPrerequis) raises (PropositionDoesNotExistException);
 		short getPositionEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
 		boolean checkLicenceEtudiant(in Etudiant e, in Licence l);

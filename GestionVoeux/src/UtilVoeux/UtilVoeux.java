@@ -5,7 +5,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Calendar;
 
+import org.omg.CORBA.ORB;
+
+import Util.UtilConnexion;
 import Etudes.Etudiant;
 import Etudes.NombreMaxDeVoeuxAtteint;
 import Etudes.NombreMaxDeVoeuxAtteintException;
@@ -16,13 +20,18 @@ import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
 import Util.UtilTraitements;
 
-class UtilVoeux extends UtilVoeuxPOA{
+class UtilVoeux extends UtilVoeuxPOA {
 
 	private ArrayList<VoeuImpl> listeVoeux = new ArrayList<VoeuImpl>();
 
 	public UtilVoeux()  
 	{
-		// TODO Auto-generated constructor stub
+		ORB orb = UtilConnexion.connexionAuNammingService(this, "UtilVoeux");
+		 
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant UtilVoeux référencé et opérationnel.");
+			 
+		// Lancement de l'ORB et mise en attente de requete
+		orb.run();
 	}
 
 
@@ -117,14 +126,12 @@ class UtilVoeux extends UtilVoeuxPOA{
 
 		for (VoeuImpl v : listeVoeux)
 		{
-			{
-
-				if (v.etudiantCorrespondant().equals(soumetteur)) {cpt++;};
-			}
+			if (v.etudiantCorrespondant().equals(soumetteur)) {cpt++;};
 
 			if (cpt <5) 
 			{
 				VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
+				soumetteur.addVoeuEtudiant((Voeu) leVoeu);
 				listeVoeux.add(leVoeu);
 
 			}

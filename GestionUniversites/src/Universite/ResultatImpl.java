@@ -1,11 +1,13 @@
 package Universite;
-import java.util.ArrayList;
+import java.util.Calendar;
 
-import Etudes.EtudiantDejaInscritException;
-import Etudes.Formation;
+import org.omg.CORBA.ORB;
+
 import Etudes.Licence;
+import Etudes.LicenceHelper;
 import Etudes.Proposition;
 import Etudes.ResultatPOA;
+import Util.UtilConnexion;
 
 
  class ResultatImpl extends ResultatPOA {
@@ -15,11 +17,18 @@ import Etudes.ResultatPOA;
 	private String codeObtention;
 	private short position;
 	
-	public ResultatImpl(Licence l, float m, String c, short p){
-		licence = l;
+	public ResultatImpl(String intituleLicence, float m, String c, short p, String numEtudiant){
 		moyenne = m;
 		codeObtention = c;
 		position = p;
+		
+		ORB orb = UtilConnexion.connexionAuNammingService(this, "Result_" + numEtudiant);
+		
+		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Licence_" + intituleLicence);
+		this.licence = LicenceHelper.narrow(result);
+		
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Result_" + numEtudiant + " référencé et opérationnel.");
+		orb.run();
 	}
 	
 	public Licence getLicence() {

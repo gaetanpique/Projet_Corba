@@ -2,8 +2,12 @@ package Universite;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Calendar;
 
 import Util.UtilTraitements;
+import org.omg.CORBA.ORB;
+
+import Util.UtilConnexion;
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
@@ -18,14 +22,27 @@ import Etudes.diplomesDifferentsException;
 	
 	private String numero;	
 	private String motDePasse;
-	private Resultat resultats;
-	private Universite universite;
+	private ResultatImpl resultats;
+	private UniversiteImpl universite;
 	private ArrayList<Voeu> listeVoeux;
 	
-	public EtudiantImpl (String numE, Resultat resE, Universite univE){
+	public EtudiantImpl (String numE, ResultatImpl resE, UniversiteImpl univE){
+		this(numE, resE, univE, null);
+	}
+	
+	public EtudiantImpl (String numE, ResultatImpl resE, UniversiteImpl univE, String motDePasse){
 		this.numero = numE;
 		this.resultats = resE;
 		this.universite = univE;
+		this.motDePasse = motDePasse;
+		this.listeVoeux = new ArrayList<Voeu>();
+		
+		ORB orb = UtilConnexion.connexionAuNammingService(this, "Etu_" + this.numero);
+		
+		this.universite.referencer(this);
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
+		
+		orb.run();
 	}
 
 	@Override
@@ -35,18 +52,12 @@ import Etudes.diplomesDifferentsException;
 	
 	@Override
 	public Resultat resultats() {
-		return resultats;
+		return resultats._this();
 	}
-
-	@Override
-	public void resultats(Resultat value) {
-		resultats = value;
-	}
-	
 
 	@Override
 	public Universite getUniversite() {
-		return universite;
+		return universite._this();
 	}
 	
 	public String getNumero()
