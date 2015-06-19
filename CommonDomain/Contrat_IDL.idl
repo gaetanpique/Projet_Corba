@@ -138,6 +138,7 @@ module Etudes
 	interface Etudiant
 	{
 		attribute Resultat resultats;
+		attribute string motDePasse;
 		attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		short getPositionEtudiant();
