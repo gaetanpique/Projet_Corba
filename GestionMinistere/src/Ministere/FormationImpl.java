@@ -38,7 +38,5 @@ import Etudes.FormationPOA;
 	@Override
 	public boolean _equals(Formation formation) {
 		return (this.intitule().equals(formation.intitule()));
-	}
-
-	
+	}	
 }

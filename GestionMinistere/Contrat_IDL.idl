@@ -116,13 +116,14 @@ module Etudes
 		readonly attribute short position;
 	};
 	
+	enum EtatVoeu {initial,nonValide,valide,cloture,OUI,NON,OUIMAIS,NONMAIS};
 	interface Voeu
 	{
+		attribute EtatVoeu etatVoeu;
 		readonly attribute Proposition propositionCorrespondante;
 		readonly attribute Etudiant etudiantCorrespondant;
 		attribute short position;
 		attribute short classementEtudiant;
-		attribute string etatVoeu;
 		oneway void reponseOUI();
 		oneway void reponseOUIMAIS();
 		oneway void reponseNONMAIS();
