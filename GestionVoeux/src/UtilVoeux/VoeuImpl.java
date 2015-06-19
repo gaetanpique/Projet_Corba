@@ -7,7 +7,6 @@ import java.util.Calendar;
 import org.omg.CORBA.ORB;
 
 import Util.UtilTraitements;
-import Etudes.EtatVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantHelper;
 import Etudes.NombreMaxDeVoeuxAtteintException;
@@ -24,9 +23,8 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	private short classementEtudiant;
 	private short position;
 	private Etudes.EtatVoeu etatVoeu;
-
-	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu)
-
+	
+	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu) 
 	{
 		this(p, numEtudiant, positionVoeu, EtatVoeu.initial);
 	}
@@ -55,6 +53,21 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 	
+
+	@Override
+	public String etatVoeu() 
+	{
+		return this.etatVoeu();
+	}
+
+
+	@Override
+	public void etatVoeu(String value) 
+	{
+		this.etatVoeu = value;
+		
+	}
+
 	@Override
 	public short position() 
 	{
@@ -86,9 +99,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 
 	
 	//---------------------------------METHODS-------------------------------//
-	//Pour la réponse de l'étudiant, on effectue un traitement que lors de la réponse de l'étudiant, 
-	//sinon le voeu reste à "valide" et c'est lors de l'affichage que l'on determinera si l'étudiant est en attente
-	//ou non, en comparant le classement de l'étudiant et le nombre de places dans la proposition
 	
 	/**
 	 * Methode declenchee lors de la réponse de l'etudiant
@@ -97,73 +107,61 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	public void reponseOUI() 
 	{
 		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		this.etatVoeu = EtatVoeu.OUI;
+		this.etatVoeu("OUI");
 		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
+		//TODO Remplacer la methode asList par la methode correspondant dans Util
 		for (VoeuImpl v : listeVoeuTemp)
 		{
 			if (!v.equals(this))
 			{
-				//Tous les autres voeux passent à NON car on a un "OUI" définitif
-				v.etatVoeu = EtatVoeu.NON;
-				
+				v.reponseNON();
 			}
 		}
 	}
-	
+
+
+	/**
+	 * Methode declenchee lors de la réponse de l'etudiant
+	 */
 	@Override
-	public void reponseOUIMAIS() {
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		this.etatVoeu = EtatVoeu.OUIMAIS;
-		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
-		for (VoeuImpl v : listeVoeuTemp)
-		{
-			if (v.position> this.position)
-			{
-				//Les voeux moins biens classés passent à non (utile car on peut avoir plusieurs réponses positivesà un voeu)
-				v.etatVoeu = EtatVoeu.NON;
-			}
-		}
-		
+	public void reponseOUIMAIS() 
+	{
+		this.etatVoeu("OUI MAIS");
+		//TODO les voeux en dessous passent a "non"
 	}
 
 
+	/**
+	 * Methode declenchee lors de la réponse de l'etudiant
+	 */
 	@Override
-	public void reponseNONMAIS() {
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		this.etatVoeu = EtatVoeu.NONMAIS;
-		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
-		for (VoeuImpl v : listeVoeuTemp)
-		{
-			if (v.position> this.position)
-			{
-				//Les voeux moins biens classés passent à non (utile car on peut avoir plusieurs réponses positivesà un voeu)
-				v.etatVoeu = EtatVoeu.NON;
-			}
-			
-		}
-		
-		
+	public void reponseNONMAIS() 
+	{
+		this.etatVoeu("NON MAIS");
 	}
 
 
+	/**
+	 * Methode declenchee lors de la réponse de l'etudiant
+	 */
 	@Override
 	public void reponseNON() 
 	{
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		this.etatVoeu = EtatVoeu.NON;
-		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
-		for (VoeuImpl v : listeVoeuTemp)
-		{
-			if (!(v.equals(this)))
-			{
-				//Les voeux moins biens classés passent à non (utile car on peut avoir plusieurs réponses positivesà un voeu)
-				v.etatVoeu = EtatVoeu.NON;
-			}
-			
-		}
-		
+		this.etatVoeu("NON");
 	}
 	
+	public void refuserCandidature() 
+	{
+		this.etatVoeu("PREREQUIS NOK");
+		
+	}
+		
+	@Override
+	public void accepterCandidature() 
+	{
+		this.etatVoeu("PREREQUIS");
+		
+	}		
 
 	@Override
 	public short classementEtudiant() {
@@ -204,6 +202,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 			e.printStackTrace();
 		}
 		return rep;
+<<<<<<< master
 	}
 
 	@Override
@@ -235,6 +234,8 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	{
 		this.etatVoeu(EtatVoeu.nonValide);
 		
+=======
+>>>>>>> 083e4d4 FInition UtilVOeux
 	}
 
 	
