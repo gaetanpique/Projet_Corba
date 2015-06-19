@@ -1,0 +1,155 @@
+module Etudes
+{
+	interface Formation
+	{
+		readonly attribute string intitule;
+		boolean equals(in Formation f);
+	};
+	typedef sequence<Formation> listFormations;
+	
+	interface Licence : Formation
+	{};
+	
+	typedef sequence<Licence> listLicences;
+	interface Master : Formation
+	{
+	};
+
+	exception pasDiplomeException 
+	{
+		string nomEtudiant;
+		string nomDiplome;
+	};
+	
+	interface Proposition;
+	
+	exception prerequisDejaExistantException
+	{
+		Proposition proposition;
+	};
+	
+	exception PropositionDoesNotExistException
+	{
+		Formation nonProposee;
+	};
+	
+	exception EtudiantInconnuException
+	{
+		string numEtudiantInconnu;
+		string nomUniversite;
+	};
+	
+	exception NombreMaxDeVoeuxAtteintException
+	{};
+
+	interface Resultat;
+	interface Universite;
+	interface Proposition
+	{
+		readonly attribute Master masterPropose;
+		attribute listLicences prerequis;
+		void addPrerequis(in Licence l) raises(prerequisDejaExistantException);
+	};
+	
+	interface Etudiant;
+	typedef sequence<Etudiant> listEtudiant;
+	typedef sequence<Proposition> listPropositions;
+	interface Universite
+	{
+		attribute listPropositions listeDesPropositions;
+		listEtudiant getEtudiants();
+		Etudiant getEtudiantByNumero(in string numEtudiant);
+		void inscrire(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException);
+		void connecter(in Etudiant numEtudiant, in string motDePasse) raises (EtudiantInconnuException);
+		Proposition getPropositionByFormation(in Master _formation);
+		listLicences getPrerequis(in Proposition p) raises (PropositionDoesNotExistException);
+		oneway void creerProposition(in string intituleMaster, in listLicences _prerequis);
+		oneway void majPrerequis(in Proposition p, in listLicences _nouveauxPrerequis) raises (PropositionDoesNotExistException);
+		short getPositionEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
+		boolean checkLicenceEtudiant(in Etudiant e, in Licence l);
+	};
+	
+	typedef sequence<Universite> listUniversites;
+	interface Rectorat
+	{
+		readonly attribute string nom;
+		Etudiant getEtudiantByNumero(in string numEtudiant);
+		void demanderConnexion(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException);
+		void demanderInscription(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException);
+		oneway void referencer(in Universite universiteConnecte);
+		oneway void dereferencer(in Universite universiteDeconnecte);
+		listUniversites getListUniversites();
+		listFormations getAccreditationsByUniversite(in Universite _universite);
+		listPropositions getPropositionByFormation(in Master _formation);
+	};
+	
+	typedef sequence<Rectorat> listRectorats;
+	interface Ministere
+	{
+		listFormations getListFormations();
+		listRectorats getListRectorats();
+		listPropositions getPropositionByFormation(in Formation _formation);
+		oneway void referencer(in Rectorat nomRectoratConnecte);
+		oneway void dereferencer(in Rectorat rectoratDeconnecte);
+	};
+
+	exception diplomesDifferentsException 
+	{
+		string nomEtudiant;
+		string nomDiplome;
+		string nomEtudiantDiff;
+	};
+	
+	exception EtudiantDejaInscritException
+	{
+		string numEtudiant;
+	};
+
+	interface Resultat
+	{
+		readonly attribute string codeObtention;
+		readonly attribute float moyenne;
+		readonly attribute short position;
+	};
+	
+	interface Voeu
+	{
+		readonly attribute Proposition propositionCorrespondante;
+		readonly attribute Etudiant etudiantCorrespondant;
+		attribute short position;
+		attribute short classementEtudiant;
+		attribute string etatVoeu;
+		oneway void reponseOUI();
+		oneway void reponseOUIMAIS();
+		oneway void reponseNONMAIS();
+		oneway void reponseNON();
+		oneway void accepterCandidature();
+		oneway void refuserCandidature();
+
+		oneway void majClassement(in short classement);
+	};
+	
+	typedef sequence<Voeu> listVoeux;
+	
+	interface Etudiant
+	{
+		readonly attribute Resultat resultats;
+		readonly attribute listVoeux listeVoeux;
+		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
+		short getPositionEtudiant();
+		Universite getUniversite();
+		
+		
+	};
+	
+	interface UtilVoeux
+	{
+		listVoeux getMeilleurePropositionByEtudiant(in Etudiant _etudiant);
+		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur, in short position) raises (NombreMaxDeVoeuxAtteintException);
+		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
+		listVoeux getVoeuxByUniversite(in Universite _universite);
+		listVoeux getVoeuxByRectorat(in Rectorat rectoratConcerne);
+		oneway void classerVoeuxParProposition(in Proposition p);
+		oneway void classerVoeuxParUniversite(in Universite u);
+	};
+};
