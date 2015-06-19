@@ -160,5 +160,4 @@ public class EtudiantImpl extends EtudiantPOA {
 	public String numEtudiant() {
 		return this.numero;
 	}
-
 }

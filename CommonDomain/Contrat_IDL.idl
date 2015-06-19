@@ -139,7 +139,6 @@ module Etudes
 	{
 		readonly attribute string numEtudiant;
 		attribute Resultat resultats;
-		attribute string motDePasse;
 		attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		void addVoeuEtudiant(in Voeu voeuAAjouter) raises (NombreMaxDeVoeuxAtteintException);

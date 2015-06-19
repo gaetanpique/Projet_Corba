@@ -201,7 +201,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 			e.printStackTrace();
 		}
 		return rep;
-<<<<<<< master
 	}
 
 	@Override
@@ -216,10 +215,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		
 	}
 
-
-
-
-
 	@Override
 	public void accepterCandidature() 
 	{
@@ -227,17 +222,9 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		
 	}
 
-
 	@Override
 	public void refuserCandidature() 
 	{
 		this.etatVoeu(EtatVoeu.nonValide);
-		
-=======
->>>>>>> 083e4d4 FInition UtilVOeux
 	}
-
-	
-
-
 }

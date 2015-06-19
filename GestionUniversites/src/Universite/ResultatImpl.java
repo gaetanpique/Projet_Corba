@@ -1,8 +1,6 @@
 package Universite;
 import java.util.Calendar;
 
-import org.omg.CORBA.ORB;
-
 import Etudes.Licence;
 import Etudes.LicenceHelper;
 import Etudes.Proposition;

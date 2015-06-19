@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
-import org.omg.CORBA.ORB;
-
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.MasterHelper;

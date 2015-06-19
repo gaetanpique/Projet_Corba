@@ -3,13 +3,11 @@ package Ministere;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.omg.CORBA.ORB;
-
-import Util.UtilConnexion;
 import Etudes.Formation;
 import Etudes.MinisterePOA;
 import Etudes.Proposition;
 import Etudes.Rectorat;
+import Util.UtilConnexion;
 
 public class MinistereImpl extends MinisterePOA {
 	
