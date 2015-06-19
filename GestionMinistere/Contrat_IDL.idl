@@ -130,8 +130,6 @@ module Etudes
 		oneway void reponseNON();
 		oneway void accepterCandidature();
 		oneway void refuserCandidature();
-
-		oneway void majClassement(in short classement);
 	};
 	
 	typedef sequence<Voeu> listVoeux;
@@ -140,6 +138,8 @@ module Etudes
 	{
 		attribute Resultat resultats;
 		attribute listVoeux listeVoeux;
+		attribute string numEtudiant;
+		attribute string motDePasse;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		short getPositionEtudiant();
 		Universite getUniversite();

@@ -52,6 +52,27 @@ class EtudiantImpl extends EtudiantPOA {
 	}
 
 	@Override
+	public String numEtudiant() {
+		return numero;
+	}
+
+	@Override
+	public void numEtudiant(String value) {
+		numero = value;
+		
+	}
+
+	@Override
+	public String motDePasse() {
+		return motDePasse;
+	}
+
+	@Override
+	public void motDePasse(String value) {
+		motDePasse = value;
+	}
+
+	@Override
 	public void listeVoeux(Voeu[] value) {
 		listeVoeux.clear();
 		listeVoeux.addAll((Collection<? extends Voeu>) UtilTraitements
@@ -77,18 +98,6 @@ class EtudiantImpl extends EtudiantPOA {
 	@Override
 	public Universite getUniversite() {
 		return universite._this();
-	}
-
-	public String getNumero() {
-		return this.numero;
-	}
-
-	public String getMotDePasse() {
-		return motDePasse;
-	}
-
-	public void setMotDePasse(String motDePasse) {
-		this.motDePasse = motDePasse;
 	}
 
 	@Override
@@ -117,7 +126,7 @@ class EtudiantImpl extends EtudiantPOA {
 		if (this.motDePasse == null)
 			throw new EtudiantDejaInscritException(this.numero);
 		else
-			setMotDePasse(mdp);
+			motDePasse(mdp);
 	}
 
 	/**
@@ -169,4 +178,5 @@ class EtudiantImpl extends EtudiantPOA {
 		}
 		else listeVoeux.add(v);
 	}
+
 }

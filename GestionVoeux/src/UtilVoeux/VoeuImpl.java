@@ -23,19 +23,14 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	private Etudiant etudiantCorrespondant;
 	private short classementEtudiant;
 	private short position;
-<<<<<<< Upstream, based on origin/master
-	private String etatVoeu;
-	
-	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu) 
-=======
 	private Etudes.EtatVoeu etatVoeu;
-	public VoeuImpl() 
->>>>>>> a43e199 FInition UtilVOeux
+	
+	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu)
 	{
-		this(p, numEtudiant, positionVoeu, "initial");
+		this(p, numEtudiant, positionVoeu, EtatVoeu.initial);
 	}
 	
-	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, String etatVoeu) 
+	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, EtatVoeu etatVoeu) 
 	{
 		try {
 			this.propositionCorrespondante = p;
@@ -177,14 +172,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 
 	@Override
 	public void classementEtudiant(short value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void majClassement(short classement) {
-		// TODO Auto-generated method stub
+		this.classementEtudiant = value;
 		
 	}
 	
@@ -219,7 +207,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 
 	@Override
 	public Etudes.EtatVoeu etatVoeu() {
-		// TODO Auto-generated method stub
 		return this.etatVoeu;
 	}
 
@@ -237,7 +224,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	@Override
 	public void accepterCandidature() 
 	{
-		// TODO Auto-generated method stub
+		this.etatVoeu(EtatVoeu.valide);
 		
 	}
 
@@ -245,7 +232,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	@Override
 	public void refuserCandidature() 
 	{
-		// TODO Auto-generated method stub
+		this.etatVoeu(EtatVoeu.nonValide);
 		
 	}
 

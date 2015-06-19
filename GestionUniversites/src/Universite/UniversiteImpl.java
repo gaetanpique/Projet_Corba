@@ -96,7 +96,7 @@ public class UniversiteImpl extends UniversitePOA {
 		
 		for (EtudiantImpl e : this.etudiants)
 		{
-			if (e.getNumero().equals(numEtudiant))
+			if (e.numEtudiant().equals(numEtudiant))
 			{
 				result = (Etudiant) e;
 				break;
@@ -121,11 +121,11 @@ public class UniversiteImpl extends UniversitePOA {
 		
 		if (etudiantAInscrire == null)
 		{
-			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).getNumero(), this.nom);
+			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
 		}
 		else
 		{
-			etudiantAInscrire.setMotDePasse(motDePasse);
+			etudiantAInscrire.motDePasse(motDePasse);
 		}
 	}
 
@@ -143,13 +143,13 @@ public class UniversiteImpl extends UniversitePOA {
 		
 		if (etudiantAConnecter == null)
 		{
-			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).getNumero(), this.nom);
+			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
 		}
 		else
 		{
-			if (!etudiantAConnecter.getMotDePasse().equals(motDePasse))
+			if (!etudiantAConnecter.motDePasse().equals(motDePasse))
 			{
-				throw new EtudiantInconnuException(((EtudiantImpl) etudiant).getNumero(), this.nom);
+				throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
 			}
 		}
 	}
