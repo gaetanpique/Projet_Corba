@@ -14,6 +14,7 @@ import Etudes.Proposition;
 import Etudes.Voeu;
 import Etudes.VoeuPOA;
 import Etudes.diplomesDifferentsException;
+import Etudes.listeEtatsVoeu;
 import Util.UtilConnexion;
  
 public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
@@ -22,14 +23,14 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	private Etudiant etudiantCorrespondant;
 	private short classementEtudiant;
 	private short position;
-	private Etudes.EtatVoeu etatVoeu;
+	private Etudes.listeEtatsVoeu etatVoeu;
 	
 	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu) 
 	{
-		this(p, numEtudiant, positionVoeu, EtatVoeu.initial);
+		this(p, numEtudiant, positionVoeu, listeEtatsVoeu.initial );
 	}
 	
-	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, EtatVoeu etatVoeu) 
+	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, listeEtatsVoeu etatVoeu) 
 	{
 		try {
 			this.propositionCorrespondante = p;
@@ -54,20 +55,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	
 
 	@Override
-	public String etatVoeu() 
-	{
-		return this.etatVoeu();
-	}
-
-
-	@Override
-	public void etatVoeu(String value) 
-	{
-		this.etatVoeu = value;
-		
-	}
-
-	@Override
 	public short position() 
 	{
 		return position;
@@ -78,6 +65,21 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		this.position = value;
 		
 	}
+	
+	@Override
+	public Etudes.listeEtatsVoeu etatVoeu() {
+		return this.etatVoeu;
+	}
+
+
+	@Override
+	public void etatVoeu(listeEtatsVoeu value) {
+		this.etatVoeu = value;
+		
+	}
+
+
+
 	
 	//-------------------READ ONLY ATTRIBUTES-------------------------------//
 	
@@ -96,6 +98,12 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		return etudiantCorrespondant;
 	}
 
+	@Override
+	public void majClassement(short classement) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	//---------------------------------METHODS-------------------------------//
 	
@@ -106,7 +114,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	public void reponseOUI() 
 	{
 		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		this.etatVoeu("OUI");
+		this.etatVoeu = listeEtatsVoeu.OUI ;
 		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
 		//TODO Remplacer la methode asList par la methode correspondant dans Util
 		for (VoeuImpl v : listeVoeuTemp)
@@ -125,7 +133,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	@Override
 	public void reponseOUIMAIS() 
 	{
-		this.etatVoeu("OUI MAIS");
+		this.etatVoeu = listeEtatsVoeu.OUIMAIS ;
 		//TODO les voeux en dessous passent a "non"
 	}
 
@@ -136,7 +144,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	@Override
 	public void reponseNONMAIS() 
 	{
-		this.etatVoeu("NON MAIS");
+		this.etatVoeu = listeEtatsVoeu.NONMAIS;
 	}
 
 
@@ -146,21 +154,8 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	@Override
 	public void reponseNON() 
 	{
-		this.etatVoeu("NON");
+		this.etatVoeu = listeEtatsVoeu.NON ;
 	}
-	
-	public void refuserCandidature() 
-	{
-		this.etatVoeu("PREREQUIS NOK");
-		
-	}
-		
-	@Override
-	public void accepterCandidature() 
-	{
-		this.etatVoeu("PREREQUIS");
-		
-	}		
 
 	@Override
 	public short classementEtudiant() {
@@ -203,28 +198,20 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		return rep;
 	}
 
-	@Override
-	public Etudes.EtatVoeu etatVoeu() {
-		return this.etatVoeu;
-	}
 
-
-	@Override
-	public void etatVoeu(Etudes.EtatVoeu value) {
-		this.etatVoeu = value;
-		
-	}
 
 	@Override
 	public void accepterCandidature() 
 	{
-		this.etatVoeu(EtatVoeu.valide);
+		this.etatVoeu(listeEtatsVoeu.valide);
 		
 	}
 
 	@Override
 	public void refuserCandidature() 
 	{
-		this.etatVoeu(EtatVoeu.nonValide);
+		this.etatVoeu(listeEtatsVoeu.nonValide);
 	}
 }
+
+	

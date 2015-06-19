@@ -130,7 +130,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 
 			if (cpt <5) 
 			{
-				VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
+				new VoeuImpl(aSoumettre, soumetteur.numEtudiant(),positionVoeu);
 			}
 			else
 			{

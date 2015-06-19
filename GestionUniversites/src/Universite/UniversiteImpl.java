@@ -234,6 +234,7 @@ public class UniversiteImpl extends UniversitePOA {
 			{
 				// crée un nouvelle proposition de formation 
 				this.listeDesPropositions.add(new PropositionImpl(prerequis, this.nom, intituleMaster));
+
 			}
 		}	
 	}

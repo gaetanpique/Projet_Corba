@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
+
+import org.omg.CORBA.ORB;
+
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
@@ -16,6 +19,7 @@ import Etudes.Voeu;
 import Etudes.diplomesDifferentsException;
 import Util.UtilConnexion;
 import Util.UtilTraitements;
+import Util.*;
 
 public class EtudiantImpl extends EtudiantPOA {
 	
@@ -152,12 +156,9 @@ public class EtudiantImpl extends EtudiantPOA {
 		else listeVoeux.add(v);
 	}
 
-	public String getMotDePasse() {
-		return motDePasse;
-	}
-
 	@Override
 	public String numEtudiant() {
 		return this.numero;
 	}
+
 }

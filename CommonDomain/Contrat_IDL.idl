@@ -116,13 +116,14 @@ module Etudes
 		readonly attribute short position;
 	};
 	
+	enum listeEtatsVoeu {initial,valide,nonValide,OUI,NON,OUIMAIS,NONMAIS};
 	interface Voeu
 	{
 		readonly attribute Proposition propositionCorrespondante;
 		readonly attribute Etudiant etudiantCorrespondant;
 		attribute short position;
 		attribute short classementEtudiant;
-		attribute string etatVoeu;
+		attribute listeEtatsVoeu etatVoeu;
 		oneway void reponseOUI();
 		oneway void reponseOUIMAIS();
 		oneway void reponseNONMAIS();
@@ -139,11 +140,13 @@ module Etudes
 	{
 		readonly attribute string numEtudiant;
 		attribute Resultat resultats;
+		readonly attribute string numEtudiant;
 		attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		void addVoeuEtudiant(in Voeu voeuAAjouter) raises (NombreMaxDeVoeuxAtteintException);
 		short getPositionEtudiant();
 		Universite getUniversite();
+		oneway void addVoeuEtudiant(in Voeu v) raises (NombreMaxDeVoeuxAtteintException);
 		
 		
 	};
