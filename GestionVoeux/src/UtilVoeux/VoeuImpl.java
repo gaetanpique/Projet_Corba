@@ -24,8 +24,9 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	private short classementEtudiant;
 	private short position;
 	private Etudes.EtatVoeu etatVoeu;
-	
+
 	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu)
+
 	{
 		this(p, numEtudiant, positionVoeu, EtatVoeu.initial);
 	}
