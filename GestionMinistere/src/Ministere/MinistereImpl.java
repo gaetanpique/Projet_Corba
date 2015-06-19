@@ -19,12 +19,12 @@ public class MinistereImpl extends MinisterePOA {
 
 	public MinistereImpl()
 	{
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "Ministere");
+		UtilConnexion.connexionAuNammingService(this, "Ministere");
 			 
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant MinistereImpl référencé et opérationnel.");
 			 
 		// Lancement de l'ORB et mise en attente de requete
-		orb.run();
+		UtilConnexion.runORB();
 	}
 	
 	@Override

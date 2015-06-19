@@ -27,13 +27,12 @@ public class ResultatImpl extends ResultatPOA {
 		codeObtention = c;
 		position = p;
 		
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "Result_" + numEtudiant);
+		UtilConnexion.connexionAuNammingService(this, "Result_" + numEtudiant);
 		
 		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Licence_" + intituleLicence);
 		this.licence = LicenceHelper.narrow(result);
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Result_" + numEtudiant + " référencé et opérationnel.");
-		orb.run();
 	}
 	
 	public Licence getLicence() {

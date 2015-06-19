@@ -3,10 +3,8 @@ package Universite;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.omg.CORBA.ORB;
-
-import Util.UtilTraitements;
 import Etudes.Etudiant;
+import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
 import Etudes.Licence;
@@ -16,11 +14,11 @@ import Etudes.PropositionDoesNotExist;
 import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
 import Etudes.RectoratHelper;
-import Etudes.Universite;
 import Etudes.UniversitePOA;
 import Etudes.formationDejaProposeeException;
 import Etudes.pasDiplomeException;
 import Util.UtilConnexion;
+import Util.UtilTraitements;
 
 public class UniversiteImpl extends UniversitePOA {
 	
@@ -45,17 +43,18 @@ public class UniversiteImpl extends UniversitePOA {
 		this.listeDesPropositions = new ArrayList<PropositionImpl>();
 		
 		// Intialisation de l'orb
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "Universite_" + this.nom);
+		UtilConnexion.connexionAuNammingService(this, "Universite_" + this.nom);
 		
 		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Rectorat_" + _nomRectoratReference);
 		this.rectoratDappartenance = RectoratHelper.narrow(result);
 		
 		this.rectoratDappartenance.referencer(this._this());
 		
-		new EtudiantImpl("012345", new ResultatImpl(), this);
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Universite_" + this.nom + " référencé et opérationnel.");
 		
-		orb.run();
+		UtilConnexion.runORB();
+		
+		new EtudiantImpl("012345", new ResultatImpl(), this);
 	}
 
 
@@ -66,7 +65,6 @@ public class UniversiteImpl extends UniversitePOA {
 
 	@Override
 	public void listeDesPropositions(Proposition[] value) {
-		// TODO Auto-generated method stub
 		this.listeDesPropositions = (ArrayList<PropositionImpl>) UtilTraitements.ToArray(value);
 	}
 	
@@ -90,7 +88,7 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public Etudiant getEtudiantByNumero(String numEtudiant) {
-		System.out.println("Universite_" + this.nom + ".getEtudiantByNumero(" + numEtudiant + ")");
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Universite_" + this.nom + ".getEtudiantByNumero(" + numEtudiant + ")");
 		
 		Etudiant result = null;
 		
@@ -115,17 +113,24 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public void inscrire(Etudiant etudiant, String motDePasse)
-			throws EtudiantInconnuException {
-		EtudiantImpl etudiantAInscrire = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) etudiant));
+	public void inscrire(Etudiant etudiant, String motDePasse) throws EtudiantDejaInscritException, EtudiantInconnuException {
+		EtudiantImpl etudiantAInscrire = null;
 		
+		for (EtudiantImpl e : this.etudiants)
+		{
+			if (e.numEtudiant().equals(etudiant.numEtudiant()))
+			{
+				etudiantAInscrire = e;
+				break;
+			}
+		}
 		if (etudiantAInscrire == null)
 		{
 			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
 		}
 		else
 		{
-			etudiantAInscrire.motDePasse(motDePasse);
+			etudiantAInscrire.inscrireEtudiant(motDePasse);
 		}
 	}
 
@@ -139,15 +144,24 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public void connecter(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException {
-		EtudiantImpl etudiantAConnecter = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) etudiant));
+		EtudiantImpl etudiantAConnecter = null;
 		
-		if (etudiantAConnecter == null)
+		for (EtudiantImpl e : this.etudiants)
+		{
+			if (e.numEtudiant().equals(etudiant.numEtudiant()))
+			{
+				etudiantAConnecter = e;
+				break;
+			}
+		}
+
+		if (etudiantAConnecter == null || etudiantAConnecter.getMotDePasse() == null)
 		{
 			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
 		}
 		else
 		{
-			if (!etudiantAConnecter.motDePasse().equals(motDePasse))
+			if (!etudiantAConnecter.getMotDePasse().equals(motDePasse))
 			{
 				throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
 			}
@@ -219,7 +233,7 @@ public class UniversiteImpl extends UniversitePOA {
 			else
 			{
 				// crée un nouvelle proposition de formation 
-				this.listeDesPropositions.add( (Proposition) new PropositionImpl(prerequis, this.nom, intituleMaster));
+				this.listeDesPropositions.add(new PropositionImpl(prerequis, this.nom, intituleMaster));
 			}
 		}	
 	}

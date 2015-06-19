@@ -1,11 +1,9 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import Etudes.Etudiant;
+import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnuException;
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
@@ -38,7 +36,7 @@ public class MainClient {
 			choisi.demanderConnexion(e, this.motDePasseSaisi);
 			System.out.println("Connexion réussie");
 		} catch (EtudiantInconnuException e) {
-			System.out.println("ERREUR : L'étudiant numéro " + e.numEtudiantInconnu + " n'est pas connu du rectorat " + e.nomUniversite + ".");
+			System.out.println("ERREUR");
 		}
 	}
 	

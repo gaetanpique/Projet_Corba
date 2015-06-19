@@ -39,12 +39,11 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Etu_" + numEtudiant);
 			this.etudiantCorrespondant = EtudiantHelper.narrow(result);
 
-			ORB orb = UtilConnexion.connexionAuNammingService(this, "Voeu_"	+ numEtudiant + "_" + p.masterPropose().intitule());
+			UtilConnexion.connexionAuNammingService(this, "Voeu_"	+ numEtudiant + "_" + p.masterPropose().intitule());
 
 			this.etudiantCorrespondant.addVoeuEtudiant(this._this());
 
 			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Voeu_" + numEtudiant + "_"	+ p.masterPropose().intitule() + " référencé et opérationnel.");
-			orb.run();
 		} catch (NombreMaxDeVoeuxAtteintException e) {
 			e.printStackTrace();
 		}

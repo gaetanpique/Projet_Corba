@@ -45,6 +45,18 @@ module Etudes
 	exception formationDejaProposeeException
 	{};
 	
+	exception diplomesDifferentsException 
+	{
+		string nomEtudiant;
+		string nomDiplome;
+		string nomEtudiantDiff;
+	};
+	
+	exception EtudiantDejaInscritException
+	{
+		string numEtudiant;
+	};
+	
 
 	interface Resultat;
 	interface Universite;
@@ -63,7 +75,7 @@ module Etudes
 		attribute listPropositions listeDesPropositions;
 		listEtudiant getEtudiants();
 		Etudiant getEtudiantByNumero(in string numEtudiant);
-		void inscrire(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException);
+		void inscrire(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException, EtudiantDejaInscritException);
 		void connecter(in Etudiant numEtudiant, in string motDePasse) raises (EtudiantInconnuException);
 		Proposition getPropositionByFormation(in Master _formation);
 		listLicences getPrerequis(in Proposition p) raises (PropositionDoesNotExistException);
@@ -79,7 +91,7 @@ module Etudes
 		readonly attribute string nom;
 		Etudiant getEtudiantByNumero(in string numEtudiant);
 		void demanderConnexion(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException);
-		void demanderInscription(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException);
+		void demanderInscription(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException, EtudiantDejaInscritException);
 		oneway void referencer(in Universite universiteConnecte);
 		oneway void dereferencer(in Universite universiteDeconnecte);
 		listUniversites getListUniversites();
@@ -95,18 +107,6 @@ module Etudes
 		listPropositions getPropositionByFormation(in Formation _formation);
 		oneway void referencer(in Rectorat nomRectoratConnecte);
 		oneway void dereferencer(in Rectorat rectoratDeconnecte);
-	};
-
-	exception diplomesDifferentsException 
-	{
-		string nomEtudiant;
-		string nomDiplome;
-		string nomEtudiantDiff;
-	};
-	
-	exception EtudiantDejaInscritException
-	{
-		string numEtudiant;
 	};
 
 	interface Resultat
@@ -137,10 +137,12 @@ module Etudes
 	
 	interface Etudiant
 	{
+		readonly attribute string numEtudiant;
 		attribute Resultat resultats;
 		attribute string motDePasse;
 		attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
+		void addVoeuEtudiant(in Voeu voeuAAjouter) raises (NombreMaxDeVoeuxAtteintException);
 		short getPositionEtudiant();
 		Universite getUniversite();
 		

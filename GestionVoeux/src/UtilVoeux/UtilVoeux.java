@@ -26,12 +26,12 @@ public class UtilVoeux extends UtilVoeuxPOA {
 
 	public UtilVoeux()  
 	{
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "UtilVoeux");
+		UtilConnexion.connexionAuNammingService(this, "UtilVoeux");
 		 
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant UtilVoeux référencé et opérationnel.");
 			 
 		// Lancement de l'ORB et mise en attente de requete
-		orb.run();
+		UtilConnexion.runORB();
 	}
 
 

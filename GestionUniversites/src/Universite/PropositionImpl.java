@@ -29,13 +29,12 @@ public class PropositionImpl extends PropositionPOA {
 		prerequis = p;
 		
 		// Intialisation de l'orb
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "Proposition_" + nomUniversite + "_" + intituleMaster);
+		UtilConnexion.connexionAuNammingService(this, "Proposition_" + nomUniversite + "_" + intituleMaster);
 				
 		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Master_" + intituleMaster);
 		this.masterPropose = MasterHelper.narrow(result);
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + nomUniversite + "_" + intituleMaster + " référencé et opérationnel.");
-		orb.run();
 	}
 	
 	/**

@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import org.omg.CORBA.ORB;
-
 import Etudes.Etudiant;
+import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
 import Etudes.Formation;
@@ -37,7 +36,7 @@ public class RectoratImpl extends RectoratPOA {
 		super();
 		this.nom = nom;
 
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "Rectorat_" + this.nom);
+		UtilConnexion.connexionAuNammingService(this, "Rectorat_" + this.nom);
 		
 		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Ministere");
 		this.ministere = MinistereHelper.narrow(result);
@@ -45,7 +44,7 @@ public class RectoratImpl extends RectoratPOA {
 		this.ministere.referencer(this._this());
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Rectorat_" + this.nom + " référencé et opérationnel.");
-		orb.run();
+		UtilConnexion.runORB();
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class RectoratImpl extends RectoratPOA {
 	@Override
 	public Etudiant getEtudiantByNumero(String numEtudiant) {
 		Etudiant result = null;
-		
+
 		for (Universite u : this.universites)
 		{
 			result = u.getEtudiantByNumero(numEtudiant);
@@ -86,9 +85,7 @@ public class RectoratImpl extends RectoratPOA {
 	 */
 	@Override
 	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException{
-		System.out.println("université" + etudiant.getUniversite());
 		Universite univDeLetudiant = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
-		System.out.println("2");
 		if (univDeLetudiant == null)
 		{
 			throw new EtudiantInconnuException();
@@ -110,9 +107,10 @@ public class RectoratImpl extends RectoratPOA {
 	 * @param motDePasse String Le mot de passe qu'il a saisi
 	 * @throws EtudiantInconnu Si l'étudiant ne fait pas parti de ce rectorat, ou si il est déjà inscrit
 	 * @author Gaetan
+	 * @throws EtudiantDejaInscritException 
 	 */
 	@Override
-	public void demanderInscription(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException {
+	public void demanderInscription(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException, EtudiantDejaInscritException {
 		Universite univDinscription = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
 		
 		//univDinscription == null <=> étudiant ne fait pas partie de ce rectorat

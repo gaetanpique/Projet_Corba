@@ -1,14 +1,9 @@
 package Universite;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Calendar;
+import java.util.Collection;
 
-import Util.UtilTraitements;
-
-import org.omg.CORBA.ORB;
-
-import Util.UtilConnexion;
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
@@ -19,6 +14,8 @@ import Etudes.Resultat;
 import Etudes.Universite;
 import Etudes.Voeu;
 import Etudes.diplomesDifferentsException;
+import Util.UtilConnexion;
+import Util.UtilTraitements;
 
 public class EtudiantImpl extends EtudiantPOA {
 	
@@ -39,35 +36,12 @@ public class EtudiantImpl extends EtudiantPOA {
 		this.universite = univE;
 		this.motDePasse = motDePasse;
 		this.listeVoeux = new ArrayList<Voeu>();
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "Etu_" + this.numero);
-		
 
+		UtilConnexion.connexionAuNammingService(this, "Etu_" + this.numero);
+		
 		this.universite.referencer(this);
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
-
-		orb.run();
-	}
-
-	@Override
-	public String numEtudiant() {
-		return numero;
-	}
-
-	@Override
-	public void numEtudiant(String value) {
-		numero = value;
-		
-	}
-
-	@Override
-	public String motDePasse() {
-		return motDePasse;
-	}
-
-	@Override
-	public void motDePasse(String value) {
-		motDePasse = value;
 	}
 
 	@Override
@@ -122,10 +96,10 @@ public class EtudiantImpl extends EtudiantPOA {
 	 */
 	public void inscrireEtudiant(String mdp)
 			throws EtudiantDejaInscritException {
-		if (this.motDePasse == null)
+		if (this.motDePasse != null)
 			throw new EtudiantDejaInscritException(this.numero);
 		else
-			motDePasse(mdp);
+			this.motDePasse = mdp;
 	}
 
 	/**
@@ -176,6 +150,15 @@ public class EtudiantImpl extends EtudiantPOA {
 			throw new NombreMaxDeVoeuxAtteintException();
 		}
 		else listeVoeux.add(v);
+	}
+
+	public String getMotDePasse() {
+		return motDePasse;
+	}
+
+	@Override
+	public String numEtudiant() {
+		return this.numero;
 	}
 
 }

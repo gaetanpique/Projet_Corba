@@ -10,11 +10,12 @@ import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.Servant;
 
 public class UtilConnexion {
-	public static ORB connexionAuNammingService(Servant objetAReferencer, String _nomAReferencer)
+	
+	private static ORB orb = ORB.init(new String[0], null);
+	
+	public static void connexionAuNammingService(Servant objetAReferencer, String _nomAReferencer)
 	{
 		try {
-			ORB orb = ORB.init(new String[0], null);
-
 			// Recuperation du POA
 			POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 			rootPOA.activate_object(objetAReferencer);
@@ -32,21 +33,16 @@ public class UtilConnexion {
 
 			// Enregistrement de l'objet CORBA dans le service de noms
 			nameRoot.rebind(nameToRegister, rootPOA.servant_to_reference(objetAReferencer));
-
-			return orb;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			return null;
 		}
 	}
 	
 	public static org.omg.CORBA.Object getObjetDistant(String _nomReference)
 	{
 		try {
-			ORB orb = ORB.init(new String[0], null);
-
 			// Recuperation du naming service
 			org.omg.CosNaming.NamingContext nameRoot;
 
@@ -65,5 +61,15 @@ public class UtilConnexion {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public static void runORB()
+	{
+		Thread t = new Thread() {
+			public void run() {
+				orb.run();
+			}
+		};
+		t.start();
 	}
 }

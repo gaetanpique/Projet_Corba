@@ -2,8 +2,6 @@ package Ministere;
 
 import java.util.Calendar;
 
-import org.omg.CORBA.ORB;
-
 import Util.UtilConnexion;
 import Etudes.Formation;
 import Etudes.FormationPOA;
@@ -15,12 +13,9 @@ public class FormationImpl extends FormationPOA {
 	 public FormationImpl(String intit){
 		 this.intitule = intit;
 		 
-		 ORB orb = UtilConnexion.connexionAuNammingService(this, "Formation_" + this.intitule);
+		 UtilConnexion.connexionAuNammingService(this, "Formation_" + this.intitule);
 		 
 		 System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Formation_" + this.intitule + " référencé et opérationnel.");
-				 
-		 // Lancement de l'ORB et mise en attente de requete
-		 orb.run();
 	 }
 	 
 	@Override
