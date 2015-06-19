@@ -15,7 +15,7 @@ import Etudes.prerequisDejaExistantException;
 import Util.UtilConnexion;
 import Util.UtilTraitements;
 
-class PropositionImpl extends PropositionPOA {
+public class PropositionImpl extends PropositionPOA {
 	
 	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
 	private Master masterPropose;

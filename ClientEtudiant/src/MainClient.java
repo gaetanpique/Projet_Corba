@@ -5,6 +5,7 @@ import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
+import Etudes.Etudiant;
 import Etudes.EtudiantInconnuException;
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
@@ -31,16 +32,14 @@ public class MainClient {
 		Rectorat choisi = rectoratsAccessibles[0];
 		
 		System.out.println("Choisi : " + choisi.nom());
-		
-		choisi.getEtudiantByNumero(numEtudiantSaisi);
-		
-		/*
 		try {
-			choisi.demanderConnexion(choisi.getEtudiantByNumero(this.numEtudiantSaisi), this.motDePasseSaisi);
+			Etudiant e = choisi.getEtudiantByNumero(this.numEtudiantSaisi);
+			System.out.println("Etudiant récupéré");
+			choisi.demanderConnexion(e, this.motDePasseSaisi);
 			System.out.println("Connexion réussie");
 		} catch (EtudiantInconnuException e) {
 			System.out.println("ERREUR : L'étudiant numéro " + e.numEtudiantInconnu + " n'est pas connu du rectorat " + e.nomUniversite + ".");
-		}*/
+		}
 	}
 	
 	public void seConnecter()

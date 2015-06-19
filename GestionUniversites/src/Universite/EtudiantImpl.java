@@ -20,9 +20,9 @@ import Etudes.Universite;
 import Etudes.Voeu;
 import Etudes.diplomesDifferentsException;
 
-class EtudiantImpl extends EtudiantPOA {
-
-	private String numero;
+public class EtudiantImpl extends EtudiantPOA {
+	
+	private String numero;	
 	private String motDePasse;
 	private ResultatImpl resultats;
 	private UniversiteImpl universite;
@@ -39,14 +39,12 @@ class EtudiantImpl extends EtudiantPOA {
 		this.universite = univE;
 		this.motDePasse = motDePasse;
 		this.listeVoeux = new ArrayList<Voeu>();
-
-		ORB orb = UtilConnexion.connexionAuNammingService(this, "Etu_"
-				+ this.numero);
+		ORB orb = UtilConnexion.connexionAuNammingService(this, "Etu_" + this.numero);
+		
 
 		this.universite.referencer(this);
-		System.out.println(Calendar.getInstance().getTime().toString()
-				+ " : Servant Etudiant_" + this.numero
-				+ " référencé et opérationnel.");
+		
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 
 		orb.run();
 	}
@@ -82,7 +80,7 @@ class EtudiantImpl extends EtudiantPOA {
 	@Override
 	public void resultats(Resultat value) {
 		resultats = (ResultatImpl) value;
-
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 	}
 
 	@Override
@@ -97,6 +95,7 @@ class EtudiantImpl extends EtudiantPOA {
 
 	@Override
 	public Universite getUniversite() {
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Etudiant_" + this.numero + ".getUniversite()");
 		return universite._this();
 	}
 

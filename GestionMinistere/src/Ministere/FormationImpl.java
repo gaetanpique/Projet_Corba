@@ -8,7 +8,7 @@ import Util.UtilConnexion;
 import Etudes.Formation;
 import Etudes.FormationPOA;
 
- class FormationImpl extends FormationPOA {
+public class FormationImpl extends FormationPOA {
 
 	 private String intitule;
 	 

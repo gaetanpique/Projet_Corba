@@ -20,7 +20,7 @@ import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
 import Util.UtilTraitements;
 
-class UtilVoeux extends UtilVoeuxPOA {
+public class UtilVoeux extends UtilVoeuxPOA {
 
 	private ArrayList<VoeuImpl> listeVoeux = new ArrayList<VoeuImpl>();
 
@@ -130,10 +130,7 @@ class UtilVoeux extends UtilVoeuxPOA {
 
 			if (cpt <5) 
 			{
-				VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur.numEtudiant(),positionVoeu);
-				soumetteur.addVoeuEtudiant((Voeu) leVoeu);
-				listeVoeux.add(leVoeu);
-
+				VoeuImpl leVoeu = new VoeuImpl(aSoumettre, soumetteur,positionVoeu);
 			}
 			else
 			{

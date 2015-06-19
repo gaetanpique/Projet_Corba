@@ -2,14 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/avalon-framework.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/excalibur-configuration.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/junit.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/logkit.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/openorb_examples-1.3.1.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/openorb_test-1.3.1.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/openorb_tools-1.3.1.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/openorb-1.3.1.jar"/>
-	<classpathentry kind="lib" path="Q:/Eclipse_projet_corba/Librairies/Corba/OpenORB-1.3.1/lib/xerces.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CommonDomain"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

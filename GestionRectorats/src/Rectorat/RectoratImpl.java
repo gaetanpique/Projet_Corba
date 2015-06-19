@@ -18,7 +18,7 @@ import Etudes.RectoratPOA;
 import Etudes.Universite;
 import Util.UtilConnexion;
 
-class RectoratImpl extends RectoratPOA {
+public class RectoratImpl extends RectoratPOA {
 	
 	private ArrayList<Universite> universites = new ArrayList<Universite>();
 	
@@ -68,8 +68,8 @@ class RectoratImpl extends RectoratPOA {
 			}
 		}
 		
-		System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".getEtudiantByNumero(" + numEtudiant + ") :");
 		
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".getEtudiantByNumero(" + numEtudiant + ") :");
 		return result;
 	}
 
@@ -86,8 +86,9 @@ class RectoratImpl extends RectoratPOA {
 	 */
 	@Override
 	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException{
+		System.out.println("université" + etudiant.getUniversite());
 		Universite univDeLetudiant = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
-		
+		System.out.println("2");
 		if (univDeLetudiant == null)
 		{
 			throw new EtudiantInconnuException();

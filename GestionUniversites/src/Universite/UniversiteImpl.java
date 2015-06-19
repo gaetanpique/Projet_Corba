@@ -30,12 +30,11 @@ public class UniversiteImpl extends UniversitePOA {
 	
 	private ArrayList<EtudiantImpl> etudiants;
 	
-	private ArrayList<Proposition> listeDesPropositions; 
+	private ArrayList<PropositionImpl> listeDesPropositions; 
 	
 	public static void main(String[] args) {
 		new UniversiteImpl(args[0], args[1]);
 		
-		//new EtudiantImpl("012345", new ResultatImpl(), creee);
 	}
 	
 	public UniversiteImpl(String _nomUniversite, String _nomRectoratReference)
@@ -43,7 +42,7 @@ public class UniversiteImpl extends UniversitePOA {
 		super();
 		this.nom = _nomUniversite;
 		this.etudiants = new ArrayList<EtudiantImpl>();
-		this.listeDesPropositions = new ArrayList<Proposition>();
+		this.listeDesPropositions = new ArrayList<PropositionImpl>();
 		
 		// Intialisation de l'orb
 		ORB orb = UtilConnexion.connexionAuNammingService(this, "Universite_" + this.nom);
@@ -53,21 +52,22 @@ public class UniversiteImpl extends UniversitePOA {
 		
 		this.rectoratDappartenance.referencer(this._this());
 		
+		new EtudiantImpl("012345", new ResultatImpl(), this);
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Universite_" + this.nom + " référencé et opérationnel.");
+		
 		orb.run();
 	}
 
 
 	@Override
 	public Proposition[] listeDesPropositions() {
-		// TODO Auto-generated method stub
 		return (Proposition[]) UtilTraitements.ToTableau(listeDesPropositions);
 	}
 
 	@Override
 	public void listeDesPropositions(Proposition[] value) {
 		// TODO Auto-generated method stub
-		this.listeDesPropositions = (ArrayList<Proposition>) UtilTraitements.ToArray(value);
+		this.listeDesPropositions = (ArrayList<PropositionImpl>) UtilTraitements.ToArray(value);
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class UniversiteImpl extends UniversitePOA {
 		{
 			if (e.numEtudiant().equals(numEtudiant))
 			{
-				result = (Etudiant) e;
+				result = e._this();
 				break;
 			}
 		}
@@ -163,11 +163,11 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public Proposition getPropositionByFormation(Master formation){
-		for (Proposition p : this.listeDesPropositions)
+		for (PropositionImpl p : this.listeDesPropositions)
 		{
 			if (p.masterPropose() == formation)
 			{
-				return p;
+				return p._this();
 			}
 		}
 		
@@ -210,7 +210,7 @@ public class UniversiteImpl extends UniversitePOA {
 	public void creerProposition(String intituleMaster, Licence[] prerequis) throws formationDejaProposeeException{
 		
 		// test si la formation existe deja
-		for (Proposition p : this.listeDesPropositions)
+		for (PropositionImpl p : this.listeDesPropositions)
 		{
 			if (p.masterPropose().intitule().equals(intituleMaster))
 			{

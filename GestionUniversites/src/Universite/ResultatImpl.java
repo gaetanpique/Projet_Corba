@@ -10,12 +10,17 @@ import Etudes.ResultatPOA;
 import Util.UtilConnexion;
 
 
- class ResultatImpl extends ResultatPOA {
+public class ResultatImpl extends ResultatPOA {
 
 	private Licence licence;
 	private float moyenne;
 	private String codeObtention;
 	private short position;
+	
+	public ResultatImpl()
+	{
+		
+	}
 	
 	public ResultatImpl(String intituleLicence, float m, String c, short p, String numEtudiant){
 		moyenne = m;
