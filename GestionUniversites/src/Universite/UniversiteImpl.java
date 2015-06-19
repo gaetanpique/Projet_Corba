@@ -233,8 +233,7 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Thibaut
 	 */
 	@Override
-	public void majPrerequis(Proposition proposition, Licence[] nouveauxPrerequis)
-			throws PropositionDoesNotExistException {
+	public void majPrerequis(Proposition proposition, Licence[] nouveauxPrerequis) throws PropositionDoesNotExistException {
 		// TODO Auto-generated method stub
 		// test si la formation existe deja
 		PropositionImpl p = (PropositionImpl) proposition;

@@ -143,6 +143,7 @@ module Etudes
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		short getPositionEtudiant();
 		Universite getUniversite();
+		void addVoeuEtudiant(in Voeu v) raises (NombreMaxDeVoeuxAtteintException);
 		
 		
 	};
