@@ -145,4 +145,10 @@ import Etudes.diplomesDifferentsException;
 		listeVoeux.clear();
 		listeVoeux.addAll((Collection<? extends Voeu>) UtilTraitements.ToArray(value));	
 	}
+
+	@Override
+	public void resultats(Resultat value) {
+		resultats = (ResultatImpl)value;
+		
+	}
 }

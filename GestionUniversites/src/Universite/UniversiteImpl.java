@@ -18,6 +18,7 @@ import Etudes.Rectorat;
 import Etudes.RectoratHelper;
 import Etudes.Universite;
 import Etudes.UniversitePOA;
+import Etudes.formationDejaProposeeException;
 import Etudes.pasDiplomeException;
 import Util.UtilConnexion;
 
@@ -206,19 +207,19 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Thibaut
 	 */
 	@Override
-	public void creerProposition(String intituleMaster, Licence[] prerequis) {
+	public void creerProposition(String intituleMaster, Licence[] prerequis) throws formationDejaProposeeException{
 		
 		// test si la formation existe deja
 		for (Proposition p : this.listeDesPropositions)
 		{
 			if (p.masterPropose().intitule().equals(intituleMaster))
 			{
-				throw new formationDejaProposeException();
+				throw new formationDejaProposeeException();
 			}
 			else
 			{
 				// crée un nouvelle proposition de formation 
-				this.listeDesPropositions.add(new PropositionImpl(prerequis, this.nom, intituleMaster));
+				this.listeDesPropositions.add( (Proposition) new PropositionImpl(prerequis, this.nom, intituleMaster));
 			}
 		}	
 	}
