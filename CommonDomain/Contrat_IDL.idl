@@ -123,12 +123,7 @@ module Etudes
 		attribute short position;
 		attribute short classementEtudiant;
 		attribute listeEtatsVoeu etatVoeu;
-		oneway void reponseOUI();
-		oneway void reponseOUIMAIS();
-		oneway void reponseNONMAIS();
-		oneway void reponseNON();
-		oneway void accepterCandidature();
-		oneway void refuserCandidature();
+		oneway void modifierEtatVoeu(in listeEtatsVoeu nouvelEtat);
 	};
 	
 	typedef sequence<Voeu> listVoeux;

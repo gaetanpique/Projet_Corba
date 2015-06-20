@@ -63,7 +63,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 
 		}
 
-		listeVoeuTemp = getListeVoeuxOrdonnee(listeVoeuTemp);
+		listeVoeuTemp = ordonnerListeVoeux(listeVoeuTemp);
 		for (VoeuImpl v : listeVoeuTemp)
 		{
 
@@ -86,7 +86,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	 * @return La liste ordonnée
 	 * @author Memer
 	 */
-	public ArrayList<VoeuImpl> getListeVoeuxOrdonnee(ArrayList<VoeuImpl> listeAOrdonner)
+	public ArrayList<VoeuImpl> ordonnerListeVoeux(ArrayList<VoeuImpl> listeAOrdonner)
 	{
 		VoeuImpl voeuTemp;
 		boolean permut;

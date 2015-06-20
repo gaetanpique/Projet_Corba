@@ -124,79 +124,49 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	 * Methode declenchee lors de la réponse de l'etudiant
 	 */
 	@Override
-	public void reponseOUI() 
+	public void modifierEtatVoeu(listeEtatsVoeu nouvelEtat)
 	{
 		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		this.etatVoeu = listeEtatsVoeu.OUI ;
-		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
-		for (VoeuImpl v : listeVoeuTemp)
+		switch(nouvelEtat.value())
 		{
-			if (!v.equals(this))
+		case listeEtatsVoeu._nonValide :
+
+		case listeEtatsVoeu._valide :
+
+		case listeEtatsVoeu._cloture : 
+			this.etatVoeu(nouvelEtat);
+			break;
+			
+		case listeEtatsVoeu._OUI : 
+					
+		case listeEtatsVoeu._NON :
+			this.etatVoeu(nouvelEtat);
+			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
+			for (VoeuImpl v : listeVoeuTemp)
 			{
-				v.etatVoeu(listeEtatsVoeu.NON);
+				if (!v.equals(this))
+				{
+					v.etatVoeu(listeEtatsVoeu.NON);
+				}
 			}
+			break;
+			
+		case listeEtatsVoeu._OUIMAIS : 
+			
+		case listeEtatsVoeu._NONMAIS : 
+			this.etatVoeu(nouvelEtat);
+			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
+			for (VoeuImpl v : listeVoeuTemp)
+			{
+				if (v.position() > this.position())
+				{
+					v.etatVoeu(listeEtatsVoeu.NON);
+				}
+			}
+			break;
+			
 		}
 	}
-
-
-
-	/**
-	 * Methode declenchee lors de la réponse de l'etudiant
-	 */
-	@Override
-	public void reponseOUIMAIS() 
-	{
-		this.etatVoeu = listeEtatsVoeu.OUIMAIS ;
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
-		for (VoeuImpl v : listeVoeuTemp)
-		{
-			if (v.position() > this.position())
-			{
-				v.etatVoeu(listeEtatsVoeu.NON);
-			}
-		}
-	}
-
-
-	/**
-	 * Methode declenchee lors de la réponse de l'etudiant
-	 */
-	@Override
-	public void reponseNONMAIS() 
-	{
-		this.etatVoeu = listeEtatsVoeu.NONMAIS;
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
-		for (VoeuImpl v : listeVoeuTemp)
-		{
-			if (v.position() > this.position())
-			{
-				v.etatVoeu(listeEtatsVoeu.NON); 
-			}
-		}
-	}
-
-
-	/**
-	 * Methode declenchee lors de la réponse de l'etudiant
-	 */
-	@Override
-	public void reponseNON() 
-	{
-		this.etatVoeu = listeEtatsVoeu.NON ;
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
-		for (VoeuImpl v : listeVoeuTemp)
-		{
-			if (!v.equals(this))
-			{
-				v.etatVoeu(listeEtatsVoeu.NON); 
-			}
-		}
-	}
-
-
 	
 	/**
 	 * 
@@ -227,20 +197,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		return rep;
 	}
 
-
-
-	@Override
-	public void accepterCandidature() 
-	{
-		this.etatVoeu(listeEtatsVoeu.valide);
-		
-	}
-
-	@Override
-	public void refuserCandidature() 
-	{
-		this.etatVoeu(listeEtatsVoeu.nonValide);
-	}
 	
 	
 	public boolean classable()
