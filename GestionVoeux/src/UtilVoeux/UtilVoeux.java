@@ -18,6 +18,7 @@ import Etudes.Rectorat;
 import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
+import Etudes.listeEtatsVoeu;
 import Util.UtilTraitements;
 
 public class UtilVoeux extends UtilVoeuxPOA {
@@ -137,7 +138,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 				throw new NombreMaxDeVoeuxAtteintException();
 			}
 		}
-		soumetteur.listeVoeux((Voeu[]) UtilTraitements.ToTableau(listeVoeux));
+		
 	}
 
 	/**
@@ -233,7 +234,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 		ArrayList<VoeuImpl> arrayVoeuTemp = new ArrayList<VoeuImpl>();
 		for(VoeuImpl v : listeVoeux)
 		{
-			if (v.propositionCorrespondante().equals(p))
+			if (v.propositionCorrespondante().equals(p) && v.classable())
 			{
 				//Les voeux implémentent Comparable ce qui permet d'utiliser
 				//la méthode sort de la classe ArrayList
@@ -244,6 +245,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 		for (short i = 0; i < arrayVoeuTemp.size()-1;i++)
 		{
 			arrayVoeuTemp.get(i).classementEtudiant((short) (i+1));
+			arrayVoeuTemp.get(i).etatVoeu(listeEtatsVoeu.cloture);
 
 		}
 

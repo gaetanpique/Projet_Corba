@@ -48,17 +48,12 @@ public class EtudiantImpl extends EtudiantPOA {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 	}
 
-	@Override
-	public void listeVoeux(Voeu[] value) {
-		listeVoeux.clear();
-		listeVoeux.addAll((Collection<? extends Voeu>) UtilTraitements
-				.ToArray(value));
+	public String getMotDePasse() {
+		return motDePasse;
 	}
 
-	@Override
-	public void resultats(Resultat value) {
-		resultats = (ResultatImpl) value;
-		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
+	public void setMotDePasse(String motDePasse) {
+		this.motDePasse = motDePasse;
 	}
 
 	@Override

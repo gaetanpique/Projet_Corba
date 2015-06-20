@@ -66,7 +66,7 @@ public class PropositionImpl extends PropositionPOA {
 	 * @exception prerequisDejaExiistantException : la licence en paramètre est déjà présente dans la liste
 	 * @author Baptiste
 	 */
-	@Override
+/*	@Override
 	public void addPrerequis(Licence l) throws prerequisDejaExistantException{
 		if(prerequis.contains(l))
 		{
@@ -77,6 +77,6 @@ public class PropositionImpl extends PropositionPOA {
 			prerequis.add(l);
 		}
 		
-	}
+	}*/
 }
 

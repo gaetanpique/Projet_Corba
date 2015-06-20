@@ -64,7 +64,6 @@ module Etudes
 	{
 		readonly attribute Master masterPropose;
 		attribute listLicences prerequis;
-		void addPrerequis(in Licence l) raises(prerequisDejaExistantException);
 	};
 	
 	interface Etudiant;
@@ -116,7 +115,7 @@ module Etudes
 		readonly attribute short position;
 	};
 	
-	enum listeEtatsVoeu {initial,valide,nonValide,OUI,NON,OUIMAIS,NONMAIS};
+	enum listeEtatsVoeu {initial,valide,nonValide,cloture,OUI,NON,OUIMAIS,NONMAIS};
 	interface Voeu
 	{
 		readonly attribute Proposition propositionCorrespondante;
@@ -130,8 +129,6 @@ module Etudes
 		oneway void reponseNON();
 		oneway void accepterCandidature();
 		oneway void refuserCandidature();
-
-		oneway void majClassement(in short classement);
 	};
 	
 	typedef sequence<Voeu> listVoeux;
@@ -139,14 +136,12 @@ module Etudes
 	interface Etudiant
 	{
 		readonly attribute string numEtudiant;
-		attribute Resultat resultats;
-		readonly attribute string numEtudiant;
-		attribute listVoeux listeVoeux;
+		readonly attribute Resultat resultats;
+		readonly attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
-		void addVoeuEtudiant(in Voeu voeuAAjouter) raises (NombreMaxDeVoeuxAtteintException);
+		oneway void addVoeuEtudiant(in Voeu voeuAAjouter) raises (NombreMaxDeVoeuxAtteintException);
 		short getPositionEtudiant();
 		Universite getUniversite();
-		oneway void addVoeuEtudiant(in Voeu v) raises (NombreMaxDeVoeuxAtteintException);
 		
 		
 	};
