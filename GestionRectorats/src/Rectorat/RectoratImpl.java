@@ -47,6 +47,47 @@ public class RectoratImpl extends RectoratPOA {
 		UtilConnexion.runORB();
 	}
 
+	//-----------------GETTERS ANS SETTERS--------------------------------//
+		/**
+	 * Cette méthode retourne l'ensemble des universités qui dépendent de ce rectorat
+	 * 
+	 * @return Universite[] Un tableau des unviersités
+	 * @author Gaetan
+	 */
+	@Override
+	public Universite[] getListUniversites() {
+		return this.universites.toArray(new Universite[this.universites.size()]);
+	}
+	
+	
+	/**
+	 * Cette méthode retourne les formations de Master pour lesquelles l'université en question à une accréditation
+	 * 
+	 * Pré-condition : L'université doit dépendre de ce rectorat
+	 * 
+	 * @param universite Universite L'université pour lesquelles on veut les accréditations
+	 * @return Formation[] La liste des accréditations
+	 * @author Gaetan
+	 */
+	@Override
+	public Formation[] getAccreditationsByUniversite(Universite universite) {
+		return this.accreditations.get(universite).toArray(new Formation[this.accreditations.get(universite).size()]);
+	}
+
+
+	@Override
+	public String nom() {
+		return this.nom;
+	}
+
+	@Override
+	public String getId() {
+		return  "Rectorat_" + this.nom;
+	}
+
+	
+	//-----------------METHODS--------------------------------//
+	
 	/**
 	 * Cette méthode recherche l'étudiant correspondant au numéro demandé
 	 * 
@@ -142,30 +183,6 @@ public class RectoratImpl extends RectoratPOA {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".dereferencer() :");
 	}
 
-	/**
-	 * Cette méthode retourne l'ensemble des universités qui dépendent de ce rectorat
-	 * 
-	 * @return Universite[] Un tableau des unviersités
-	 * @author Gaetan
-	 */
-	@Override
-	public Universite[] getListUniversites() {
-		return this.universites.toArray(new Universite[this.universites.size()]);
-	}
-
-	/**
-	 * Cette méthode retourne les formations de Master pour lesquelles l'université en question à une accréditation
-	 * 
-	 * Pré-condition : L'université doit dépendre de ce rectorat
-	 * 
-	 * @param universite Universite L'université pour lesquelles on veut les accréditations
-	 * @return Formation[] La liste des accréditations
-	 * @author Gaetan
-	 */
-	@Override
-	public Formation[] getAccreditationsByUniversite(Universite universite) {
-		return this.accreditations.get(universite).toArray(new Formation[this.accreditations.get(universite).size()]);
-	}
 
 	/**
 	 * Cette méthode retourne toutes les propositions des universités qui dépendent de ce rectorat pour la formation demandée
@@ -191,10 +208,5 @@ public class RectoratImpl extends RectoratPOA {
 		return resultat.toArray(new Proposition[resultat.size()]);
 	}
 
-	@Override
-	public String nom() {
-		return this.nom;
-	}
 
-	
 }

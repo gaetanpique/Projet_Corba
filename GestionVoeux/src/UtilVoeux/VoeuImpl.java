@@ -7,6 +7,7 @@ import java.util.Calendar;
 import org.omg.CORBA.ORB;
 
 import Util.UtilTraitements;
+import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantHelper;
 import Etudes.NombreMaxDeVoeuxAtteintException;
@@ -21,19 +22,18 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 {
 	private Proposition propositionCorrespondante;
 	private Etudiant etudiantCorrespondant;
-	private short classementEtudiant;
-	private short position;
-	private Etudes.listeEtatsVoeu etatVoeu;
+	private int position;
+	private Etudes.EtatsVoeu etatVoeu;
 	//TODO Creer un booléen "classable"/"valide" ?
 	//PBM : Comment ne plus compter un voeu dans le classement lorsque celui-ci n'est pas valide 
 	//ou que l'étudiant a repondu non/nonmais ??
 	
 	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu) 
 	{
-		this(p, numEtudiant, positionVoeu, listeEtatsVoeu.initial );
+		this(p, numEtudiant, positionVoeu, EtatsVoeu.initial );
 	}
 	
-	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, listeEtatsVoeu etatVoeu) 
+	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, EtatsVoeu etatVoeu) 
 	{
 		try {
 			this.propositionCorrespondante = p;
@@ -43,7 +43,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Etu_" + numEtudiant);
 			this.etudiantCorrespondant = EtudiantHelper.narrow(result);
 
-			UtilConnexion.connexionAuNammingService(this, "Voeu_"	+ numEtudiant + "_" + p.masterPropose().intitule());
+			UtilConnexion.connexionAuNammingService(this, "Voeu_"	+ numEtudiant + "_" + p.getId());
 
 			this.etudiantCorrespondant.addVoeuEtudiant(this._this());
 
@@ -61,29 +61,33 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	
 
 	@Override
-	public short position() 
+	public int position() 
 	{
 		return position;
 	}
 
 	@Override
-	public void position(short value) {
+	public void position(int value) {
 		this.position = value;
 		
 	}
 	
 	@Override
-	public Etudes.listeEtatsVoeu etatVoeu() {
+	public Etudes.EtatsVoeu etatVoeu() {
 		return this.etatVoeu;
 	}
 
 
 	@Override
-	public void etatVoeu(listeEtatsVoeu value) {
+	public void etatVoeu(EtatsVoeu value) {
 		this.etatVoeu = value;
 		
 	}
-
+	
+	@Override
+	public String getId() {
+		return "Voeu_" + etudiantCorrespondant.numEtudiant()+ "_" + propositionCorrespondante.getId();
+	}
 
 
 	
@@ -104,63 +108,53 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		return etudiantCorrespondant;
 	}
 
-	@Override
-	public short classementEtudiant() {
-		return this.classementEtudiant;
-	}
-
-
-	@Override
-	public void classementEtudiant(short value) {
-		this.classementEtudiant = value;
-		
-	}
-
 	//---------------------------------METHODS-------------------------------//
 	
 	
 	
 	/**
-	 * Methode declenchee lors de la réponse de l'etudiant
+	 *Methode modifiant l'état du voeu concerné
+	 *@param la classe "enum" créée par l'IDL (avec la valeur correspondante)
+	 *@author Memer
 	 */
 	@Override
-	public void modifierEtatVoeu(listeEtatsVoeu nouvelEtat)
+	public void modifierEtatVoeu(EtatsVoeu nouvelEtat)
 	{
 		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
 		switch(nouvelEtat.value())
 		{
-		case listeEtatsVoeu._nonValide :
+		case EtatsVoeu._nonValide :
 
-		case listeEtatsVoeu._valide :
+		case EtatsVoeu._valide :
 
-		case listeEtatsVoeu._cloture : 
+		case EtatsVoeu._cloture : 
 			this.etatVoeu(nouvelEtat);
 			break;
 			
-		case listeEtatsVoeu._OUI : 
+		case EtatsVoeu._OUI : 
 					
-		case listeEtatsVoeu._NON :
+		case EtatsVoeu._NON :
 			this.etatVoeu(nouvelEtat);
 			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
 			for (VoeuImpl v : listeVoeuTemp)
 			{
 				if (!v.equals(this))
 				{
-					v.etatVoeu(listeEtatsVoeu.NON);
+					v.etatVoeu(EtatsVoeu.NON);
 				}
 			}
 			break;
 			
-		case listeEtatsVoeu._OUIMAIS : 
+		case EtatsVoeu._OUIMAIS : 
 			
-		case listeEtatsVoeu._NONMAIS : 
+		case EtatsVoeu._NONMAIS : 
 			this.etatVoeu(nouvelEtat);
 			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
 			for (VoeuImpl v : listeVoeuTemp)
 			{
 				if (v.position() > this.position())
 				{
-					v.etatVoeu(listeEtatsVoeu.NON);
+					v.etatVoeu(EtatsVoeu.NON);
 				}
 			}
 			break;
@@ -198,7 +192,13 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	}
 
 	
-	
+	/**
+	 * Methode qui permet de determiner si un voeu doit rester dans le classement 
+	 * ou peut en être sorti selon son etat
+	 * 
+	 * @return booleen indiquant le "statut" du voeu
+	 * @author Memer
+	 */
 	public boolean classable()
 	{
 		switch (etatVoeu.value())
@@ -223,6 +223,11 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		}
 		return true;
 	}
+
+
+
+
+
 }
 
 	

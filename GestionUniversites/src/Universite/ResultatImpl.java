@@ -33,6 +33,8 @@ public class ResultatImpl extends ResultatPOA {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Result_" + numEtudiant + " référencé et opérationnel.");
 	}
 	
+	//-----------------GETTERS ANS SETTERS--------------------------------//
+
 	public Licence getLicence() {
 		return licence;
 	}
@@ -50,7 +52,13 @@ public class ResultatImpl extends ResultatPOA {
 	public float moyenne() {
 		return moyenne;
 	}
+	
+	@Override
+	public short position() {
+		return position;
+	}
 
+	//-----------------METHODS--------------------------------//
 
 	/**
 	 * Cette méthode vérifie si la licence du résultat est présente 
@@ -72,9 +80,6 @@ public class ResultatImpl extends ResultatPOA {
 		return false;
 	}
 
-	@Override
-	public short position() {
-		return position;
-	}
+
 
 }

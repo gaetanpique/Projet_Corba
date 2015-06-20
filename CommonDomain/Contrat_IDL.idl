@@ -64,6 +64,8 @@ module Etudes
 	{
 		readonly attribute Master masterPropose;
 		attribute listLicences prerequis;
+		readonly attribute long nbPlaces;
+		oneway string getId();
 	};
 	
 	interface Etudiant;
@@ -71,6 +73,7 @@ module Etudes
 	typedef sequence<Proposition> listPropositions;
 	interface Universite
 	{
+		readonly attribute string nom;
 		attribute listPropositions listeDesPropositions;
 		listEtudiant getEtudiants();
 		Etudiant getEtudiantByNumero(in string numEtudiant);
@@ -82,6 +85,7 @@ module Etudes
 		oneway void majPrerequis(in Proposition p, in listLicences _nouveauxPrerequis) raises (PropositionDoesNotExistException);
 		short getPositionEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
 		boolean checkLicenceEtudiant(in Etudiant e, in Licence l);
+		oneway string getId();
 	};
 	
 	typedef sequence<Universite> listUniversites;
@@ -96,6 +100,7 @@ module Etudes
 		listUniversites getListUniversites();
 		listFormations getAccreditationsByUniversite(in Universite _universite);
 		listPropositions getPropositionByFormation(in Master _formation);
+		oneway string getId();
 	};
 	
 	typedef sequence<Rectorat> listRectorats;
@@ -106,6 +111,7 @@ module Etudes
 		listPropositions getPropositionByFormation(in Formation _formation);
 		oneway void referencer(in Rectorat nomRectoratConnecte);
 		oneway void dereferencer(in Rectorat rectoratDeconnecte);
+		
 	};
 
 	interface Resultat
@@ -113,17 +119,18 @@ module Etudes
 		readonly attribute string codeObtention;
 		readonly attribute float moyenne;
 		readonly attribute short position;
+		
 	};
 	
-	enum listeEtatsVoeu {initial,valide,nonValide,cloture,OUI,NON,OUIMAIS,NONMAIS};
+	enum EtatsVoeu {initial,valide,nonValide,cloture,enAttente,accepte,OUI,NON,OUIMAIS,NONMAIS};
 	interface Voeu
 	{
 		readonly attribute Proposition propositionCorrespondante;
 		readonly attribute Etudiant etudiantCorrespondant;
-		attribute short position;
-		attribute short classementEtudiant;
-		attribute listeEtatsVoeu etatVoeu;
-		oneway void modifierEtatVoeu(in listeEtatsVoeu nouvelEtat);
+		attribute long position;
+		attribute EtatsVoeu etatVoeu;
+		oneway void modifierEtatVoeu(in EtatsVoeu nouvelEtat);
+		oneway string getId();
 	};
 	
 	typedef sequence<Voeu> listVoeux;

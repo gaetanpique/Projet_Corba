@@ -1,15 +1,10 @@
 package UtilVoeux;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Calendar;
+import java.util.Collection;
 
-import org.omg.CORBA.ORB;
-
-import Util.UtilConnexion;
+import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.NombreMaxDeVoeuxAtteint;
 import Etudes.NombreMaxDeVoeuxAtteintException;
@@ -19,6 +14,7 @@ import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
 import Etudes.listeEtatsVoeu;
+import Util.UtilConnexion;
 import Util.UtilTraitements;
 
 public class UtilVoeux extends UtilVoeuxPOA {
@@ -244,8 +240,14 @@ public class UtilVoeux extends UtilVoeuxPOA {
 		//Parcours de l'arrayList triée pour donner le classement du voeu égale à son index+1
 		for (short i = 0; i < arrayVoeuTemp.size()-1;i++)
 		{
-			arrayVoeuTemp.get(i).classementEtudiant((short) (i+1));
-			arrayVoeuTemp.get(i).etatVoeu(listeEtatsVoeu.cloture);
+			if ( i < p.nbPlaces())
+			{
+			arrayVoeuTemp.get(i).etatVoeu(EtatsVoeu.accepte);
+			}
+			else
+			{
+				arrayVoeuTemp.get(i).etatVoeu(EtatsVoeu.enAttente);
+			}
 
 		}
 

@@ -58,6 +58,8 @@ public class UniversiteImpl extends UniversitePOA {
 	}
 
 
+	//-----------------GETTERS ANS SETTERS--------------------------------//
+	
 	@Override
 	public Proposition[] listeDesPropositions() {
 		return (Proposition[]) UtilTraitements.ToTableau(listeDesPropositions);
@@ -79,6 +81,19 @@ public class UniversiteImpl extends UniversitePOA {
 		return this.etudiants.toArray(new Etudiant[this.etudiants.size()]);
 	}
 
+
+	@Override
+	public String nom() {
+		return this.nom;
+	}
+	
+	@Override
+	public String getId() {
+		return "Universite_" + this.nom;
+	}
+
+
+	//-----------------METHODS--------------------------------//
 	/**
 	 * Cette méthode l'étudiant correspondant au numéro demandé. Si aucun n'étudiant de cette université ne porte ce numéro, retourne null
 	 * 
@@ -264,7 +279,7 @@ public class UniversiteImpl extends UniversitePOA {
 		
 	}
 
-
+//TODO JavaDOC + methode check licence étudiant ?
 	/**
 	 * Retourne la position de l'etudiant pour la formation "formation" auquel il postule
 	 * 
@@ -302,4 +317,7 @@ public class UniversiteImpl extends UniversitePOA {
 		this.etudiants.add(etudiantAAjouter);
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Universite_ " + this.nom + ".referencer(EtudiantImpl) :");
 	}
+
+
+
 }

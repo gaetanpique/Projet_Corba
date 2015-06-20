@@ -47,7 +47,8 @@ public class EtudiantImpl extends EtudiantPOA {
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 	}
-
+	
+	//-----------------GETTERS ANS SETTERS--------------------------------//
 	public String getMotDePasse() {
 		return motDePasse;
 	}
@@ -71,7 +72,13 @@ public class EtudiantImpl extends EtudiantPOA {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Etudiant_" + this.numero + ".getUniversite()");
 		return universite._this();
 	}
+	
+	@Override
+	public String numEtudiant() {
+		return this.numero;
+	}
 
+	//-----------------METHODS--------------------------------//
 	@Override
 	public boolean estMeilleurQue(Etudiant aComparer)
 			throws diplomesDifferentsException {
@@ -151,9 +158,5 @@ public class EtudiantImpl extends EtudiantPOA {
 		else listeVoeux.add(v);
 	}
 
-	@Override
-	public String numEtudiant() {
-		return this.numero;
-	}
 
 }
