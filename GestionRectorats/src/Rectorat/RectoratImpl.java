@@ -1,5 +1,7 @@
 package Rectorat;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -10,12 +12,18 @@ import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
 import Etudes.EtudiantPasInscritException;
 import Etudes.Formation;
+<<<<<<< Upstream, based on origin/master
+=======
+import Etudes.FormationHelper;
+import Etudes.Master;
+>>>>>>> 9ec8cc6 Connexions Ã  la BDD = Done (HOPE)
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
 import Etudes.MotDePasseErroneException;
 import Etudes.Proposition;
 import Etudes.RectoratPOA;
 import Etudes.Universite;
+import Util.DbConnection;
 import Util.UtilConnexion;
 
 public class RectoratImpl extends RectoratPOA {
@@ -46,8 +54,33 @@ public class RectoratImpl extends RectoratPOA {
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Rectorat_" + this.nom + " référencé et opérationnel.");
 		UtilConnexion.runORB();
+		initFormations();
 	}
 
+	private void initFormations()
+	{
+		String[] colonnes = new String[1];
+		colonnes[0]="intituleformation";
+		ResultSet resultatSQL;
+		ArrayList<Formation> arrayFormationTemp = new ArrayList<Formation>();
+		for (Universite u : this.universites)
+		{
+
+			resultatSQL = DbConnection.selectIntoDB("accreditation", colonnes, "nomuniv="+u.nom().toLowerCase());
+			try {
+				
+				while(resultatSQL.next())
+				{
+					org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_"+ resultatSQL.getString(0));
+					arrayFormationTemp.add(FormationHelper.narrow(result));
+				}
+				accreditations.put(u,arrayFormationTemp);
+				resultatSQL.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 		/**
 	 * Cette méthode retourne l'ensemble des universités qui dépendent de ce rectorat

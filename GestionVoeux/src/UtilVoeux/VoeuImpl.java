@@ -43,8 +43,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 
 			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Voeu_" + numEtudiant + "_"	+ p.masterPropose().intitule() + " référencé et opérationnel.");
 			
-			//TODO definir la structure des tables
-			// TODO Util.DbConnection.insertIntoDB("voeu", _colonnes, _valeurs);
 		} catch (NombreMaxDeVoeuxAtteintException e) {
 			e.printStackTrace();
 		}

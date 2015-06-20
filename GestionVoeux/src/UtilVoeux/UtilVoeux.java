@@ -1,18 +1,24 @@
 package UtilVoeux;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
 import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
+import Etudes.FormationHelper;
+import Etudes.Licence;
 import Etudes.NombreMaxDeVoeuxAtteint;
 import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
+import Etudes.PropositionHelper;
 import Etudes.Rectorat;
 import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
+import Util.DbConnection;
 import Util.UtilConnexion;
 import Util.UtilTraitements;
 
@@ -22,6 +28,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 
 	public UtilVoeux()  
 	{
+		initVoeux();
 		UtilConnexion.connexionAuNammingService(this, "UtilVoeux");
 		 
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant UtilVoeux référencé et opérationnel.");
@@ -31,6 +38,29 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	}
 
 
+	public void initVoeux()
+	{
+		Proposition p;
+		String[] colonnes = new String[1];
+		colonnes[0]="*";
+		ResultSet resultatSQL;
+			resultatSQL = DbConnection.selectIntoDB("voeux", colonnes, "");
+			try {
+				
+				while(resultatSQL.next())
+				{
+						org.omg.CORBA.Object result = UtilConnexion.getObjetDistant(resultatSQL.getString(1));
+						p= PropositionHelper.narrow(result);
+						
+						listeVoeux.add(new VoeuImpl(p,resultatSQL.getString(0),resultatSQL.getInt(3),EtatsVoeu.from_int(resultatSQL.getInt(2))));
+						
+				}
+				
+				resultatSQL.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+	}
 	/**
 	 * 
 	 * Cette methode retourne la liste des meilleures propositions pour l'etudiant concerne

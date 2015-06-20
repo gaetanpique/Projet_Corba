@@ -46,7 +46,8 @@ public class UniversiteImpl extends UniversitePOA {
 		this.nom = _nomUniversite;
 		this.etudiants = new ArrayList<EtudiantImpl>();
 		this.listeDesPropositions = new ArrayList<PropositionImpl>();
-		
+		initEtudiants();
+		initPropositions();
 		// Intialisation de l'orb
 		UtilConnexion.connexionAuNammingService(this, "Universite_" + this.nom);
 		
@@ -61,7 +62,7 @@ public class UniversiteImpl extends UniversitePOA {
 	}
 
 
-	private void initFormations()
+	private void initEtudiants()
 	{
 		String[] colonnes = new String[2];
 		colonnes[0]="numetudiant";
@@ -83,6 +84,28 @@ public class UniversiteImpl extends UniversitePOA {
 				ex.printStackTrace();
 			}
 		}
+	}
+	
+	private void initPropositions()
+	{
+		String[] colonnes = new String[2];
+		String nomMaster;
+		colonnes[0]="*";
+		ResultSet resultatSQL;
+		resultatSQL = DbConnection.selectIntoDB("propositions", colonnes, "");
+			try {
+				
+				while(resultatSQL.next())
+				{
+					nomMaster= resultatSQL.getString(0).split("_")[2];
+					listeDesPropositions.add(new PropositionImpl(this,nomMaster));
+				}
+				
+				resultatSQL.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		
 	}
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 	
@@ -348,5 +371,7 @@ public class UniversiteImpl extends UniversitePOA {
 	public void referencer(EtudiantImpl etudiantAAjouter) {
 		this.etudiants.add(etudiantAAjouter);
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Universite_ " + this.nom + ".referencer(EtudiantImpl) :");
+
 	}
+
 }

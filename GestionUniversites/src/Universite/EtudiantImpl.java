@@ -29,17 +29,21 @@ public class EtudiantImpl extends EtudiantPOA {
 	private ArrayList<Voeu> listeVoeux;
 
 	public EtudiantImpl(String numE, ArrayList<ResultatImpl> resE, UniversiteImpl univE) {
-		this(numE, resE, univE, null);
+		this(numE, univE, null);
 	}
 
-	public EtudiantImpl(String numE, ArrayList<ResultatImpl> resE, UniversiteImpl univE,
+	public EtudiantImpl(String numE, UniversiteImpl univE,
 			String motDePasse) {
 		this.numero = numE;
-		this.resultats = resE;
 		this.universite = univE;
 		this.motDePasse = motDePasse;
 		this.listeVoeux = new ArrayList<Voeu>();
-
+		this.resultats = new ArrayList<ResultatImpl>();
+		
+		for(int i =1; i==6;i++)
+		{
+			resultats.add(new ResultatImpl(this.numero,i));
+		}
 		UtilConnexion.connexionAuNammingService(this, "Etu_" + this.numero);
 		
 		this.universite.referencer(this);
@@ -47,17 +51,6 @@ public class EtudiantImpl extends EtudiantPOA {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 	}
 	
-	public EtudiantImpl(String numEtudiant, UniversiteImpl u, String mdp) 
-	{		
-		ArrayList<ResultatImpl> r = new ArrayList<ResultatImpl>();
-		for(int i =1; i==6;i++)
-		{
-			r.add(new ResultatImpl(numEtudiant,i));
-		}
-		
-		//this(numEtudiant, r, u,mdp);
-	}
-
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 	public String getMotDePasse() {
 		return motDePasse;
@@ -74,7 +67,14 @@ public class EtudiantImpl extends EtudiantPOA {
 
 	@Override
 	public Resultat[] resultats() {
-		return (Resultat[]) UtilTraitements.ToTableau(resultats);
+		Resultat[] resultat = new Resultat[resultats.size()];
+		int cpt=0;
+		for (ResultatImpl r : resultats)
+		{
+			resultat[cpt] = r._this();
+			cpt++;
+		}
+		return resultat;
 	}
 
 	@Override
