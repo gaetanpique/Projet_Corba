@@ -74,7 +74,7 @@ public class EtudiantImpl extends EtudiantPOA {
 
 	@Override
 	public Resultat[] resultats() {
-		return resultats._this();
+		return (Resultat[]) UtilTraitements.ToTableau(resultats);
 	}
 
 	@Override
@@ -89,17 +89,37 @@ public class EtudiantImpl extends EtudiantPOA {
 	}
 
 	//-----------------METHODS--------------------------------//
+	/**
+	 * Compare la moyenne des semestres de deux étudiants.
+	 * En cas d'égalité, on compare leur position au dernier semestre
+	 * 
+	 * @return false si l'étudiant en paramètre est meilleur, true sinon
+	 * @author BAPeTISTE
+	 */
 	@Override
-	public boolean estMeilleurQue(Etudiant aComparer)
-			throws diplomesDifferentsException {
-		ResultatImpl res1 = (ResultatImpl) this.resultats();
-		ResultatImpl res2 = (ResultatImpl) aComparer.resultats();
-		if (!res1.getLicence()._equals(res2.getLicence())) {
-			throw new diplomesDifferentsException();
-		} else if (res1.moyenne() == res2.moyenne()) {
-			return (res1.position() > res2.position());
+	public boolean estMeilleurQue(Etudiant aComparer) {
+		EtudiantImpl e = (EtudiantImpl)aComparer;
+		float moy1 = this.getMoyenneLicenceEtudiant();
+		float moy2 = e.getMoyenneLicenceEtudiant();
+		
+		//si moyennes égales, on compare la position da l'élève dans la promotion
+		if (moy1 == moy2) {
+			return (this.resultats()[this.resultats().length-1].position() > e.resultats()[this.resultats().length-1].position());
 		} else
-			return (res1.moyenne() > res2.moyenne());
+			return (moy1 > moy2);
+	}
+	
+	/**
+	 * Calcule la moyenne de tous les semestres d'un étudiant (les résultats contenus dans la liste "resultats"
+	 * 
+	 * @return float représentant la moyenne des semestre
+	 */
+	public float getMoyenneLicenceEtudiant(){
+		float moy = 0;
+		for(ResultatImpl r : this.resultats){
+			moy += r.moyenne();
+		}
+		return (moy/this.resultats.size());
 	}
 
 	/**
@@ -128,12 +148,12 @@ public class EtudiantImpl extends EtudiantPOA {
 	 */
 	public boolean ResultatsValideForProposition(Proposition p) {
 		// Résultat est dans le même projet donc on appelle la méthode en local
-		ResultatImpl r = (ResultatImpl) this.resultats();
+		ResultatImpl r = (ResultatImpl) this.resultats()[0];;
 		return r.isValideForProposition(p);
 	}
 
 	/**
-	 * Cette méthode retourne l'attribut position du résultat de l'étudiant
+	 * Cette méthode retourne l'attribut position du dernier semestre de l'étudiant
 	 * 
 	 * 
 	 * @return attribut position de l'étudiant sur son résultat
@@ -142,7 +162,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	@Override
 	public int getPositionEtudiant() {
 		// appel interne au projet donc pas de méthode CORBA
-		ResultatImpl res = (ResultatImpl) this.resultats();
+		ResultatImpl res = (ResultatImpl) this.resultats()[this.resultats().length-1];
 		return res.position();
 	}
 
@@ -153,7 +173,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 * @author Baptiste
 	 */
 	public boolean checkLicence(Licence l) {
-		ResultatImpl res1 = (ResultatImpl) this.resultats();
+		ResultatImpl res1 = (ResultatImpl) this.resultats()[0];
 		return (res1.getLicence()._equals(l));
 	}
 
