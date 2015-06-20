@@ -113,6 +113,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 * Calcule la moyenne de tous les semestres d'un étudiant (les résultats contenus dans la liste "resultats"
 	 * 
 	 * @return float représentant la moyenne des semestre
+	 * @author BAPeTISTE
 	 */
 	public float getMoyenneLicenceEtudiant(){
 		float moy = 0;
@@ -179,6 +180,8 @@ public class EtudiantImpl extends EtudiantPOA {
 
 	/**
 	 * Ajoute un voeu à la lite des voeux de l'étudiant (listeVoeux)
+	 * 
+	 * @author BAPeTISTE
 	 */
 	@Override
 	public void addVoeuEtudiant(Voeu v) throws NombreMaxDeVoeuxAtteintException {
