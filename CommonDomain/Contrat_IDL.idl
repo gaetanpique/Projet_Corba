@@ -83,7 +83,7 @@ module Etudes
 		listLicences getPrerequis(in Proposition p) raises (PropositionDoesNotExistException);
 		oneway void creerProposition(in string intituleMaster, in listLicences _prerequis) raises (formationDejaProposeeException);
 		oneway void majPrerequis(in Proposition p, in listLicences _nouveauxPrerequis) raises (PropositionDoesNotExistException);
-		short getPositionEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
+		long getPositionEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
 		boolean checkLicenceEtudiant(in Etudiant e, in Licence l);
 		oneway string getId();
 	};
@@ -118,7 +118,7 @@ module Etudes
 	{
 		readonly attribute string codeObtention;
 		readonly attribute float moyenne;
-		readonly attribute short position;
+		readonly attribute long position;
 		
 	};
 	
@@ -134,15 +134,15 @@ module Etudes
 	};
 	
 	typedef sequence<Voeu> listVoeux;
-	
+	typedef sequence<Resultat> listResultat;
 	interface Etudiant
 	{
 		readonly attribute string numEtudiant;
-		readonly attribute Resultat resultats;
+		readonly attribute listResultat resultats;
 		readonly attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		oneway void addVoeuEtudiant(in Voeu voeuAAjouter) raises (NombreMaxDeVoeuxAtteintException);
-		short getPositionEtudiant();
+		long getPositionEtudiant();
 		Universite getUniversite();
 		
 		
@@ -151,7 +151,7 @@ module Etudes
 	interface UtilVoeux
 	{
 		listVoeux getMeilleurePropositionByEtudiant(in Etudiant _etudiant);
-		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur, in short position) raises (NombreMaxDeVoeuxAtteintException);
+		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur, in long position) raises (NombreMaxDeVoeuxAtteintException);
 		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
 		listVoeux getVoeuxByUniversite(in Universite _universite);
 		listVoeux getVoeuxByRectorat(in Rectorat rectoratConcerne);

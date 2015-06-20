@@ -13,7 +13,6 @@ import Etudes.Rectorat;
 import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
-import Etudes.listeEtatsVoeu;
 import Util.UtilConnexion;
 import Util.UtilTraitements;
 
@@ -117,7 +116,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	 * @author Merwan
 	 */
 	@Override
-	public void soumettreVoeu(Proposition aSoumettre, Etudiant soumetteur, short positionVoeu) throws NombreMaxDeVoeuxAtteintException 
+	public void soumettreVoeu(Proposition aSoumettre, Etudiant soumetteur, int positionVoeu) throws NombreMaxDeVoeuxAtteintException 
 	{
 		Integer cpt=0;
 
@@ -238,15 +237,15 @@ public class UtilVoeux extends UtilVoeuxPOA {
 			}
 		}
 		//Parcours de l'arrayList triée pour donner le classement du voeu égale à son index+1
-		for (short i = 0; i < arrayVoeuTemp.size()-1;i++)
+		for (short i = 1; i < arrayVoeuTemp.size();i++)
 		{
 			if ( i < p.nbPlaces())
 			{
-			arrayVoeuTemp.get(i).etatVoeu(EtatsVoeu.accepte);
+			arrayVoeuTemp.get(i-1).etatVoeu(EtatsVoeu.accepte);
 			}
 			else
 			{
-				arrayVoeuTemp.get(i).etatVoeu(EtatsVoeu.enAttente);
+				arrayVoeuTemp.get(i-1).etatVoeu(EtatsVoeu.enAttente);
 			}
 
 		}

@@ -28,12 +28,12 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	//PBM : Comment ne plus compter un voeu dans le classement lorsque celui-ci n'est pas valide 
 	//ou que l'étudiant a repondu non/nonmais ??
 	
-	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu) 
+	public VoeuImpl(Proposition p, String numEtudiant, int positionVoeu) 
 	{
 		this(p, numEtudiant, positionVoeu, EtatsVoeu.initial );
 	}
 	
-	public VoeuImpl(Proposition p, String numEtudiant, short positionVoeu, EtatsVoeu etatVoeu) 
+	public VoeuImpl(Proposition p, String numEtudiant, int positionVoeu, EtatsVoeu etatVoeu) 
 	{
 		try {
 			this.propositionCorrespondante = p;

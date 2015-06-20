@@ -1,12 +1,17 @@
 package Ministere;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.rmi.CORBA.UtilDelegate;
 
 import Etudes.Formation;
 import Etudes.MinisterePOA;
 import Etudes.Proposition;
 import Etudes.Rectorat;
+import Util.DbConnection;
 import Util.UtilConnexion;
 
 public class MinistereImpl extends MinisterePOA {
@@ -23,8 +28,25 @@ public class MinistereImpl extends MinisterePOA {
 			 
 		// Lancement de l'ORB et mise en attente de requete
 		UtilConnexion.runORB();
+		initFormations();
+		
 	}
 	
+	private void initFormations()
+	{
+		String[] colonnes = new String[1];
+		colonnes[0]="*";
+		ResultSet resultatSQL = DbConnection.selectIntoDB("formation", colonnes, "");
+		try {
+			while(resultatSQL.next())
+			{
+				new FormationImpl(resultatSQL.getString(0));
+			}
+			resultatSQL.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public Formation[] getListFormations() {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : MinistereImpl.getListFormations()");

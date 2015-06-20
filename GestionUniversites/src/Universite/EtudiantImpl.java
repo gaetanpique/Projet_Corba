@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 
 
+
 import org.omg.CORBA.ORB;
 
 import Etudes.Etudiant;
@@ -17,23 +18,21 @@ import Etudes.Resultat;
 import Etudes.Universite;
 import Etudes.Voeu;
 import Etudes.diplomesDifferentsException;
-import Util.UtilConnexion;
-import Util.UtilTraitements;
 import Util.*;
 
 public class EtudiantImpl extends EtudiantPOA {
 	
 	private String numero;	
 	private String motDePasse;
-	private ResultatImpl resultats;
+	private ArrayList<ResultatImpl> resultats;
 	private UniversiteImpl universite;
 	private ArrayList<Voeu> listeVoeux;
 
-	public EtudiantImpl(String numE, ResultatImpl resE, UniversiteImpl univE) {
+	public EtudiantImpl(String numE, ArrayList<ResultatImpl> resE, UniversiteImpl univE) {
 		this(numE, resE, univE, null);
 	}
 
-	public EtudiantImpl(String numE, ResultatImpl resE, UniversiteImpl univE,
+	public EtudiantImpl(String numE, ArrayList<ResultatImpl> resE, UniversiteImpl univE,
 			String motDePasse) {
 		this.numero = numE;
 		this.resultats = resE;
@@ -48,6 +47,17 @@ public class EtudiantImpl extends EtudiantPOA {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 	}
 	
+	public EtudiantImpl(String numEtudiant, UniversiteImpl u, String mdp) 
+	{		
+		ArrayList<ResultatImpl> r = new ArrayList<ResultatImpl>();
+		for(int i =1; i==6;i++)
+		{
+			r.add(new ResultatImpl(numEtudiant,i));
+		}
+		
+		//this(numEtudiant, r, u,mdp);
+	}
+
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 	public String getMotDePasse() {
 		return motDePasse;
@@ -63,7 +73,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	}
 
 	@Override
-	public Resultat resultats() {
+	public Resultat[] resultats() {
 		return resultats._this();
 	}
 
@@ -130,7 +140,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 * @author Baptiste
 	 */
 	@Override
-	public short getPositionEtudiant() {
+	public int getPositionEtudiant() {
 		// appel interne au projet donc pas de méthode CORBA
 		ResultatImpl res = (ResultatImpl) this.resultats();
 		return res.position();

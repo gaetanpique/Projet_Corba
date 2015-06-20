@@ -1,5 +1,7 @@
 package Universite;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -7,6 +9,8 @@ import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
+import Etudes.Formation;
+import Etudes.FormationHelper;
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.Proposition;
@@ -14,9 +18,11 @@ import Etudes.PropositionDoesNotExist;
 import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
 import Etudes.RectoratHelper;
+import Etudes.Universite;
 import Etudes.UniversitePOA;
 import Etudes.formationDejaProposeeException;
 import Etudes.pasDiplomeException;
+import Util.DbConnection;
 import Util.UtilConnexion;
 import Util.UtilTraitements;
 
@@ -54,10 +60,32 @@ public class UniversiteImpl extends UniversitePOA {
 		
 		UtilConnexion.runORB();
 		
-		new EtudiantImpl("012345", new ResultatImpl(), this);
 	}
 
 
+	private void initFormations()
+	{
+		String[] colonnes = new String[2];
+		colonnes[0]="numetudiant";
+		colonnes[1]="mdp";
+		ResultSet resultatSQL;
+		for (EtudiantImpl e : this.etudiants)
+		{
+
+			resultatSQL = DbConnection.selectIntoDB("etudiants", colonnes, "");
+			try {
+				
+				while(resultatSQL.next())
+				{
+					new EtudiantImpl(resultatSQL.getString(0),this,resultatSQL.getString(1));
+				}
+				
+				resultatSQL.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 	
 	@Override
@@ -306,7 +334,7 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Thibaut
 	 */
 	@Override
-	public short getPositionEtudiant(Etudiant sujet, Licence formation)
+	public int getPositionEtudiant(Etudiant sujet, Licence formation)
 			throws pasDiplomeException {
 				EtudiantImpl etudiantPosition = this.etudiants.get(this.etudiants.indexOf((EtudiantImpl) sujet));
 				// TODO Recupérer la position 
