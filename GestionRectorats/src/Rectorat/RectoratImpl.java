@@ -8,10 +8,11 @@ import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
+import Etudes.EtudiantPasInscritException;
 import Etudes.Formation;
-import Etudes.Master;
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
+import Etudes.MotDePasseErroneException;
 import Etudes.Proposition;
 import Etudes.RectoratPOA;
 import Etudes.Universite;
@@ -96,7 +97,7 @@ public class RectoratImpl extends RectoratPOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public Etudiant getEtudiantByNumero(String numEtudiant) {
+	public Etudiant getEtudiantByNumero(String numEtudiant) throws EtudiantInconnuException {
 		Etudiant result = null;
 
 		for (Universite u : this.universites)
@@ -110,7 +111,15 @@ public class RectoratImpl extends RectoratPOA {
 		
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".getEtudiantByNumero(" + numEtudiant + ") :");
-		return result;
+		
+		if (result == null)
+		{
+			throw new EtudiantInconnuException(numEtudiant, "");
+		}
+		else
+		{
+			return result;
+		}
 	}
 
 	/**
@@ -125,8 +134,9 @@ public class RectoratImpl extends RectoratPOA {
 	 * @throws EtudiantInconnuException 
 	 */
 	@Override
-	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException{
+	public void demanderConnexion(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException, EtudiantPasInscritException, MotDePasseErroneException {
 		Universite univDeLetudiant = this.universites.get(this.universites.indexOf(etudiant.getUniversite()));
+		
 		if (univDeLetudiant == null)
 		{
 			throw new EtudiantInconnuException();
@@ -192,13 +202,15 @@ public class RectoratImpl extends RectoratPOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public Proposition[] getPropositionByFormation(Master formation) {
+	public Proposition[] getPropositionByFormation(Formation formation) {
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".getPropositionByFormation() :");
 		ArrayList<Proposition> resultat = new ArrayList<Proposition>();
 		Proposition temp;
 		
 		for (Universite u : this.universites)
 		{
 			temp = u.getPropositionByFormation(formation);
+
 			if (u.getPropositionByFormation(formation) != null)
 			{
 				resultat.add(temp);

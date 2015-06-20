@@ -9,16 +9,15 @@ import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
+import Etudes.EtudiantPasInscritException;
 import Etudes.Formation;
-import Etudes.FormationHelper;
 import Etudes.Licence;
-import Etudes.Master;
+import Etudes.MotDePasseErroneException;
 import Etudes.Proposition;
 import Etudes.PropositionDoesNotExist;
 import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
 import Etudes.RectoratHelper;
-import Etudes.Universite;
 import Etudes.UniversitePOA;
 import Etudes.formationDejaProposeeException;
 import Etudes.pasDiplomeException;
@@ -59,7 +58,6 @@ public class UniversiteImpl extends UniversitePOA {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Universite_" + this.nom + " référencé et opérationnel.");
 		
 		UtilConnexion.runORB();
-		
 	}
 
 
@@ -186,7 +184,7 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public void connecter(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException {
+	public void connecter(Etudiant etudiant, String motDePasse) throws EtudiantInconnuException, EtudiantPasInscritException, MotDePasseErroneException {
 		EtudiantImpl etudiantAConnecter = null;
 		
 		for (EtudiantImpl e : this.etudiants)
@@ -198,15 +196,22 @@ public class UniversiteImpl extends UniversitePOA {
 			}
 		}
 
-		if (etudiantAConnecter == null || etudiantAConnecter.getMotDePasse() == null)
+		if (etudiantAConnecter == null)
 		{
-			throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
+			throw new EtudiantInconnuException(etudiant.numEtudiant(), this.nom);
 		}
 		else
 		{
-			if (!etudiantAConnecter.getMotDePasse().equals(motDePasse))
+			if (etudiantAConnecter.getMotDePasse() == null)
 			{
-				throw new EtudiantInconnuException(((EtudiantImpl) etudiant).numEtudiant(), this.nom);
+				throw new EtudiantPasInscritException(etudiant.numEtudiant());
+			}
+			else
+			{
+				if (!etudiantAConnecter.getMotDePasse().equals(motDePasse))
+				{
+					throw new MotDePasseErroneException(etudiant.numEtudiant());
+				}
 			}
 		}
 	}
@@ -219,7 +224,8 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @author Gaetan
 	 */
 	@Override
-	public Proposition getPropositionByFormation(Master formation){
+	public Proposition getPropositionByFormation(Formation formation){
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Universite_" + this.nom + ".getPropositionByFormation()");
 		for (PropositionImpl p : this.listeDesPropositions)
 		{
 			if (p.masterPropose() == formation)
@@ -276,8 +282,7 @@ public class UniversiteImpl extends UniversitePOA {
 			else
 			{
 				// crée un nouvelle proposition de formation 
-				this.listeDesPropositions.add(new PropositionImpl(prerequis, this.nom, intituleMaster));
-
+				this.listeDesPropositions.add(new PropositionImpl(prerequis, this, intituleMaster));
 			}
 		}	
 	}
@@ -292,7 +297,6 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public void majPrerequis(Proposition proposition, Licence[] nouveauxPrerequis) throws PropositionDoesNotExistException {
-		// TODO Auto-generated method stub
 		// test si la formation existe deja
 		PropositionImpl p = (PropositionImpl) proposition;
 		
@@ -307,7 +311,7 @@ public class UniversiteImpl extends UniversitePOA {
 		
 	}
 
-//TODO JavaDOC + methode check licence étudiant ?
+
 	/**
 	 * Retourne la position de l'etudiant pour la formation "formation" auquel il postule
 	 * 
@@ -321,7 +325,7 @@ public class UniversiteImpl extends UniversitePOA {
 	
 	public boolean checkLicenceEtudiant(Etudiant _etudiant, Licence formation){
 		return false;
-		
+		//TODO JavaDOC + methode check licence étudiant ?
 	}
 
 	/**
@@ -345,7 +349,4 @@ public class UniversiteImpl extends UniversitePOA {
 		this.etudiants.add(etudiantAAjouter);
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Universite_ " + this.nom + ".referencer(EtudiantImpl) :");
 	}
-
-
-
 }

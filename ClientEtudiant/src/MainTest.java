@@ -3,41 +3,38 @@ import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import Etudes.Etudiant;
-import Etudes.EtudiantDejaInscritException;
-import Etudes.EtudiantInconnuException;
+import Etudes.Formation;
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
 import Etudes.Rectorat;
 
-public class MainClient {
+public class MainTest {
 	
-	private Ministere ministere;
+	public Ministere ministere;
 	
-	private String numEtudiantSaisi = "012345";
+	public Formation[] formationsExistentes;
 	
-	private String motDePasseSaisi = "azerty";
+	public String numEtudiantSaisi = "012345";
+	
+	public Etudiant etudiantConnecte;
+	
+	public String motDePasseSaisi = "azerty";
+	
+	public Rectorat[] listRectorat;
+	
+	public Rectorat choisi;
 	
 	public static void main(String[] args) {
-		new MainClient();
+		new MainTest();
 	}
 	
-	public MainClient()
+	public MainTest()
 	{
 		this.seConnecter();
-		
-		Rectorat[] rectoratsAccessibles = ministere.getListRectorats();
-		
-		Rectorat choisi = rectoratsAccessibles[0];
-		
-		System.out.println("Choisi : " + choisi.nom());
-		try {
-			Etudiant e = choisi.getEtudiantByNumero(this.numEtudiantSaisi);
-			System.out.println("Etudiant récupéré");
-			choisi.demanderConnexion(e, this.motDePasseSaisi);
-			System.out.println("Connexion réussie");
-		} catch (EtudiantInconnuException e) {
-			System.out.println("ERREUR");
-		}
+		this.testerRecupererRectorats();
+		new TestInscription(this);
+		new TestConnexion(this);
+		new TestPostuler(this);
 	}
 	
 	public void seConnecter()
@@ -68,4 +65,23 @@ public class MainClient {
 			e.printStackTrace();
 		}
 	}
+	
+	public void testerRecupererRectorats()
+	{
+		System.out.println("--------------------------------------------------");
+		System.out.println("- TesterRecupererRectorats() ");
+		System.out.println("- Récupération de la liste des rectorats DEBUT ");
+		this.listRectorat = ministere.getListRectorats();
+		
+		for (Rectorat r : listRectorat)
+		{
+			System.out.println("- Rectorat : " + r.nom());
+		}
+		this.choisi = this.listRectorat[0];
+		System.out.println("- Récupération de la liste des rectorats FIN ");
+		System.out.println("- Choisi : " + choisi.nom());
+	}
+	
+	
+	
 }

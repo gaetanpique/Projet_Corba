@@ -7,11 +7,8 @@ import java.util.Collection;
 import Etudes.Licence;
 import Etudes.Master;
 import Etudes.MasterHelper;
-import Etudes.Proposition;
 import Etudes.PropositionPOA;
 import Etudes.Universite;
-import Etudes.UniversiteHelper;
-import Etudes.prerequisDejaExistantException;
 import Util.UtilConnexion;
 import Util.UtilTraitements;
 
@@ -20,38 +17,33 @@ public class PropositionImpl extends PropositionPOA {
 	private ArrayList<Licence> prerequis = new ArrayList<Licence>(); 
 	private Master masterPropose;
 	private int nbPlaces;
-	private Universite universiteProposante;
+	private UniversiteImpl proposant;
 	/**
 	 * Constructeur de Proposition avec une ArrayList<Licence> pour les prérequis
 	 * 
 	 * @author Baptiste
 	 */
-	public PropositionImpl(ArrayList<Licence> p, String nomUniversite, String intituleMaster){
-		prerequis = p;
 
+	public PropositionImpl(ArrayList<Licence> p, UniversiteImpl u, String intituleMaster){
+		this.prerequis = p;
+		this.proposant = u;
+		
 		// Intialisation de l'orb
-		UtilConnexion.connexionAuNammingService(this, "Proposition_" + nomUniversite + "_" + intituleMaster);
+		UtilConnexion.connexionAuNammingService(this, "Proposition_" + u.nom() + "_" + intituleMaster);
 				
 		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Master_" + intituleMaster);
 		this.masterPropose = MasterHelper.narrow(result);
-		
-		org.omg.CORBA.Object result1 = UtilConnexion.getObjetDistant("Universite_" + intituleMaster);
-		this.universiteProposante = UniversiteHelper.narrow(result1);
-		
-		
-		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + nomUniversite + "_" + intituleMaster + " référencé et opérationnel.");
+
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + u.nom() + "_" + intituleMaster + " référencé et opérationnel.");
 	}
 	/**
 	 * Constructeur de Proposition avec Licence[] pour les prérequis
 	 * 
 	 * @author Baptiste
 	 */
-	public PropositionImpl(Licence[] p, String nomUniversite, String intituleMaster){
-		this((ArrayList<Licence>) UtilTraitements.ToArray(p), nomUniversite, intituleMaster);
-	}	
-	
-	//-----------------GETTERS ANS SETTERS--------------------------------//
-
+	public PropositionImpl(Licence[] p, UniversiteImpl u, String intituleMaster){
+		this((ArrayList<Licence>) UtilTraitements.ToArray(p), u, intituleMaster);
+	}
 
 	@Override
 	public Master masterPropose() {
@@ -71,30 +63,16 @@ public class PropositionImpl extends PropositionPOA {
 
 	@Override
 	public String getId() {
-		return "Proposition_" + universiteProposante.nom() + "_" + masterPropose.intitule();
+		return "Proposition_" + proposant.nom() + "_" + masterPropose.intitule();
 	}
 	@Override
 	public int nbPlaces() {
 		return this.nbPlaces;
 	}
 
-	/**
-	 * Ajoute une licence à la liste des prérequis d'une proposition
-	 * 
-	 * @exception prerequisDejaExiistantException : la licence en paramètre est déjà présente dans la liste
-	 * @author Baptiste
-	 */
-/*	@Override
-	public void addPrerequis(Licence l) throws prerequisDejaExistantException{
-		if(prerequis.contains(l))
-		{
-			throw new prerequisDejaExistantException((Proposition) this);
-		}
-		else
-		{
-			prerequis.add(l);
-		}
-		
-	}*/
+	@Override
+	public Universite proposant() {
+		return this.proposant._this();
+	}
 }
 

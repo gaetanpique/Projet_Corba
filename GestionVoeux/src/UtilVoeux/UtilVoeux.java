@@ -266,6 +266,4 @@ public class UtilVoeux extends UtilVoeuxPOA {
 			classerVoeuxParProposition(p);
 		}
 	}
-
-
 }

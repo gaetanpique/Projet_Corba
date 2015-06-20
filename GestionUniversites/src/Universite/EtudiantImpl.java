@@ -131,8 +131,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 *                : étudiant déjà inscrit
 	 * @author Baptiste
 	 */
-	public void inscrireEtudiant(String mdp)
-			throws EtudiantDejaInscritException {
+	public void inscrireEtudiant(String mdp) throws EtudiantDejaInscritException {
 		if (this.motDePasse != null)
 			throw new EtudiantDejaInscritException(this.numero);
 		else

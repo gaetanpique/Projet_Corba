@@ -3,11 +3,13 @@ package Ministere;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import javax.rmi.CORBA.UtilDelegate;
 
 import Etudes.Formation;
+import Etudes.Master;
 import Etudes.MinisterePOA;
 import Etudes.Proposition;
 import Etudes.Rectorat;
@@ -18,7 +20,7 @@ public class MinistereImpl extends MinisterePOA {
 	
 	private ArrayList<Rectorat> rectorats = new ArrayList<Rectorat>();
 	
-	private ArrayList<Formation> formations = new ArrayList<Formation>();  
+	private ArrayList<FormationImpl> formations = new ArrayList<FormationImpl>();  
 
 	public MinistereImpl()
 	{
@@ -29,7 +31,6 @@ public class MinistereImpl extends MinisterePOA {
 		// Lancement de l'ORB et mise en attente de requete
 		UtilConnexion.runORB();
 		initFormations();
-		
 	}
 	
 	private void initFormations()
@@ -50,30 +51,49 @@ public class MinistereImpl extends MinisterePOA {
 	@Override
 	public Formation[] getListFormations() {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : MinistereImpl.getListFormations()");
-		return new Formation[1];
+		
+		Formation[] resultat = new Formation[this.formations.size()];
+		int cpt = 0;
+		
+		for (FormationImpl f : this.formations)
+		{
+			resultat[cpt] = f._this();
+			cpt++;
+		}
+		
+		return resultat;
 	}
 
 	@Override
 	public Rectorat[] getListRectorats() {
-		
+		System.out.println(Calendar.getInstance().getTime().toString() + " : MinistereImpl.getListRectorats()");
 		return this.rectorats.toArray(new Rectorat[this.rectorats.size()]);
 	}
 
 	@Override
 	public Proposition[] getPropositionByFormation(Formation formation) {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : MinistereImpl.getPropositionByFormation()");
-		return new Proposition[1];
+		
+		ArrayList<Proposition> resultat = new ArrayList<Proposition>();
+		Proposition[] temp;
+		
+		for (Rectorat r : this.rectorats)
+		{
+			temp = r.getPropositionByFormation(formation); 
+			
+			for (Proposition p : temp)
+			{
+				resultat.add(p);
+			}
+		}
+		
+		return resultat.toArray(new Proposition[resultat.size()]);
 	}
 
 	@Override
 	public void referencer(Rectorat rectoratConnecte) {
 		System.out.println(Calendar.getInstance().getTime().toString() + " : MinistereImpl.referencer(Rectorat)");
 		this.rectorats.add(rectoratConnecte);
-	}
-
-	public void referencer(Formation formationReferencee) {
-		System.out.println(Calendar.getInstance().getTime().toString() + " : MinistereImpl.referencer(Formation)");
-		this.formations.add(formationReferencee);
 	}
 
 	@Override

@@ -1,4 +1,5 @@
 package Universite;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -112,7 +113,5 @@ public class ResultatImpl extends ResultatPOA {
 		}		
 		return false;
 	}
-
-
 
 }

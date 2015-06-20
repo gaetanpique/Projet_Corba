@@ -1,12 +1,8 @@
 package UtilVoeux;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
-import org.omg.CORBA.ORB;
-
-import Util.UtilTraitements;
 import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantHelper;
@@ -17,6 +13,7 @@ import Etudes.VoeuPOA;
 import Etudes.diplomesDifferentsException;
 import Etudes.listeEtatsVoeu;
 import Util.UtilConnexion;
+import Util.UtilTraitements;
  
 public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 {
@@ -24,9 +21,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	private Etudiant etudiantCorrespondant;
 	private int position;
 	private Etudes.EtatsVoeu etatVoeu;
-	//TODO Creer un booléen "classable"/"valide" ?
-	//PBM : Comment ne plus compter un voeu dans le classement lorsque celui-ci n'est pas valide 
-	//ou que l'étudiant a repondu non/nonmais ??
 	
 	public VoeuImpl(Proposition p, String numEtudiant, int positionVoeu) 
 	{
@@ -67,7 +61,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 	}
 
 	@Override
-	public void position(int value) {
+	public void position (int  value) {
 		this.position = value;
 		
 	}
@@ -124,15 +118,11 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		switch(nouvelEtat.value())
 		{
 		case EtatsVoeu._nonValide :
-
 		case EtatsVoeu._valide :
-
 		case EtatsVoeu._cloture : 
 			this.etatVoeu(nouvelEtat);
 			break;
-			
 		case EtatsVoeu._OUI : 
-					
 		case EtatsVoeu._NON :
 			this.etatVoeu(nouvelEtat);
 			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
@@ -144,9 +134,7 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 				}
 			}
 			break;
-			
 		case EtatsVoeu._OUIMAIS : 
-			
 		case EtatsVoeu._NONMAIS : 
 			this.etatVoeu(nouvelEtat);
 			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements.ToArray(etudiantCorrespondant.listeVoeux());
@@ -158,7 +146,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 				}
 			}
 			break;
-			
 		}
 	}
 	
@@ -191,7 +178,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		return rep;
 	}
 
-	
 	/**
 	 * Methode qui permet de determiner si un voeu doit rester dans le classement 
 	 * ou peut en être sorti selon son etat
@@ -223,11 +209,6 @@ public class VoeuImpl extends VoeuPOA  implements Comparable<Voeu>
 		}
 		return true;
 	}
-
-
-
-
-
 }
 
 	
