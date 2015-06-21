@@ -34,6 +34,7 @@ public class RectoratImpl extends RectoratPOA {
 	private Ministere ministere;
 	
 	public static void main(String[] args) {
+		DbConnection.connect(args[1]);
 		new RectoratImpl(args[0]);
 	}
 

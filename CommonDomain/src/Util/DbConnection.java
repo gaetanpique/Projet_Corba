@@ -8,19 +8,20 @@ import java.sql.Statement;
 
 public class DbConnection {
 
-		private static String url = "jdbc:postgresql://localhost:5432/GuantanamoBay";
+		private static String url = "jdbc:postgresql://localhost:5432/";
 		private static String user = "postgres";
-		private static String passwd = "postgres";
+		private static String passwd = "postgre";
 		private static Connection laConn;
 		private static Statement state;
-		public static void connect() 
+		public static void connect(String url) 
 		{
 			Connection conn = null;
+			DbConnection.url = "jdbc:postgresql://localhost:5432/BD_"+url;
 			
 			try {
 				Class.forName("org.postgresql.Driver");
 		      	System.out.println("Driver JDBC O.K.");
-		      	conn = DriverManager.getConnection(url, user, passwd);
+		      	conn = DriverManager.getConnection(DbConnection.url, user, passwd);
 		      	System.out.println("Connexion JDBC effective !");
 		      	DbConnection.laConn = conn;
 				

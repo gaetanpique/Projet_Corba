@@ -37,11 +37,11 @@ public class MinistereImpl extends MinisterePOA {
 	{
 		String[] colonnes = new String[1];
 		colonnes[0]="*";
-		ResultSet resultatSQL = DbConnection.selectIntoDB("formation", colonnes, "");
+		ResultSet resultatSQL = DbConnection.selectIntoDB("formations", colonnes, "");
 		try {
 			while(resultatSQL.next())
 			{
-				new FormationImpl(resultatSQL.getString(0));
+				new FormationImpl(resultatSQL.getString(1));
 			}
 			resultatSQL.close();
 		} catch (SQLException e) {
@@ -103,6 +103,7 @@ public class MinistereImpl extends MinisterePOA {
 	}
 	
 	public static void main(String[] args) {
+		DbConnection.connect("Ministere");
 		new MinistereImpl();
 	}
 }
