@@ -12,11 +12,8 @@ import Etudes.EtudiantInconnu;
 import Etudes.EtudiantInconnuException;
 import Etudes.EtudiantPasInscritException;
 import Etudes.Formation;
-<<<<<<< Upstream, based on origin/master
-=======
 import Etudes.FormationHelper;
 import Etudes.Master;
->>>>>>> 9ec8cc6 Connexions à la BDD = Done (HOPE)
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
 import Etudes.MotDePasseErroneException;
