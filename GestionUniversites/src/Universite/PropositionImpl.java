@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
+import Etudes.Formation;
 import Etudes.FormationHelper;
 import Etudes.Licence;
-import Etudes.LicenceHelper;
-import Etudes.Master;
 import Etudes.MasterHelper;
 import Etudes.PropositionPOA;
 import Etudes.Universite;
@@ -19,57 +18,40 @@ import Util.UtilConnexion;
 import Util.UtilTraitements;
 
 public class PropositionImpl extends PropositionPOA {
-
-	private ArrayList<Licence> prerequis = new ArrayList<Licence>();
-	private Master masterPropose;
+	
+	private ArrayList<Formation> prerequis = new ArrayList<Formation>(); 
+	private Formation masterPropose;
 	private int nbPlaces;
 	private UniversiteImpl universiteProposante;
-
 	/**
 	 * Constructeur de Proposition avec une ArrayList<Licence> pour les
 	 * prérequis
 	 * 
 	 * @author Baptiste
 	 */
-	public PropositionImpl(UniversiteImpl u, String intituleMaster) {
-		try {
-			initLicences();
-			this.universiteProposante = u;
-			// Intialisation de l'orb
-			UtilConnexion.connexionAuNammingService(this,
-					"Proposition_" + u.nom() + "_" + intituleMaster);
-
-			org.omg.CORBA.Object result = UtilConnexion
-					.getObjetDistant("Master_" + intituleMaster);
-			this.masterPropose = MasterHelper.narrow(result);
-
-			System.out.println(Calendar.getInstance().getTime().toString()
-					+ " : Servant Proposition_" + u.nom() + "_"
-					+ intituleMaster + " référencé et opérationnel.");
-
-			insertIntoDB();
-			System.out.println("EtudiantImpl : Insertion dans BD OK");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public PropositionImpl(UniversiteImpl u, String intituleMaster){
+		this.universiteProposante= u;
+		// Intialisation de l'orb
+		UtilConnexion.connexionAuNammingService(this, "proposition_" + u.nom() + "_" + intituleMaster);
+				
+		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" + intituleMaster);
+		this.masterPropose = FormationHelper.narrow(result);
+	
+		initLicences();
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + u.nom() + "_" + intituleMaster + " référencé et opérationnel.");
 	}
 
-	public PropositionImpl(Licence[] prerequis, UniversiteImpl u,
-			String intituleMaster) {
+	public PropositionImpl(Licence[] prerequis, UniversiteImpl u, String intituleMaster) {
 		try {
 			prerequis(prerequis);
 			this.universiteProposante = u;
 			// Intialisation de l'orb
-			UtilConnexion.connexionAuNammingService(this,
-					"Proposition_" + u.nom() + "_" + intituleMaster);
+			UtilConnexion.connexionAuNammingService(this, "Proposition_" + u.nom() + "_" + intituleMaster);
 
-			org.omg.CORBA.Object result = UtilConnexion
-					.getObjetDistant("Master_" + intituleMaster);
-			this.masterPropose = MasterHelper.narrow(result);
+			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" + intituleMaster);
+			this.masterPropose = FormationHelper.narrow(result);
 
-			System.out.println(Calendar.getInstance().getTime().toString()
-					+ " : Servant Proposition_" + u.nom() + "_"
-					+ intituleMaster + " référencé et opérationnel.");
+			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + u.nom() + "_" + intituleMaster + " référencé et opérationnel.");
 
 			insertIntoDB();
 			System.out.println("PropositionImpl : Insertion dans BD OK");
@@ -78,32 +60,31 @@ public class PropositionImpl extends PropositionPOA {
 		}
 	}
 
-	public void initLicences() {
+	public void initLicences() 
+	{
 		String[] colonnes = new String[1];
-		colonnes[0] = "intitulelicence";
+		colonnes[0]="intitulelicence";
 		ResultSet resultatSQL;
-		resultatSQL = DbConnection.selectIntoDB("prerequis", colonnes,
-				"idproposition=" + this.getId());
-		try {
-
-			while (resultatSQL.next()) {
-				org.omg.CORBA.Object result = UtilConnexion
-						.getObjetDistant("Formation_"
-								+ resultatSQL.getString(0));
-				this.prerequis.add((Licence) FormationHelper.narrow(result));
+			resultatSQL = DbConnection.selectIntoDB("prerequis", colonnes, "idproposition='"+this.getId()+"'");
+			try {
+				
+				while(resultatSQL.next())
+				{
+					org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" +resultatSQL.getString(1));
+					this.prerequis.add(FormationHelper.narrow(result));
+				}
+				
+				resultatSQL.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
 			}
-
-			resultatSQL.close();
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
 	}
+
 
 	// -----------------GETTERS ANS SETTERS--------------------------------//
 
 	@Override
-	public Master masterPropose() {
+	public Formation masterPropose() {
 		return masterPropose;
 	}
 
@@ -128,8 +109,7 @@ public class PropositionImpl extends PropositionPOA {
 
 	@Override
 	public String getId() {
-		return "Proposition_" + universiteProposante.nom() + "_"
-				+ masterPropose.intitule();
+		return "proposition_" + universiteProposante.nom() + "_" + masterPropose.intitule();
 	}
 
 	@Override
@@ -141,22 +121,6 @@ public class PropositionImpl extends PropositionPOA {
 	public Universite proposant() {
 		return this.universiteProposante._this();
 	}
-
-	/**
-	 * Ajoute une licence à la liste des prérequis d'une proposition
-	 * 
-	 * @exception prerequisDejaExiistantException
-	 *                : la licence en paramètre est déjà présente dans la liste
-	 * @author Baptiste
-	 */
-	/*
-	 * @Override public void addPrerequis(Licence l) throws
-	 * prerequisDejaExistantException{ if(prerequis.contains(l)) { throw new
-	 * prerequisDejaExistantException((Proposition) this); } else {
-	 * prerequis.add(l); }
-	 * 
-	 * }
-	 */
 
 	public void insertIntoDB() {
 		String[] colonnes = new String[2];
@@ -184,5 +148,4 @@ public class PropositionImpl extends PropositionPOA {
 
 		DbConnection.insertIntoDB("etudiants", colonnes, valeurs);
 	}
-
 }

@@ -13,7 +13,6 @@ import Etudes.EtudiantInconnuException;
 import Etudes.EtudiantPasInscritException;
 import Etudes.Formation;
 import Etudes.FormationHelper;
-import Etudes.Master;
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
 import Etudes.MotDePasseErroneException;
@@ -52,33 +51,8 @@ public class RectoratImpl extends RectoratPOA {
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Rectorat_" + this.nom + " référencé et opérationnel.");
 		UtilConnexion.runORB();
-		initFormations();
 	}
 
-	private void initFormations()
-	{
-		String[] colonnes = new String[1];
-		colonnes[0]="intituleformation";
-		ResultSet resultatSQL;
-		ArrayList<Formation> arrayFormationTemp = new ArrayList<Formation>();
-		for (Universite u : this.universites)
-		{
-
-			resultatSQL = DbConnection.selectIntoDB("accreditation", colonnes, "nomuniv="+u.nom().toLowerCase());
-			try {
-				
-				while(resultatSQL.next())
-				{
-					org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_"+ resultatSQL.getString(0));
-					arrayFormationTemp.add(FormationHelper.narrow(result));
-				}
-				accreditations.put(u,arrayFormationTemp);
-				resultatSQL.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 		/**
 	 * Cette méthode retourne l'ensemble des universités qui dépendent de ce rectorat
@@ -215,6 +189,27 @@ public class RectoratImpl extends RectoratPOA {
 	@Override
 	public void referencer(Universite universiteConnecte) {
 		this.universites.add(universiteConnecte);
+		
+		String[] colonnes = new String[1];
+		colonnes[0]="intituleformation";
+		ResultSet resultatSQL;
+		ArrayList<Formation> arrayFormationTemp = new ArrayList<Formation>();
+
+		resultatSQL = DbConnection.selectIntoDB("accreditations", colonnes, "nomuniv='"+universiteConnecte.nom().toLowerCase()+"'");
+		try {
+			
+			while(resultatSQL.next())
+			{
+				org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_"+ resultatSQL.getString(1));
+				arrayFormationTemp.add(FormationHelper.narrow(result));
+				System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".accrediationRecupérée : " + arrayFormationTemp.get(arrayFormationTemp.size()-1).intitule());
+			}
+			accreditations.put(universiteConnecte,arrayFormationTemp);
+			resultatSQL.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".referencer() :");
 	}
 

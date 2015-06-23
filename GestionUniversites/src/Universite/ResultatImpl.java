@@ -50,7 +50,7 @@ public class ResultatImpl extends ResultatPOA {
 				
 				while(resultatSQL.next())
 				{		
-					new ResultatImpl(resultatSQL.getString(1),resultatSQL.getFloat(3),resultatSQL.getInt(2),resultatSQL.getString(5),resultatSQL.getInt(4),resultatSQL.getString(0));
+					new ResultatImpl(resultatSQL.getString(2),resultatSQL.getFloat(4),resultatSQL.getInt(3),resultatSQL.getString(6),resultatSQL.getInt(5),resultatSQL.getString(1));
 				}
 				
 				resultatSQL.close();

@@ -7,7 +7,7 @@ import Etudes.MotDePasseErroneException;
 public class TestConnexion {
 	private MainTest main;
 	
-	private String numEtudiantNonInscrit = "6789";
+	private String numEtudiantNonInscrit = "2345412";
 	
 	public TestConnexion(MainTest main)
 	{

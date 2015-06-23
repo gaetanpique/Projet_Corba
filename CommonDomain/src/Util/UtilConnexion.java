@@ -51,7 +51,6 @@ public class UtilConnexion {
 			// Construction du nom a rechercher
 			org.omg.CosNaming.NameComponent[] nameToFind = new org.omg.CosNaming.NameComponent[1];
 			nameToFind[0] = new org.omg.CosNaming.NameComponent(_nomReference,"");
-
 			// Recherche aupres du naming service
 			org.omg.CORBA.Object distantObjet = nameRoot.resolve(nameToFind);
 

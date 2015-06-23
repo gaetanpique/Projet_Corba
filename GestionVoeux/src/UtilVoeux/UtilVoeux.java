@@ -49,10 +49,10 @@ public class UtilVoeux extends UtilVoeuxPOA {
 				
 				while(resultatSQL.next())
 				{
-						org.omg.CORBA.Object result = UtilConnexion.getObjetDistant(resultatSQL.getString(1));
+						org.omg.CORBA.Object result = UtilConnexion.getObjetDistant(resultatSQL.getString(2));
 						p= PropositionHelper.narrow(result);
 						
-						listeVoeux.add(new VoeuImpl(p,resultatSQL.getString(0),resultatSQL.getInt(3),EtatsVoeu.from_int(resultatSQL.getInt(2))));
+						listeVoeux.add(new VoeuImpl(p,resultatSQL.getString(1),resultatSQL.getInt(3),EtatsVoeu.from_int(resultatSQL.getInt(2))));
 						
 				}
 				

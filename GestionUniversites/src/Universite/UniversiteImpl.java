@@ -36,6 +36,7 @@ public class UniversiteImpl extends UniversitePOA {
 	private ArrayList<PropositionImpl> listeDesPropositions;
 
 	public static void main(String[] args) {
+		DbConnection.connect(args[2]);
 		new UniversiteImpl(args[0], args[1]);
 
 	}
@@ -68,33 +69,32 @@ public class UniversiteImpl extends UniversitePOA {
 		colonnes[0] = "numetudiant";
 		colonnes[1] = "mdp";
 		ResultSet resultatSQL;
-		for (EtudiantImpl e : this.etudiants) {
 
-			resultatSQL = DbConnection.selectIntoDB("etudiants", colonnes, "");
-			try {
-
-				while (resultatSQL.next()) {
-					new EtudiantImpl(resultatSQL.getString(0), this,
-							resultatSQL.getString(1));
-				}
-
-				resultatSQL.close();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
+		resultatSQL = DbConnection.selectIntoDB("etudiants", colonnes, "");
+		try {
+			
+			while(resultatSQL.next())
+			{
+				new EtudiantImpl(resultatSQL.getString(1),this,resultatSQL.getString(2));
 			}
+			
+			resultatSQL.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
 	}
 
-	private void initPropositions() {
-		String[] colonnes = new String[2];
+	private void initPropositions()
+	{
+		String[] colonnes = new String[1];
 		String nomMaster;
 		colonnes[0] = "*";
 		ResultSet resultatSQL;
 		resultatSQL = DbConnection.selectIntoDB("propositions", colonnes, "");
-		try {
 
+		try {
 			while (resultatSQL.next()) {
-				nomMaster = resultatSQL.getString(0).split("_")[2];
+				nomMaster = resultatSQL.getString(1).split("_")[2];
 				listeDesPropositions.add(new PropositionImpl(this, nomMaster));
 			}
 
@@ -102,7 +102,6 @@ public class UniversiteImpl extends UniversitePOA {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-
 	}
 
 	// -----------------GETTERS ANS SETTERS--------------------------------//

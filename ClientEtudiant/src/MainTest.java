@@ -14,7 +14,7 @@ public class MainTest {
 	
 	public Formation[] formationsExistentes;
 	
-	public String numEtudiantSaisi = "012345";
+	public String numEtudiantSaisi = "2345411";
 	
 	public Etudiant etudiantConnecte;
 	

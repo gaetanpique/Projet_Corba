@@ -73,7 +73,7 @@ module Etudes
 	interface Proposition
 	{
 		readonly attribute Universite proposant;
-		readonly attribute Master masterPropose;
+		readonly attribute Formation masterPropose;
 		attribute listLicences prerequis;
 		readonly attribute long nbPlaces;
 		oneway string getId();
