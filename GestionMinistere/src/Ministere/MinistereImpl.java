@@ -41,7 +41,7 @@ public class MinistereImpl extends MinisterePOA {
 		try {
 			while(resultatSQL.next())
 			{
-				new FormationImpl(resultatSQL.getString(1));
+				this.formations.add(new FormationImpl(resultatSQL.getString(1)));
 			}
 			resultatSQL.close();
 		} catch (SQLException e) {
@@ -60,7 +60,6 @@ public class MinistereImpl extends MinisterePOA {
 			resultat[cpt] = f._this();
 			cpt++;
 		}
-		
 		return resultat;
 	}
 

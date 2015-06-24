@@ -255,7 +255,7 @@ public class UniversiteImpl extends UniversitePOA {
 		System.out.println(Calendar.getInstance().getTime().toString()
 				+ " : Universite_" + this.nom + ".getPropositionByFormation()");
 		for (PropositionImpl p : this.listeDesPropositions) {
-			if (p.masterPropose() == formation) {
+			if (p.masterPropose().intitule().equals(formation.intitule())) {
 				return p._this();
 			}
 		}

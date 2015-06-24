@@ -3,9 +3,11 @@ import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import Etudes.Formation;
+import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
 import Etudes.UtilVoeux;
 import Etudes.UtilVoeuxHelper;
+import Etudes.Voeu;
 
 
 public class TestPostuler {
@@ -26,6 +28,7 @@ public class TestPostuler {
 		this.testerRecupererListeFormations();
 		this.testerRecupererUniversitesQuiProposentLaFormation(formationChoisie);
 		this.testerRecupererUtilitaireVoeu();
+		this.testerSoumettreVoeuOK();
 	}
 	
 	public void testerRecupererListeFormations()
@@ -53,7 +56,8 @@ public class TestPostuler {
 		System.out.println("- Nb propositions : " + this.propositions.length);
 		for (Proposition p : this.propositions)
 		{
-			System.out.println("- Propostion : " + p.proposant().nom() + "_" + p.masterPropose().intitule());
+			//System.out.println("- Propostion : " + p.proposant().nom() + "_" + p.masterPropose().intitule());
+			System.out.println("- Propostion : " + p.getId());
 		}
 		this.propositionChoisie = this.propositions[0];
 		System.out.println("- Récupération de la liste des propositions FIN ");
@@ -79,7 +83,8 @@ public class TestPostuler {
 			// Recherche aupres du naming service
 			org.omg.CORBA.Object distantVoeux = nameRoot
 					.resolve(nameToFind);
-
+			
+			System.out.println("Recuperation de l'utilitaire de voeux");
 			// Casting de l'objet CORBA au type convertisseur euro
 			this.utilVoeux = UtilVoeuxHelper.narrow(distantVoeux);
 
@@ -89,8 +94,27 @@ public class TestPostuler {
 		}
 	}
 	
-	public void testerSoumettreVoeu()
+	public void testerSoumettreVoeuOK()
 	{
-		//this.utilVoeux.soumettreVoeu(propositionChoisie, main.etudiantConnecte, 1);
+		try {
+			 Voeu[] voeuxTemp = new Voeu[5];
+			for (int i = 0; i<5 && i<propositions.length; i++)
+			{
+				this.utilVoeux.soumettreVoeu(propositions[i], main.etudiantConnecte, i);
+				System.out.println("Voeu n°"+i+" de l'étudiant "+main.etudiantConnecte.numEtudiant() + " créé");
+			}
+			
+			voeuxTemp = main.etudiantConnecte.listeVoeux();
+			for (int j = 0; j<voeuxTemp.length;j++)
+			{
+				//TODO Regler le probleme de l'ID pour proposition
+				//TODO finir le cas nbre max atteint
+				System.out.println(voeuxTemp[j].getId());
+			}
+
+		} catch (NombreMaxDeVoeuxAtteintException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

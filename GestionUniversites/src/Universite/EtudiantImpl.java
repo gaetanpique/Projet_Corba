@@ -50,8 +50,8 @@ public class EtudiantImpl extends EtudiantPOA {
 					+ " : Servant Etudiant_" + this.numero
 					+ " référencé et opérationnel.");
 
-			insertIntoDB();
-			System.out.println("EtudiantImpl : Insertion dans BD OK");
+			//insertIntoDB(); // TODO : Insert into BD à remettre
+			//System.out.println("EtudiantImpl : Insertion dans BD OK");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,7 +69,7 @@ public class EtudiantImpl extends EtudiantPOA {
 
 	@Override
 	public Voeu[] listeVoeux() {
-		return (Voeu[]) Util.UtilTraitements.ToTableau(listeVoeux);
+		return listeVoeux.toArray(new Voeu[listeVoeux.size()]);
 	}
 
 	@Override

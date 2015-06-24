@@ -148,21 +148,18 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	@Override
 	public void soumettreVoeu(Proposition aSoumettre, Etudiant soumetteur, int positionVoeu) throws NombreMaxDeVoeuxAtteintException 
 	{
-		Integer cpt=0;
-
-		for (VoeuImpl v : listeVoeux)
-		{
-			if (v.etudiantCorrespondant().equals(soumetteur)) {cpt++;};
-
-			if (cpt <5) 
+		System.out.println(" soumettre voeu 1 : ");
+		System.out.println( soumetteur.listeVoeux().length);
+			
+			if (soumetteur.listeVoeux().length < 5) 
 			{
+				System.out.println(" soumettre voeu 2");
 				new VoeuImpl(aSoumettre, soumetteur.numEtudiant(),positionVoeu);
 			}
 			else
 			{
 				throw new NombreMaxDeVoeuxAtteintException();
 			}
-		}
 		
 	}
 
@@ -296,4 +293,9 @@ public class UtilVoeux extends UtilVoeuxPOA {
 			classerVoeuxParProposition(p);
 		}
 	}
+	
+		public static void main(String[] args) {
+			DbConnection.connect("Voeux");
+			new UtilVoeux();
+		}
 }

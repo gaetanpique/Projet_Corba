@@ -32,11 +32,12 @@ public class PropositionImpl extends PropositionPOA {
 	public PropositionImpl(UniversiteImpl u, String intituleMaster){
 		this.universiteProposante= u;
 		// Intialisation de l'orb
-		UtilConnexion.connexionAuNammingService(this, "proposition_" + u.nom() + "_" + intituleMaster);
+
 				
 		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" + intituleMaster);
 		this.masterPropose = FormationHelper.narrow(result);
-	
+		
+		UtilConnexion.connexionAuNammingService(this, this.getId());
 		initLicences();
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + u.nom() + "_" + intituleMaster + " référencé et opérationnel.");
 	}
@@ -109,7 +110,7 @@ public class PropositionImpl extends PropositionPOA {
 
 	@Override
 	public String getId() {
-		return "proposition_" + universiteProposante.nom() + "_" + masterPropose.intitule();
+		return "p_" + universiteProposante.nom() + "_" + masterPropose.intitule();
 	}
 
 	@Override
