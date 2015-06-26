@@ -112,7 +112,7 @@ public class DbConnection {
 			else
 				_requeteGeneree = _requeteGeneree + _lesColonnes + " FROM \""+ _table + "\";";
 				
-			//System.out.println("La requete SELECT générée est la suivante : " +_requeteGeneree);
+			System.out.println("La requete SELECT générée est la suivante : " +_requeteGeneree);
 			
 			try {
 				return laConn.createStatement().executeQuery(_requeteGeneree);

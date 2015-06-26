@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnu;
@@ -19,6 +20,9 @@ import Etudes.MotDePasseErroneException;
 import Etudes.Proposition;
 import Etudes.RectoratPOA;
 import Etudes.Universite;
+import Etudes.UtilVoeux;
+import Etudes.UtilVoeuxHelper;
+import Etudes.Voeu;
 import Util.DbConnection;
 import Util.UtilConnexion;
 
@@ -246,5 +250,31 @@ public class RectoratImpl extends RectoratPOA {
 		return resultat.toArray(new Proposition[resultat.size()]);
 	}
 
+	@Override
+	public void validerCandidatures()
+	{
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Rectorat_ " + this.nom + ".validerCondidatures() :");
+		Voeu[] voeux = this.getUtilVoeux().getVoeuxByRectorat(this._this());
+		
+		for (Voeu v : voeux)
+		{
+			if (v.etudiantCorrespondant().ResultatsValideForProposition(v.propositionCorrespondante()))
+			{
+				v.modifierEtatVoeu(EtatsVoeu.valide);
+				System.out.println("VALIDE");
+			}
+			else
+			{
+				v.modifierEtatVoeu(EtatsVoeu.nonValide);
+				System.out.println("-");
+			}
+		}
+	}
+	
+	public UtilVoeux getUtilVoeux()
+	{
+		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("UtilVoeux");
+		return UtilVoeuxHelper.narrow(result);
+	}
 
 }

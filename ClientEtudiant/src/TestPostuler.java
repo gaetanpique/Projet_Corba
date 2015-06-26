@@ -1,37 +1,36 @@
-import org.omg.CORBA.ORBPackage.InvalidName;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
-
+import Etudes.Etudiant;
 import Etudes.Formation;
 import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
-import Etudes.UtilVoeux;
+import Etudes.Rectorat;
+import Etudes.Universite;
 import Etudes.UtilVoeuxHelper;
 import Etudes.Voeu;
+import Etudes.VoeuDejaCreeException;
+import Util.UtilConnexion;
 
 
 public class TestPostuler {
 	
 	private MainTest main;
 	
-	private UtilVoeux utilVoeux;
-	
 	private Formation formationChoisie;
 	
 	private Proposition propositionChoisie;
 	
-	private Proposition[] propositions;
+	
 	
 	public TestPostuler(MainTest main)
 	{
 		this.main = main;
-		this.testerRecupererListeFormations();
+		this.testerRecupererListeFormations(0);
 		this.testerRecupererUniversitesQuiProposentLaFormation(formationChoisie);
 		this.testerRecupererUtilitaireVoeu();
-		this.testerSoumettreVoeuOK();
+		this.testerSoumettreTousVoeux();
+		this.testerSoumettreNbMaxAtteint();
 	}
 	
-	public void testerRecupererListeFormations()
+	public void testerRecupererListeFormations(int i)
 	{
 		System.out.println("--------------------------------------------------");
 		System.out.println("- testerRecupererListeFormations ");
@@ -42,7 +41,7 @@ public class TestPostuler {
 		{
 			System.out.println("- Formation : " + f.intitule());
 		}
-		this.formationChoisie = main.formationsExistentes[0];
+		this.formationChoisie = main.formationsExistentes[i];
 		System.out.println("- Récupération de la liste des formations FIN ");
 		System.out.println("- Choisi : " + formationChoisie.intitule());
 	}
@@ -52,69 +51,129 @@ public class TestPostuler {
 		System.out.println("--------------------------------------------------");
 		System.out.println("- testerRecupererUniversitesQuiProposentLaFormation ");
 		System.out.println("- Récupération de la liste des universités qui proposent la formation : " + f.intitule() + " DEBUT ");
-		this.propositions = main.ministere.getPropositionByFormation(f);
-		System.out.println("- Nb propositions : " + this.propositions.length);
-		for (Proposition p : this.propositions)
+		Proposition[] propositions = main.ministere.getPropositionByFormation(f);
+		System.out.println("- Nb propositions : " + propositions.length);
+		for (Proposition p : propositions)
 		{
 			//System.out.println("- Propostion : " + p.proposant().nom() + "_" + p.masterPropose().intitule());
 			System.out.println("- Propostion : " + p.getId());
 		}
-		this.propositionChoisie = this.propositions[0];
+		this.propositionChoisie = propositions[0];
 		System.out.println("- Récupération de la liste des propositions FIN ");
 		System.out.println("- Choisi : " + propositionChoisie.proposant().nom() + "_" + propositionChoisie.masterPropose().intitule());
 	}
 	
 	public void testerRecupererUtilitaireVoeu()
 	{
+		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("UtilVoeux");
+
+		System.out.println("Recuperation de l'utilitaire de voeux");
+		this.main.utilVoeux = UtilVoeuxHelper.narrow(result);
+
+	}
+	
+	public void testerSoumettreTousVoeux()
+	{
+		System.out.println("--------------------------------------------------");
+		System.out.println("- testerSoumettreTousVoeux ");
+		System.out.println("- DEBUT ");
+		
+		int numProp;
+		
 		try {
-			// Intialisation de l'orb
-			org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init(new String[0], null);
-
-			// Recuperation du naming service
-			org.omg.CosNaming.NamingContext nameRoot;
-
-			nameRoot = org.omg.CosNaming.NamingContextHelper.narrow(orb
-					.resolve_initial_references("NameService"));
-
-			// Construction du nom a rechercher
-			org.omg.CosNaming.NameComponent[] nameToFind = new org.omg.CosNaming.NameComponent[1];
-			nameToFind[0] = new org.omg.CosNaming.NameComponent("UtilVoeux", "");
-
-			// Recherche aupres du naming service
-			org.omg.CORBA.Object distantVoeux = nameRoot
-					.resolve(nameToFind);
+			this.getAllEtudiants();
+			this.getAllPropositions();
 			
-			System.out.println("Recuperation de l'utilitaire de voeux");
-			// Casting de l'objet CORBA au type convertisseur euro
-			this.utilVoeux = UtilVoeuxHelper.narrow(distantVoeux);
-
-		} catch (InvalidName | NotFound | CannotProceed
-				| org.omg.CosNaming.NamingContextPackage.InvalidName e) {
-			e.printStackTrace();
+			int cptEtudiant = 0;
+			int cptVoeux = 0;
+			
+			for (Etudiant e : this.main.allEtudiants)
+			{
+				cptEtudiant++;
+				Voeu[] voeux = this.main.utilVoeux.getVoeuxByEtudiant(e);
+				System.out.println("Etat initial des voeux de l'étudiant " + e.numEtudiant() + " : " + voeux.length);
+				while (voeux.length < 5)
+				{
+					try {
+						numProp = (int)(Math.random() * ((this.main.allPropositions.size() - 0)));
+						System.out.println("Etudiant demandant : " + e.numEtudiant() + " ; NumProp : " + numProp + " ; Proposition demandée : " + this.main.allPropositions.get(numProp).getId());
+						this.main.utilVoeux.soumettreVoeu(this.main.allPropositions.get(numProp), e, this.main.utilVoeux.getVoeuxByEtudiant(e).length+1);
+						cptVoeux++;
+					} catch (VoeuDejaCreeException e1) {
+						//On catch des voeux déjà créés puisque choisis aléatoirements
+					}
+					
+					voeux = this.main.utilVoeux.getVoeuxByEtudiant(e);
+				}
+			}
+			
+			System.out.println("- FIN : OK - Nb Etudiants : " + cptEtudiant + " ; NbVoeuxCréés : " + cptVoeux);
+		} catch (NombreMaxDeVoeuxAtteintException e) {
+			System.out.println("- ERREUR : NombreMaxDeVoeuxAtteintException");
 		}
 	}
 	
-	public void testerSoumettreVoeuOK()
+	private void getAllEtudiants()
 	{
-		try {
-			 Voeu[] voeuxTemp = new Voeu[5];
-			for (int i = 0; i<5 && i<propositions.length; i++)
+		System.out.println("--------------------------------------------------");
+		System.out.println("- getAllEtudiants ");
+		System.out.println("- DEBUT ");
+		Rectorat[] rectorats = this.main.ministere.getListRectorats();
+		for (Rectorat r : rectorats)
+		{
+			Universite[] universites = r.getListUniversites();
+			for (Universite u : universites)
 			{
-				this.utilVoeux.soumettreVoeu(propositions[i], main.etudiantConnecte, i);
-				System.out.println("Voeu n°"+i+" de l'étudiant "+main.etudiantConnecte.numEtudiant() + " créé");
+				Etudiant[] etudiants = u.getEtudiants();
+				for (Etudiant e : etudiants)
+				{
+					this.main.allEtudiants.add(e);
+				}
+			}
+		}
+		System.out.println("- FIN ");
+	}
+	
+	private void getAllPropositions()
+	{
+		System.out.println("--------------------------------------------------");
+		System.out.println("- getAllPropositions ");
+		System.out.println("- DEBUT ");
+		Rectorat[] rectorats = this.main.ministere.getListRectorats();
+		for (Rectorat r : rectorats)
+		{
+			Universite[] universites = r.getListUniversites();
+			for (Universite u : universites)
+			{
+				Proposition[] propositions = u.listeDesPropositions();
+				for (Proposition p : propositions)
+				{
+					this.main.allPropositions.add(p);
+				}
+			}
+		}
+		System.out.println("- FIN ");
+	}
+	
+	public void testerSoumettreNbMaxAtteint()
+	{
+		System.out.println("--------------------------------------------------");
+		System.out.println("- testerSoumettreNbMaxAtteint ");
+		try
+		{
+			try {
+				this.main.utilVoeux.soumettreVoeu(this.main.allPropositions.get(0), this.main.allEtudiants.get(0), 5);
+			} catch (VoeuDejaCreeException e) {
+				try {
+					this.main.utilVoeux.soumettreVoeu(this.main.allPropositions.get(0), this.main.allEtudiants.get(1), 5);
+				} catch (VoeuDejaCreeException e1) {
+					System.out.println("- PAS DE CHANCE : T'es tombé deux fois sur des voeux déjà demandé");
+				}
 			}
 			
-			voeuxTemp = main.etudiantConnecte.listeVoeux();
-			for (int j = 0; j<voeuxTemp.length;j++)
-			{
-				//TODO Regler le probleme de l'ID pour proposition
-				//TODO finir le cas nbre max atteint
-				System.out.println(voeuxTemp[j].getId());
-			}
-
 		} catch (NombreMaxDeVoeuxAtteintException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("- OK : NombreMaxDeVoeuxAtteintException");
 		}
+		
 	}
 }

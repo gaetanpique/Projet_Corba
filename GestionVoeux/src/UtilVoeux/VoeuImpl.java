@@ -6,13 +6,10 @@ import java.util.Calendar;
 import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantHelper;
-import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
 import Etudes.Voeu;
 import Etudes.VoeuPOA;
 import Etudes.diplomesDifferentsException;
-import Etudes.EtatsVoeu;
-import Util.DbConnection;
 import Util.UtilConnexion;
 import Util.UtilTraitements;
 
@@ -28,32 +25,21 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 
 	public VoeuImpl(Proposition p, String numEtudiant, int positionVoeu,
 			EtatsVoeu etatVoeu) {
-		try {
+
 			this.propositionCorrespondante = p;
 			this.position = positionVoeu;
 			this.etatVoeu = etatVoeu;
 			
 			System.out.println("Construction du voeu");
-			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Etu_"
-					+ numEtudiant);
+			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Etu_" + numEtudiant);
 			this.etudiantCorrespondant = EtudiantHelper.narrow(result);
-			System.out.println("1");
-			UtilConnexion.connexionAuNammingService(this, "Voeu_" + numEtudiant
-					+ "_");
-			System.out.println("2");
-			this.etudiantCorrespondant.addVoeuEtudiant(this._this());
-			System.out.println("3");
-			
-			System.out.println(Calendar.getInstance().getTime().toString()
-					+ " : Servant Voeu_" + numEtudiant + "_"
-					+ p.masterPropose().intitule()
-					+ " référencé et opérationnel.");
-			
 
-		} catch (NombreMaxDeVoeuxAtteintException e) {
-			e.printStackTrace();
-		}
-	}
+			UtilConnexion.connexionAuNammingService(this, "Voeu_" + numEtudiant + "_"+p.getId());
+
+			this.etudiantCorrespondant.addVoeuEtudiant(this._this());
+			
+			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Voeu_" + numEtudiant + "_"	+ p.masterPropose().intitule() + " référencé et opérationnel.");
+			}
 
 	// -----------------GETTERS ANS SETTERS--------------------------------//
 
@@ -69,12 +55,12 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 		colonnes[0] = "position";
 		String[] valeurs = new String[1];
 		valeurs[0] = String.valueOf(value);
-
-		DbConnection.updateIntoDB("Voeu", colonnes, valeurs, "numetudiant = '"
+/*
+		DbConnection.updateIntoDB("voeux", colonnes, valeurs, "numetudiant = '"
 				+ etudiantCorrespondant.numEtudiant()
 				+ "' and idproposition = '"
 				+ propositionCorrespondante().getId() + "'");
-	}
+	*/}
 
 	@Override
 	public Etudes.EtatsVoeu etatVoeu() {
@@ -89,11 +75,11 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 		String[] valeurs = new String[1];
 		valeurs[0] = String.valueOf(value);
 
-		DbConnection.updateIntoDB("Voeu", colonnes, valeurs, "numetudiant = '"
+/*		DbConnection.updateIntoDB("voeux", colonnes, valeurs, "numetudiant = '"
 				+ etudiantCorrespondant.numEtudiant()
 				+ "' and idproposition = '"
 				+ propositionCorrespondante().getId() + "'");
-	}
+	*/}
 
 	@Override
 	public String getId() {
@@ -127,7 +113,7 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 	 */
 	@Override
 	public void modifierEtatVoeu(EtatsVoeu nouvelEtat) {
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
+		Voeu[] listeVoeuTemp;
 		switch (nouvelEtat.value()) {
 		case EtatsVoeu._nonValide:
 		case EtatsVoeu._valide:
@@ -137,10 +123,9 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 		case EtatsVoeu._OUI:
 		case EtatsVoeu._NON:
 			this.etatVoeu(nouvelEtat);
-			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements
-					.ToArray(etudiantCorrespondant.listeVoeux());
-			for (VoeuImpl v : listeVoeuTemp) {
-				if (!v.equals(this)) {
+			listeVoeuTemp = etudiantCorrespondant.listeVoeux();
+			for (Voeu v : listeVoeuTemp) {
+				if (!v.getId().equals(this.getId())) {
 					v.etatVoeu(EtatsVoeu.NON);
 				}
 			}
@@ -148,9 +133,8 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 		case EtatsVoeu._OUIMAIS:
 		case EtatsVoeu._NONMAIS:
 			this.etatVoeu(nouvelEtat);
-			listeVoeuTemp = (ArrayList<VoeuImpl>) UtilTraitements
-					.ToArray(etudiantCorrespondant.listeVoeux());
-			for (VoeuImpl v : listeVoeuTemp) {
+			listeVoeuTemp = etudiantCorrespondant.listeVoeux();
+			for (Voeu v : listeVoeuTemp) {
 				if (v.position() > this.position()) {
 					v.etatVoeu(EtatsVoeu.NON);
 				}
@@ -196,13 +180,19 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 	 * @return booleen indiquant le "statut" du voeu
 	 * @author Memer
 	 */
+	@Override
 	public boolean classable() {
-		switch (etatVoeu.value()) {
+		switch (this.etatVoeu.value()) 
+		{
 		case EtatsVoeu._initial:
 			return true;
 		case EtatsVoeu._nonValide:
 			return false;
 		case EtatsVoeu._valide:
+			return true;
+		case EtatsVoeu._accepte:
+			return true;
+		case EtatsVoeu._enAttente:
 			return true;
 		case EtatsVoeu._cloture:
 			return true;
@@ -214,8 +204,8 @@ public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 			return false;
 		case EtatsVoeu._NONMAIS:
 			return false;
-
 		}
+		
 		return true;
 	}
 }

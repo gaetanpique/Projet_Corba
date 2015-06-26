@@ -4,12 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 
 import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
-import Etudes.FormationHelper;
-import Etudes.Licence;
 import Etudes.NombreMaxDeVoeuxAtteint;
 import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
@@ -18,15 +15,16 @@ import Etudes.Rectorat;
 import Etudes.Universite;
 import Etudes.UtilVoeuxPOA;
 import Etudes.Voeu;
+import Etudes.VoeuDejaCreeException;
+import Etudes.diplomesDifferentsException;
 import Util.DbConnection;
 import Util.UtilConnexion;
-import Util.UtilTraitements;
 
 public class UtilVoeux extends UtilVoeuxPOA {
 
 	private ArrayList<VoeuImpl> listeVoeux = new ArrayList<VoeuImpl>();
 
-	public UtilVoeux()  
+	public UtilVoeux() throws NombreMaxDeVoeuxAtteintException, VoeuDejaCreeException  
 	{
 		initVoeux();
 		UtilConnexion.connexionAuNammingService(this, "UtilVoeux");
@@ -38,7 +36,7 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	}
 
 
-	public void initVoeux()
+	public void initVoeux() throws NombreMaxDeVoeuxAtteintException, VoeuDejaCreeException
 	{
 		Proposition p;
 		String[] colonnes = new String[1];
@@ -74,65 +72,101 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	@Override
 	public Etudes.Voeu[] getMeilleurePropositionByEtudiant(Etudiant etudiant) 
 	{
-		ArrayList<VoeuImpl> listeVoeuTemp = new ArrayList<VoeuImpl>();
-		ArrayList<VoeuImpl> listeMeilleurVoeu = new ArrayList<VoeuImpl>();
-		boolean meilleurVoeuTrouve = false;
-
+		Voeu[] listeVoeuTemp = new Voeu[5];
+		int cpt=0;
 		for (VoeuImpl v : listeVoeux)
 		{
-
-			if (v.etudiantCorrespondant().equals(etudiant))
+			if (v.etudiantCorrespondant().numEtudiant().equals(etudiant.numEtudiant()))
 			{
-				listeVoeuTemp.add(v);
+				listeVoeuTemp[cpt] = v._this();
+				cpt++;
 			}
-
 		}
 
-		listeVoeuTemp = ordonnerListeVoeux(listeVoeuTemp);
-		for (VoeuImpl v : listeVoeuTemp)
+		listeVoeuTemp = ordonnerListeVoeuxByPosition(listeVoeuTemp);
+		
+		ArrayList<Voeu> listeMeilleurVoeu = new ArrayList<Voeu>();
+		cpt=0;
+		for (Voeu v : listeVoeuTemp)
 		{
-
-			if (v.etatVoeu().equals("Accepte"))
+			listeMeilleurVoeu.add(v);
+			cpt++;
+			//if (v.etatVoeu() == EtatsVoeu.accepte)
+			if(v.classable())
 			{
-				meilleurVoeuTrouve = true;
-				listeMeilleurVoeu.add(v);
-			}
-			else if (!meilleurVoeuTrouve);
-			{
-				listeMeilleurVoeu.add(v);
+				break;
 			}
 		}
-		return (Voeu[]) UtilTraitements.ToTableau(listeMeilleurVoeu);
+		
+		listeVoeuTemp = listeMeilleurVoeu.toArray(new Voeu[listeMeilleurVoeu.size()]);
+		
+		return listeVoeuTemp;
 	}
-
+	
 	/**
 	 * Cette methode trie une arraylist de Voeux par leur position
 	 * @param listeAOrdonner (assez explicite non ?)
 	 * @return La liste ordonnée
 	 * @author Memer
 	 */
-	public ArrayList<VoeuImpl> ordonnerListeVoeux(ArrayList<VoeuImpl> listeAOrdonner)
+	private Voeu[] ordonnerListeVoeuxByPosition(Voeu[] listeAOrdonner)
 	{
-		VoeuImpl voeuTemp;
-		boolean permut;
+		Voeu voeuTemp;
+		boolean permut = true;
+		long p1, p2;
 
-		do
+			// hypothèse : le tableau est trié
+			permut=false;
+			for (int i = 0 ; i < listeAOrdonner.length-2 ; i++)
+			{
+				for (int j =listeAOrdonner.length-1;i<j;j--)
+				{
+				// Teste si 2 éléments successifs sont dans le bon ordre ou non
+				p1 = listeAOrdonner[j].position();
+				p2 = listeAOrdonner[j-1].position();
+				if (p1 < p2)
+				{
+					voeuTemp=listeAOrdonner[j-1];
+					listeAOrdonner[j-1] = listeAOrdonner[j];
+					listeAOrdonner[j] = voeuTemp;
+				}
+				}
+			}
+		
+
+		return listeAOrdonner;
+	}
+	
+
+
+	@Override
+	public Voeu[] ordonnerListeVoeux(Voeu[] listeAOrdonner) {
+		Voeu voeuTemp;
+		boolean permut = true;
+		boolean test;
+
+		while (permut)
 		{
 			// hypothèse : le tableau est trié
 			permut=false;
-			for (int i =0;i<listeAOrdonner.size()-1;i++)
+			for (int i = 0 ; i < listeAOrdonner.length-2 ; i++)
 			{
 				// Teste si 2 éléments successifs sont dans le bon ordre ou non
-				if (listeAOrdonner.get(i).position()> listeAOrdonner.get(i+1).position())
-				{
-					voeuTemp=listeAOrdonner.get(i);
-					listeAOrdonner.set(i, listeAOrdonner.get(i+1));
-					listeAOrdonner.set(i+1, voeuTemp);
-					permut=true;
+				try {
+					test= listeAOrdonner[i].etudiantCorrespondant().estMeilleurQue(listeAOrdonner[i+1].etudiantCorrespondant());
+					if (test)
+					{
+						voeuTemp=listeAOrdonner[i];
+						listeAOrdonner[i] = listeAOrdonner[i+1];
+						listeAOrdonner[i+1] = voeuTemp;
+						permut=true;
+					}
+				} catch (diplomesDifferentsException e) {
+					e.printStackTrace();
 				}
 			}
 		}
-		while(permut);
+
 		return listeAOrdonner;
 	}
 
@@ -144,23 +178,34 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	 * @return void
 	 * @throws NombreMaxDeVoeuxAtteint l'etudiant peut en avoir maximum 5 
 	 * @author Merwan
+	 * @throws VoeuDejaCreeException 
 	 */
 	@Override
-	public void soumettreVoeu(Proposition aSoumettre, Etudiant soumetteur, int positionVoeu) throws NombreMaxDeVoeuxAtteintException 
-	{
-		System.out.println(" soumettre voeu 1 : ");
-		System.out.println( soumetteur.listeVoeux().length);
-			
-			if (soumetteur.listeVoeux().length < 5) 
-			{
-				System.out.println(" soumettre voeu 2");
-				new VoeuImpl(aSoumettre, soumetteur.numEtudiant(),positionVoeu);
+	public void soumettreVoeu(Proposition aSoumettre, Etudiant soumetteur, int positionVoeu) throws NombreMaxDeVoeuxAtteintException, VoeuDejaCreeException 
+	{	
+		if (soumetteur.listeVoeux().length==5)
+		{
+			throw new NombreMaxDeVoeuxAtteintException();
+		}
+		else
+		{
+			Voeu[] temp = soumetteur.listeVoeux();
+			for (Voeu v : temp) {
+				String idNewVoeu = "Voeu_" + soumetteur.numEtudiant() + "_" + aSoumettre.getId();
+				System.out.println("IdConstruite : "+ idNewVoeu);
+				System.out.println("IdDejaDansLetudiant : "+v.getId());
+				if (idNewVoeu.equals(v.getId())) {
+					throw new VoeuDejaCreeException(aSoumettre.getId(),	soumetteur.numEtudiant());
+				}
 			}
-			else
-			{
-				throw new NombreMaxDeVoeuxAtteintException();
-			}
-		
+
+		}
+
+		listeVoeux.add(new VoeuImpl(aSoumettre, soumetteur.numEtudiant(),positionVoeu));
+
+		System.out.println( "Longeur tableau etudiant apres appel constructeur Voeuimpl : " + soumetteur.listeVoeux().length);
+
+
 	}
 
 	/**
@@ -173,19 +218,26 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	 */
 	@Override
 	public Etudes.Voeu[] getVoeuxByEtudiant(Etudiant etudiant) {
-		ArrayList<Voeu> arrayVoeuxTemp = new ArrayList<Voeu>();
-
-		for (int i =0; i< listeVoeux.size();i++) 
+		Voeu[] result;
+		ArrayList<VoeuImpl> temp = new ArrayList<VoeuImpl>();
+		for (VoeuImpl v : this.listeVoeux) 
 		{
-			if (listeVoeux.get(i).etudiantCorrespondant().equals(etudiant))
-				//TODO verifier que le point equals fonctionne
+			if (v.etudiantCorrespondant().numEtudiant().equals(etudiant.numEtudiant()))
 			{
-				arrayVoeuxTemp.add(listeVoeux.get(i)._this());
+				temp.add(v);
 			}
 
 		}
+		
+		result = new Voeu[temp.size()];
+		int cpt=0;
+		for (VoeuImpl v : temp)
+		{
+			result[cpt] = v._this();
+			cpt++;
+		}
 
-		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuxTemp);
+		return result;
 	}
 
 
@@ -201,20 +253,57 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	public Voeu[] getVoeuxByUniversite(Universite _universite) 
 	{
 		ArrayList<Voeu> arrayVoeuxTemp = new ArrayList<Voeu>();
-		ArrayList<Proposition> arrayPropositionTemp = new ArrayList<Proposition>();
-
-		arrayPropositionTemp = (ArrayList<Proposition>) UtilTraitements.ToArray(_universite.listeDesPropositions());
-
-		for (Voeu v : arrayVoeuxTemp)
+		System.out.println("Entrée dans la methode utilVoeux.getVoeuxByUniversite universite en parametre : " + _universite.nom());
+		
+		Proposition[] propositions = _universite.listeDesPropositions();
+		for (VoeuImpl v : this.listeVoeux)
 		{
-			if (arrayPropositionTemp.contains(v.propositionCorrespondante()))
+			for (Proposition p : propositions)
 			{
-				arrayVoeuxTemp.add(v);
+				if(p.getId().equals(v.propositionCorrespondante().getId()))
+				{
+					arrayVoeuxTemp.add(v._this());
+				}
 			}
 		}
-
-		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuxTemp);
+		
+		Voeu[] result = new Voeu[arrayVoeuxTemp.size()];
+		int cpt = 0;
+		for (Voeu v : arrayVoeuxTemp)
+		{
+			result[cpt] = v;
+			cpt++;
+		}
+		
+		System.out.println("Taille de la liste de voeux récupérée : " + result.length);
+		return result;
 	}
+	
+	@Override
+	public Voeu[] getVoeuxByProposition(Proposition p) {
+		ArrayList<Voeu> arrayVoeuxTemp = new ArrayList<Voeu>();
+		System.out.println("Entrée dans la methode utilVoeux.getVoeuxByProposition : " + p.getId());
+		
+		for (VoeuImpl v : this.listeVoeux)
+		{
+			if(p.getId().equals(v.propositionCorrespondante().getId()))
+			{
+				arrayVoeuxTemp.add(v._this());
+			}
+		}
+		
+		Voeu[] result = new Voeu[arrayVoeuxTemp.size()];
+		int cpt = 0;
+		for (Voeu v : arrayVoeuxTemp)
+		{
+			result[cpt] = v;
+			cpt++;
+		}
+		
+		System.out.println("Taille de la liste de voeux récupérée : " + result.length);
+		return result;
+	}
+
 
 	/**
 	 * Cette méthode permet de retourner un tableau de voeu concernant les universites d'un rectorat
@@ -226,76 +315,36 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	@Override
 	public Voeu[] getVoeuxByRectorat(Rectorat rectoratConcerne) 
 	{
+		System.out.println("Entrée dans la methode utilVoeux.getVoeuxByRectorat");
+		ArrayList<Voeu> arrayVoeuxTemp = new ArrayList<Voeu>();
+		
+		Universite[] universites = rectoratConcerne.getListUniversites();
 
-		ArrayList<Universite> arrayUniversiteTemp = new ArrayList<Universite>();
-		ArrayList<Voeu> arrayVoeuTemp = new ArrayList<Voeu>();
-		arrayUniversiteTemp = (ArrayList<Universite>) UtilTraitements.ToArray(rectoratConcerne.getListUniversites());
-
-
-		for ( int i = 0; i < arrayUniversiteTemp.size()-1; i++)
+		for (Universite u : universites)
 		{
-			arrayVoeuTemp.addAll(arrayVoeuTemp.size(), (Collection<? extends Voeu>) UtilTraitements.ToArray(this.getVoeuxByUniversite(arrayUniversiteTemp.get(i))));
-			//Cette manipulation permet de transformer le tableau fourni par voeu en arraylist puis de la caster
-			//pour l'ajouter a la fin de l'arraylist
-
-		}
-
-		return (Voeu[]) UtilTraitements.ToTableau(arrayVoeuTemp);
-
-	}
-
-	/**
-	 * Cette méthode permet de classer tous les voeux associés à une proposition particulière
-	 * @param Proposition p : La proposition en question
-	 * @return void
-	 * @author Memer
-	 */
-	@Override
-	public void classerVoeuxParProposition(Proposition p)
-	{
-		ArrayList<VoeuImpl> arrayVoeuTemp = new ArrayList<VoeuImpl>();
-		for(VoeuImpl v : listeVoeux)
-		{
-			if (v.propositionCorrespondante().equals(p) && v.classable())
+			for (Voeu v : this.getVoeuxByUniversite(u))
 			{
-				//Les voeux implémentent Comparable ce qui permet d'utiliser
-				//la méthode sort de la classe ArrayList
-				arrayVoeuTemp.sort(null);
+				arrayVoeuxTemp.add(v);
 			}
 		}
-		//Parcours de l'arrayList triée pour donner le classement du voeu égale à son index+1
-		for (short i = 1; i < arrayVoeuTemp.size();i++)
+		
+		Voeu[] result = new Voeu[arrayVoeuxTemp.size()];
+		int cpt = 0;
+		for (Voeu v : arrayVoeuxTemp)
 		{
-			if ( i < p.nbPlaces())
-			{
-			arrayVoeuTemp.get(i-1).etatVoeu(EtatsVoeu.accepte);
-			}
-			else
-			{
-				arrayVoeuTemp.get(i-1).etatVoeu(EtatsVoeu.enAttente);
-			}
-
+			result[cpt] = v;
+			cpt++;
 		}
-
+		
+		return result;
 	}
 
-	/**
-	 * Cette méthode permet de classer tous les voeux associés à une université particulière
-	 * @param Universite u : L'universite en question
-	 * @return void
-	 * @author Memer
-	 */
-	@Override
-	public void classerVoeuxParUniversite(Universite u)
-	{
-		for(Proposition p : u.listeDesPropositions())
-		{
-			classerVoeuxParProposition(p);
-		}
-	}
 	
-		public static void main(String[] args) {
-			DbConnection.connect("Voeux");
-			new UtilVoeux();
-		}
+	public static void main(String[] args) throws NombreMaxDeVoeuxAtteintException, VoeuDejaCreeException {
+		DbConnection.connect("Voeu");
+		new UtilVoeux();
+	}
+
+
 }
+	

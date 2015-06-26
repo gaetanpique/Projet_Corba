@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
@@ -6,7 +8,10 @@ import Etudes.Etudiant;
 import Etudes.Formation;
 import Etudes.Ministere;
 import Etudes.MinistereHelper;
+import Etudes.Proposition;
 import Etudes.Rectorat;
+import Etudes.UtilVoeux;
+import Etudes.Voeu;
 
 public class MainTest {
 	
@@ -14,7 +19,7 @@ public class MainTest {
 	
 	public Formation[] formationsExistentes;
 	
-	public String numEtudiantSaisi = "2345411";
+	public String numEtudiantSaisi = "2345412";
 	
 	public Etudiant etudiantConnecte;
 	
@@ -23,6 +28,12 @@ public class MainTest {
 	public Rectorat[] listRectorat;
 	
 	public Rectorat choisi;
+	
+	public UtilVoeux utilVoeux;
+	
+	public ArrayList<Proposition> allPropositions = new ArrayList<Proposition>();
+	
+	public ArrayList<Etudiant> allEtudiants = new ArrayList<Etudiant>();
 	
 	public static void main(String[] args) {
 		new MainTest();
@@ -35,8 +46,48 @@ public class MainTest {
 		new TestInscription(this);
 		new TestConnexion(this);
 		new TestPostuler(this);
+		this.afficherEtatFinPhase1AND2("Etat des voeux étudiants à la fin de la phase 1 : ");
+		new Phase1To2(this);
+		this.afficherEtatFinPhase1AND2("Etat des voeux étudiants à la fin de la phase 2 : ");
+		new Phase2To3(this);
+		this.afficherEtatFinPhase3AND4("Etat des voeux étudiants au début de la phase 3 : ");
+		new Phase3To4(this);
+		this.afficherEtatFinPhase3AND4("Etat des voeux étudiants à la fin de la phase 3 : ");
+		new Phase4(this);
+		this.afficherEtatFinPhase3AND4("Etat des voeux étudiants à la fin de la phase 4 : ");
+		
 	}
 	
+	private void afficherEtatFinPhase1AND2(String _instant) {
+		System.out.println(_instant);
+		System.out.println("------------------------------------------------- ");
+		for (Etudiant e : allEtudiants)
+		{
+			System.out.println("Etudiant n°" + e.numEtudiant() + " : ");
+			Voeu[] voeux = e.listeVoeux();
+			
+			for (Voeu v : voeux)
+			{
+				System.out.println(" - Voeu " + v.position() + " : " + v.getId() + " ; Etat : " + v.etatVoeu());
+			}
+		}
+	}
+	
+	private void afficherEtatFinPhase3AND4(String _instant) {
+		System.out.println(_instant);
+		System.out.println("------------------------------------------------- ");
+		for (Etudiant e : allEtudiants)
+		{
+			System.out.println("Etudiant n°" + e.numEtudiant() + " : ");
+			Voeu[] voeux = utilVoeux.getMeilleurePropositionByEtudiant(e);
+			
+			for (Voeu v : voeux)
+			{
+				System.out.println(" - Voeu " + v.position() + " : " + v.getId() + " ; Etat : " + v.etatVoeu());
+			}
+		}
+	}
+
 	public void seConnecter()
 	{
 		try {
@@ -82,6 +133,9 @@ public class MainTest {
 		System.out.println("- Choisi : " + choisi.nom());
 	}
 	
-	
+	public void passagePhase1()
+	{
+		
+	}
 	
 }

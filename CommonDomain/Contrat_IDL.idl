@@ -67,6 +67,11 @@ module Etudes
 		string numEtudiant;
 	};
 	
+	exception VoeuDejaCreeException
+	{
+		string numEtudiant;
+		string idVoeu;
+	};
 
 	interface Resultat;
 	interface Universite;
@@ -74,9 +79,9 @@ module Etudes
 	{
 		readonly attribute Universite proposant;
 		readonly attribute Formation masterPropose;
-		attribute listLicences prerequis;
+		attribute listFormations prerequis;
 		readonly attribute long nbPlaces;
-		oneway string getId();
+		string getId();
 	};
 	
 	interface Etudiant;
@@ -91,12 +96,13 @@ module Etudes
 		void inscrire(in Etudiant etudiant, in string motDePasse) raises (EtudiantInconnuException, EtudiantDejaInscritException);
 		void connecter(in Etudiant numEtudiant, in string motDePasse) raises (EtudiantInconnuException, EtudiantPasInscritException, MotDePasseErroneException);
 		Proposition getPropositionByFormation(in Formation _formation);
-		listLicences getPrerequis(in Proposition p) raises (PropositionDoesNotExistException);
+		listFormations getPrerequis(in Proposition p) raises (PropositionDoesNotExistException);
 		oneway void creerProposition(in string intituleMaster, in listLicences _prerequis) raises (formationDejaProposeeException);
 		oneway void majPrerequis(in Proposition p, in listLicences _nouveauxPrerequis) raises (PropositionDoesNotExistException);
 		long getPositionEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
 		boolean checkLicenceEtudiant(in Etudiant e, in Licence l);
-		oneway string getId();
+		string getId();
+		void classerVoeux();
 	};
 	
 	typedef sequence<Universite> listUniversites;
@@ -111,7 +117,8 @@ module Etudes
 		listUniversites getListUniversites();
 		listFormations getAccreditationsByUniversite(in Universite _universite);
 		listPropositions getPropositionByFormation(in Formation _formation);
-		oneway string getId();
+		string getId();
+		void validerCandidatures();
 	};
 	
 	typedef sequence<Rectorat> listRectorats;
@@ -140,7 +147,8 @@ module Etudes
 		attribute long position;
 		attribute EtatsVoeu etatVoeu;
 		oneway void modifierEtatVoeu(in EtatsVoeu nouvelEtat);
-		oneway string getId();
+		string getId();
+		boolean classable();
 	};
 	
 	typedef sequence<Voeu> listVoeux;
@@ -149,21 +157,24 @@ module Etudes
 	{
 		readonly attribute string numEtudiant;
 		readonly attribute listResultat resultats;
+		
 		readonly attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
-		void addVoeuEtudiant(in Voeu voeuAAjouter) raises (NombreMaxDeVoeuxAtteintException);
+		boolean ResultatsValideForProposition(in Proposition p);
+		void addVoeuEtudiant(in Voeu voeuAAjouter) ;
 		long getPositionEtudiant();
 		Universite getUniversite();
+		float getMoyenneLicenceEtudiant();
 	};
 	
-	interface UtilVoeux
+	interface UtilVoeux 
 	{
 		listVoeux getMeilleurePropositionByEtudiant(in Etudiant _etudiant);
-		oneway void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur, in long position) raises (NombreMaxDeVoeuxAtteintException);
+		void soumettreVoeu(in Proposition _aSoumettre, in Etudiant _soumetteur, in long position) raises (NombreMaxDeVoeuxAtteintException,VoeuDejaCreeException);
 		listVoeux getVoeuxByEtudiant(in Etudiant _etudiant);
 		listVoeux getVoeuxByUniversite(in Universite _universite);
 		listVoeux getVoeuxByRectorat(in Rectorat rectoratConcerne);
-		oneway void classerVoeuxParProposition(in Proposition p);
-		oneway void classerVoeuxParUniversite(in Universite u);
+		listVoeux getVoeuxByProposition(in Proposition p);
+		listVoeux ordonnerListeVoeux(in listVoeux listeAOrdonner);
 	};
 };

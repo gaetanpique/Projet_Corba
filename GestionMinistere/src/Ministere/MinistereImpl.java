@@ -3,13 +3,9 @@ package Ministere;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
-import javax.rmi.CORBA.UtilDelegate;
-
 import Etudes.Formation;
-import Etudes.Master;
 import Etudes.MinisterePOA;
 import Etudes.Proposition;
 import Etudes.Rectorat;
@@ -41,7 +37,7 @@ public class MinistereImpl extends MinisterePOA {
 		try {
 			while(resultatSQL.next())
 			{
-				this.formations.add(new FormationImpl(resultatSQL.getString(1)));
+				this.formations.add(new FormationImpl(resultatSQL.getString(1).toLowerCase()));
 			}
 			resultatSQL.close();
 		} catch (SQLException e) {

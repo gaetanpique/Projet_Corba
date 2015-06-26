@@ -1,20 +1,25 @@
 package Universite;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
 import org.omg.CORBA.ORB;
 
+import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
 import Etudes.Licence;
 import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
+import Etudes.PropositionHelper;
 import Etudes.Resultat;
 import Etudes.Universite;
 import Etudes.Voeu;
+import Etudes.VoeuDejaCreeException;
 import Etudes.diplomesDifferentsException;
 import Util.*;
 
@@ -38,17 +43,13 @@ public class EtudiantImpl extends EtudiantPOA {
 			this.motDePasse = motDePasse;
 			this.listeVoeux = new ArrayList<Voeu>();
 			this.resultats = new ArrayList<ResultatImpl>();
+			initResultats();
 
-			for (int i = 1; i == 6; i++) {
-				resultats.add(new ResultatImpl(this.numero, i));
-			}
 			UtilConnexion.connexionAuNammingService(this, "Etu_" + this.numero);
 
 			this.universite.referencer(this);
 
-			System.out.println(Calendar.getInstance().getTime().toString()
-					+ " : Servant Etudiant_" + this.numero
-					+ " référencé et opérationnel.");
+			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 
 			//insertIntoDB(); // TODO : Insert into BD à remettre
 			//System.out.println("EtudiantImpl : Insertion dans BD OK");
@@ -58,6 +59,24 @@ public class EtudiantImpl extends EtudiantPOA {
 
 	}
 
+	public void initResultats()
+	{
+		String[] colonnes = new String[1];
+		colonnes[0]="*";
+		ResultSet resultatSQL;
+			resultatSQL = DbConnection.selectIntoDB("resultats", colonnes, "numetudiant='"+this.numero+"'");
+			try {
+				
+				while(resultatSQL.next())
+				{
+					this.resultats.add(new ResultatImpl(resultatSQL.getString(2).toLowerCase(), resultatSQL.getFloat(4), resultatSQL.getInt(3), resultatSQL.getString(6).toLowerCase(), resultatSQL.getInt(5), resultatSQL.getString(1).toLowerCase()));
+				}
+				
+				resultatSQL.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+	}
 	// -----------------GETTERS ANS SETTERS--------------------------------//
 	public String getMotDePasse() {
 		return motDePasse;
@@ -69,7 +88,16 @@ public class EtudiantImpl extends EtudiantPOA {
 
 	@Override
 	public Voeu[] listeVoeux() {
-		return listeVoeux.toArray(new Voeu[listeVoeux.size()]);
+		Voeu[] result = new Voeu[this.listeVoeux.size()];
+		int cpt=0;
+		
+		for (Voeu v : this.listeVoeux)
+		{
+			result[cpt] = v;
+			cpt++;
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -105,7 +133,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 */
 	@Override
 	public boolean estMeilleurQue(Etudiant aComparer) {
-		EtudiantImpl e = (EtudiantImpl) aComparer;
+		Etudiant e =  aComparer;
 		float moy1 = this.getMoyenneLicenceEtudiant();
 		float moy2 = e.getMoyenneLicenceEtudiant();
 
@@ -157,10 +185,12 @@ public class EtudiantImpl extends EtudiantPOA {
 	 * @return validité du résultat.
 	 * @author Baptiste
 	 */
+	@Override
 	public boolean ResultatsValideForProposition(Proposition p) {
 		// Résultat est dans le même projet donc on appelle la méthode en local
-		ResultatImpl r = (ResultatImpl) this.resultats()[0];
-		;
+		System.out.println("Entrée dans la méthode Etudiant.ResultatValideForProposition avec la proposition : "+p.getId());
+		ResultatImpl r = resultats.get(0);
+
 		return r.isValideForProposition(p);
 	}
 
@@ -187,7 +217,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 */
 	public boolean checkLicence(Licence l) {
 		ResultatImpl res1 = (ResultatImpl) this.resultats()[0];
-		return (res1.getLicence()._equals(l));
+		return (res1.getLicence().intitule().equals(l.intitule()));
 	}
 
 	/**
@@ -196,11 +226,8 @@ public class EtudiantImpl extends EtudiantPOA {
 	 * @author BAPeTISTE
 	 */
 	@Override
-	public void addVoeuEtudiant(Voeu v) throws NombreMaxDeVoeuxAtteintException {
-		if (listeVoeux.size() == 5) {
-			throw new NombreMaxDeVoeuxAtteintException();
-		} else
-			listeVoeux.add(v);
+	public void addVoeuEtudiant(Voeu v)  {
+		this.listeVoeux.add(v);
 	}
 
 	public void insertIntoDB() {

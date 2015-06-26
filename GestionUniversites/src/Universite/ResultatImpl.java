@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 
+import Etudes.Formation;
+import Etudes.FormationHelper;
 import Etudes.Licence;
 import Etudes.LicenceHelper;
 import Etudes.Proposition;
@@ -14,7 +16,7 @@ import Util.UtilConnexion;
 
 public class ResultatImpl extends ResultatPOA {
 
-	private Licence licence;
+	private Formation licence;
 	private float moyenne;
 	private String codeObtention;
 	private int position;
@@ -31,10 +33,10 @@ public class ResultatImpl extends ResultatPOA {
 		this.position = p;
 		this.numSemestre = n ;
 		
-		UtilConnexion.connexionAuNammingService(this, "Result_" + numEtudiant);
+		UtilConnexion.connexionAuNammingService(this, "Result_" + numEtudiant+"_"+numSemestre);
 		
-		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Licence_" + intituleLicence);
-		this.licence = LicenceHelper.narrow(result);
+		org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" + intituleLicence);
+		this.licence = FormationHelper.narrow(result);
 		
 		System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Result_" + numEtudiant + " référencé et opérationnel.");
 	}
@@ -50,7 +52,7 @@ public class ResultatImpl extends ResultatPOA {
 				
 				while(resultatSQL.next())
 				{		
-					new ResultatImpl(resultatSQL.getString(2),resultatSQL.getFloat(4),resultatSQL.getInt(3),resultatSQL.getString(6),resultatSQL.getInt(5),resultatSQL.getString(1));
+					new ResultatImpl(resultatSQL.getString(2).toLowerCase(),resultatSQL.getFloat(4),resultatSQL.getInt(3),resultatSQL.getString(6).toLowerCase(),resultatSQL.getInt(5),resultatSQL.getString(1).toLowerCase());
 				}
 				
 				resultatSQL.close();
@@ -61,19 +63,15 @@ public class ResultatImpl extends ResultatPOA {
 	}
 	
 	
-	private void initFormations()
-	{
-
-	}
 	//-----------------GETTERS ANS SETTERS--------------------------------//
 
 
 
-	public Licence getLicence() {
+	public Formation getLicence() {
 		return licence;
 	}
 
-	public void setLicence(Licence licence) {
+	public void setLicence(Formation licence) {
 		this.licence = licence;
 	}
 
@@ -102,15 +100,18 @@ public class ResultatImpl extends ResultatPOA {
 	 * @author Baptiste
 	 */
 	public boolean isValideForProposition(Proposition proposition) {
-		PropositionImpl p = (PropositionImpl)proposition;
-		Licence[] liste = p.prerequis();
-		for(int i = 0 ; i < liste.length ; i++){
-		//comparaison par référence à vérifier
-			if (liste[i] == this.getLicence())
-//		//comparaison par contenu
-//			if (liste[i].equals(this.getLicence()))
+		System.out.println("Entrée dans la methode resultatImpl.isValideForPropositon : " + proposition.getId() + " ; " + this.licence.intitule());
+		
+		Formation[] liste = proposition.prerequis();
+		for(Formation f : liste) {
+			if (f.intitule().equals(this.getLicence().intitule()))
+			{
+				System.out.println("TRUE");
 				return true;
+			}
 		}		
+		System.out.println("FALSE");
+		//Aucun prérequis ne correspond à sa formation
 		return false;
 	}
 

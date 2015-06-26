@@ -4,18 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 
 import Etudes.Formation;
 import Etudes.FormationHelper;
 import Etudes.Licence;
-import Etudes.MasterHelper;
 import Etudes.PropositionPOA;
 import Etudes.Universite;
-import Etudes.UniversiteHelper;
 import Util.DbConnection;
 import Util.UtilConnexion;
-import Util.UtilTraitements;
 
 public class PropositionImpl extends PropositionPOA {
 	
@@ -29,8 +25,9 @@ public class PropositionImpl extends PropositionPOA {
 	 * 
 	 * @author Baptiste
 	 */
-	public PropositionImpl(UniversiteImpl u, String intituleMaster){
+	public PropositionImpl(UniversiteImpl u, String intituleMaster, int nbPlaces){
 		this.universiteProposante= u;
+		this.nbPlaces = nbPlaces;
 		// Intialisation de l'orb
 
 				
@@ -47,11 +44,11 @@ public class PropositionImpl extends PropositionPOA {
 			prerequis(prerequis);
 			this.universiteProposante = u;
 			// Intialisation de l'orb
-			UtilConnexion.connexionAuNammingService(this, "Proposition_" + u.nom() + "_" + intituleMaster);
-
+			
 			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" + intituleMaster);
 			this.masterPropose = FormationHelper.narrow(result);
-
+			
+			UtilConnexion.connexionAuNammingService(this, this.getId());
 			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Proposition_" + u.nom() + "_" + intituleMaster + " référencé et opérationnel.");
 
 			insertIntoDB();
@@ -66,12 +63,12 @@ public class PropositionImpl extends PropositionPOA {
 		String[] colonnes = new String[1];
 		colonnes[0]="intitulelicence";
 		ResultSet resultatSQL;
-			resultatSQL = DbConnection.selectIntoDB("prerequis", colonnes, "idproposition='"+this.getId()+"'");
+			resultatSQL = DbConnection.selectIntoDB("prerequis", colonnes, "idproposition='"+this.getId().toLowerCase()+"'");
 			try {
 				
 				while(resultatSQL.next())
 				{
-					org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" +resultatSQL.getString(1));
+					org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("Formation_" +resultatSQL.getString(1).toLowerCase());
 					this.prerequis.add(FormationHelper.narrow(result));
 				}
 				
@@ -90,27 +87,27 @@ public class PropositionImpl extends PropositionPOA {
 	}
 
 	@Override
-	public Licence[] prerequis() {
-		return prerequis.toArray(new Licence[prerequis.size()]);
+	public Formation[] prerequis() {
+		return prerequis.toArray(new Formation[prerequis.size()]);
 	}
 
 	@Override
-	public void prerequis(Licence[] value) {
+	public void prerequis(Formation[] value) {
 		prerequis.clear();
 		DbConnection.deleteIntoDB("prerequis", "idproposition = '" + getId()
 				+ "'");
 		// prerequis.addAll((Collection<? extends Licence>) UtilTraitements
 		// .ToArray(value));
-		for (Licence l : value) {
-			prerequis.add(l);
-			insertPrerequisIntoDB(getId(), l.intitule());
+		for (Formation f : value) {
+			prerequis.add(f);
+			insertPrerequisIntoDB(getId(), f.intitule());
 			System.out.println("Prerequis : Insertion dans BD OK");
 		}
 	}
 
 	@Override
 	public String getId() {
-		return "p_" + universiteProposante.nom() + "_" + masterPropose.intitule();
+		return  "Proposition_"+universiteProposante.nom() + "_" + masterPropose.intitule();
 	}
 
 	@Override

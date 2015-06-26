@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantInconnu;
@@ -19,11 +20,13 @@ import Etudes.PropositionDoesNotExistException;
 import Etudes.Rectorat;
 import Etudes.RectoratHelper;
 import Etudes.UniversitePOA;
+import Etudes.UtilVoeux;
+import Etudes.UtilVoeuxHelper;
+import Etudes.Voeu;
 import Etudes.formationDejaProposeeException;
 import Etudes.pasDiplomeException;
 import Util.DbConnection;
 import Util.UtilConnexion;
-import Util.UtilTraitements;
 
 public class UniversiteImpl extends UniversitePOA {
 
@@ -34,6 +37,8 @@ public class UniversiteImpl extends UniversitePOA {
 	private ArrayList<EtudiantImpl> etudiants;
 
 	private ArrayList<PropositionImpl> listeDesPropositions;
+	
+	private UtilVoeux utilVoeu;
 
 	public static void main(String[] args) {
 		DbConnection.connect(args[2]);
@@ -95,7 +100,7 @@ public class UniversiteImpl extends UniversitePOA {
 		try {
 			while (resultatSQL.next()) {
 				nomMaster = resultatSQL.getString(1).split("_")[2];
-				listeDesPropositions.add(new PropositionImpl(this, nomMaster));
+				listeDesPropositions.add(new PropositionImpl(this, nomMaster, Integer.parseInt(resultatSQL.getString(2))));
 			}
 
 			resultatSQL.close();
@@ -108,13 +113,25 @@ public class UniversiteImpl extends UniversitePOA {
 
 	@Override
 	public Proposition[] listeDesPropositions() {
-		return (Proposition[]) UtilTraitements.ToTableau(listeDesPropositions);
+		System.out.println(Calendar.getInstance().getTime().toString() + " : UniversiteImpl.getListPropositions()");
+		
+		Proposition[] resultat = new Proposition[this.listeDesPropositions.size()];
+		int cpt = 0;
+		
+		for (PropositionImpl p : this.listeDesPropositions)
+		{
+			resultat[cpt] = p._this();
+			cpt++;
+		}
+		return resultat;
 	}
 
 	@Override
 	public void listeDesPropositions(Proposition[] value) {
-		this.listeDesPropositions = (ArrayList<PropositionImpl>) UtilTraitements
-				.ToArray(value);
+		for (Proposition p : value)
+		{
+			this.listeDesPropositions.add((PropositionImpl) p);
+		}
 	}
 
 	/**
@@ -126,7 +143,15 @@ public class UniversiteImpl extends UniversitePOA {
 	 */
 	@Override
 	public Etudiant[] getEtudiants() {
-		return this.etudiants.toArray(new Etudiant[this.etudiants.size()]);
+		Etudiant[] result = new Etudiant[this.etudiants.size()];
+		int cpt=0;
+		for (EtudiantImpl e : this.etudiants)
+		{
+			result[cpt] = e._this();
+			cpt++;
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -276,7 +301,7 @@ public class UniversiteImpl extends UniversitePOA {
 	 * @throws PropositionDoesNotExist
 	 */
 	@Override
-	public Licence[] getPrerequis(Proposition p)
+	public Formation[] getPrerequis(Proposition p)
 			throws PropositionDoesNotExistException {
 		PropositionImpl proposition = (PropositionImpl) p;
 
@@ -331,7 +356,7 @@ public class UniversiteImpl extends UniversitePOA {
 		PropositionImpl p = (PropositionImpl) proposition;
 
 		if (p == null) {
-			throw new PropositionDoesNotExistException(p.masterPropose());
+			throw new PropositionDoesNotExistException();
 		} else {
 			p.prerequis(nouveauxPrerequis);
 		}
@@ -374,6 +399,61 @@ public class UniversiteImpl extends UniversitePOA {
 		// TODO Recupérer la position
 		return 0;
 	}
+	
+	/**
+	 * Cette méthode permet de classer tous les voeux associés à une proposition particulière
+	 * @param Proposition p : La proposition en question
+	 * @return void
+	 * @author Memer
+	 */
+	@Override
+	public void classerVoeux()
+	{
+		System.out.println(Calendar.getInstance().getTime().toString() + " : Universite_" + this.nom + ".classerVoeux()");
+		Voeu[] voeux;
+		ArrayList<Voeu> voeuTemp = new ArrayList<Voeu>();
+		Voeu[] voeuxClassables;
+		for (PropositionImpl p : this.listeDesPropositions)
+		{
+			voeux = this.getUtilVoeux().getVoeuxByProposition(p._this());
+			for (Voeu v : voeux)
+			{
+				if (v.classable())
+				{
+					voeuTemp.add(v);
+				}
+			}
+			
+			voeuxClassables = voeuTemp.toArray(new Voeu[voeuTemp.size()]);
+			voeuxClassables = this.getUtilVoeux().ordonnerListeVoeux(voeuxClassables);
+			
+			//Parcours de l'arrayList triée pour donner le classement du voeu égale à son index+1
+			for (int i = 0 ; i < voeuxClassables.length ; i++)
+			{
+				System.out.println("Nb places : " + p.nbPlaces());
+				if ( i+1 < p.nbPlaces())
+				{
+					voeuxClassables[i].etatVoeu(EtatsVoeu.accepte);
+					System.out.println("Voeu " + voeuxClassables[i].getId() + " accepté.");
+				}
+				else
+				{
+					voeuxClassables[i].etatVoeu(EtatsVoeu.enAttente);
+					System.out.println("Voeu " + voeuxClassables[i].getId() + " en attente.");
+				}
+			}
+		}
+	}
+	
+	private UtilVoeux getUtilVoeux()
+	{
+		if (this.utilVoeu == null) {
+			org.omg.CORBA.Object result = UtilConnexion.getObjetDistant("UtilVoeux");
+			this.utilVoeu = UtilVoeuxHelper.narrow(result);
+		}
+		
+		return this.utilVoeu;
+	}
 
 	public void referencer(EtudiantImpl etudiantAAjouter) {
 		this.etudiants.add(etudiantAAjouter);
@@ -381,5 +461,6 @@ public class UniversiteImpl extends UniversitePOA {
 				+ " : Universite_ " + this.nom + ".referencer(EtudiantImpl) :");
 
 	}
+	
 
 }
