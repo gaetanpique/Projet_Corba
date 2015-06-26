@@ -24,7 +24,6 @@ import Etudes.UtilVoeux;
 import Etudes.UtilVoeuxHelper;
 import Etudes.Voeu;
 import Etudes.formationDejaProposeeException;
-import Etudes.pasDiplomeException;
 import Util.DbConnection;
 import Util.UtilConnexion;
 
@@ -363,43 +362,6 @@ public class UniversiteImpl extends UniversitePOA {
 
 	}
 
-	/**
-	 * Retourne la position de l'etudiant pour la formation "formation" auquel
-	 * il postule
-	 * 
-	 * Pré_requis : L'etudiant doit avoir un diplome (licence)
-	 * 
-	 * @param sujet
-	 *            Etudiant L'etudiant pour lequel on demande le classement
-	 * @return short La liste des licences prérequise pour postuler
-	 * @author Thibaut
-	 */
-
-	public boolean checkLicenceEtudiant(Etudiant _etudiant, Licence formation) {
-		return false;
-		// TODO JavaDOC + methode check licence étudiant ?
-	}
-
-	/**
-	 * Retourne la position de l'etudiant pour la formation "formation" auquel
-	 * il postule
-	 * 
-	 * Pré_requis : L'etudiant doit avoir un diplome (licence)
-	 * 
-	 * @param sujet
-	 *            Etudiant L'etudiant pour lequel on demande le classement
-	 * @return short La liste des licences prérequise pour postuler
-	 * @author Thibaut
-	 */
-	@Override
-	public int getPositionEtudiant(Etudiant sujet, Licence formation)
-			throws pasDiplomeException {
-		EtudiantImpl etudiantPosition = this.etudiants.get(this.etudiants
-				.indexOf((EtudiantImpl) sujet));
-		// TODO Recupérer la position
-		return 0;
-	}
-	
 	/**
 	 * Cette méthode permet de classer tous les voeux associés à une proposition particulière
 	 * @param Proposition p : La proposition en question

@@ -6,8 +6,6 @@ import java.util.Calendar;
 
 import Etudes.Formation;
 import Etudes.FormationHelper;
-import Etudes.Licence;
-import Etudes.LicenceHelper;
 import Etudes.Proposition;
 import Etudes.ResultatPOA;
 import Util.DbConnection;

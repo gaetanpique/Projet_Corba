@@ -112,15 +112,12 @@ public class UtilVoeux extends UtilVoeuxPOA {
 	private Voeu[] ordonnerListeVoeuxByPosition(Voeu[] listeAOrdonner)
 	{
 		Voeu voeuTemp;
-		boolean permut = true;
 		long p1, p2;
 
-			// hypothèse : le tableau est trié
-			permut=false;
-			for (int i = 0 ; i < listeAOrdonner.length-2 ; i++)
+		for (int i = 0 ; i < listeAOrdonner.length-2 ; i++)
+		{
+			for (int j =listeAOrdonner.length-1;i<j;j--)
 			{
-				for (int j =listeAOrdonner.length-1;i<j;j--)
-				{
 				// Teste si 2 éléments successifs sont dans le bon ordre ou non
 				p1 = listeAOrdonner[j].position();
 				p2 = listeAOrdonner[j-1].position();
@@ -130,9 +127,8 @@ public class UtilVoeux extends UtilVoeuxPOA {
 					listeAOrdonner[j-1] = listeAOrdonner[j];
 					listeAOrdonner[j] = voeuTemp;
 				}
-				}
 			}
-		
+		}
 
 		return listeAOrdonner;
 	}

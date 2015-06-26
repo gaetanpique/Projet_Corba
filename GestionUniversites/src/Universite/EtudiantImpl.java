@@ -4,24 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 
-import org.omg.CORBA.ORB;
-
-import Etudes.EtatsVoeu;
 import Etudes.Etudiant;
 import Etudes.EtudiantDejaInscritException;
 import Etudes.EtudiantPOA;
-import Etudes.Licence;
-import Etudes.NombreMaxDeVoeuxAtteintException;
 import Etudes.Proposition;
-import Etudes.PropositionHelper;
 import Etudes.Resultat;
 import Etudes.Universite;
 import Etudes.Voeu;
-import Etudes.VoeuDejaCreeException;
-import Etudes.diplomesDifferentsException;
-import Util.*;
+import Util.DbConnection;
+import Util.UtilConnexion;
 
 public class EtudiantImpl extends EtudiantPOA {
 
@@ -51,7 +43,7 @@ public class EtudiantImpl extends EtudiantPOA {
 
 			System.out.println(Calendar.getInstance().getTime().toString() + " : Servant Etudiant_" + this.numero + " référencé et opérationnel.");
 
-			//insertIntoDB(); // TODO : Insert into BD à remettre
+			//insertIntoDB();
 			//System.out.println("EtudiantImpl : Insertion dans BD OK");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,7 +92,6 @@ public class EtudiantImpl extends EtudiantPOA {
 		return result;
 	}
 
-	@Override
 	public Resultat[] resultats() {
 		Resultat[] resultat = new Resultat[resultats.size()];
 		int cpt = 0;
@@ -133,7 +124,7 @@ public class EtudiantImpl extends EtudiantPOA {
 	 */
 	@Override
 	public boolean estMeilleurQue(Etudiant aComparer) {
-		Etudiant e =  aComparer;
+		Etudiant e = aComparer;
 		float moy1 = this.getMoyenneLicenceEtudiant();
 		float moy2 = e.getMoyenneLicenceEtudiant();
 
@@ -192,32 +183,6 @@ public class EtudiantImpl extends EtudiantPOA {
 		ResultatImpl r = resultats.get(0);
 
 		return r.isValideForProposition(p);
-	}
-
-	/**
-	 * Cette méthode retourne l'attribut position du dernier semestre de
-	 * l'étudiant
-	 * 
-	 * 
-	 * @return attribut position de l'étudiant sur son résultat
-	 * @author Baptiste
-	 */
-	@Override
-	public int getPositionEtudiant() {
-		// appel interne au projet donc pas de méthode CORBA
-		ResultatImpl res = (ResultatImpl) this.resultats()[this.resultats().length - 1];
-		return res.position();
-	}
-
-	/**
-	 * Cette méthode vérifie si un étudiant a la Licence entrée en paramètre
-	 * 
-	 * @return resultat de la vérification
-	 * @author Baptiste
-	 */
-	public boolean checkLicence(Licence l) {
-		ResultatImpl res1 = (ResultatImpl) this.resultats()[0];
-		return (res1.getLicence().intitule().equals(l.intitule()));
 	}
 
 	/**

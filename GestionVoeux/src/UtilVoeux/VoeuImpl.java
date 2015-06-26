@@ -1,6 +1,5 @@
 package UtilVoeux;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import Etudes.EtatsVoeu;
@@ -11,7 +10,6 @@ import Etudes.Voeu;
 import Etudes.VoeuPOA;
 import Etudes.diplomesDifferentsException;
 import Util.UtilConnexion;
-import Util.UtilTraitements;
 
 public class VoeuImpl extends VoeuPOA implements Comparable<Voeu> {
 	private Proposition propositionCorrespondante;

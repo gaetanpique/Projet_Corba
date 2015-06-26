@@ -99,8 +99,6 @@ module Etudes
 		listFormations getPrerequis(in Proposition p) raises (PropositionDoesNotExistException);
 		oneway void creerProposition(in string intituleMaster, in listLicences _prerequis) raises (formationDejaProposeeException);
 		oneway void majPrerequis(in Proposition p, in listLicences _nouveauxPrerequis) raises (PropositionDoesNotExistException);
-		long getPositionEtudiant(in Etudiant _sujet, in Licence _formation) raises (pasDiplomeException);
-		boolean checkLicenceEtudiant(in Etudiant e, in Licence l);
 		string getId();
 		void classerVoeux();
 	};
@@ -131,13 +129,6 @@ module Etudes
 		oneway void dereferencer(in Rectorat rectoratDeconnecte);
 		
 	};
-
-	interface Resultat
-	{
-		readonly attribute string codeObtention;
-		readonly attribute float moyenne;
-		readonly attribute long position;
-	};
 	
 	enum EtatsVoeu {initial,valide,nonValide,cloture,enAttente,accepte,OUI,NON,OUIMAIS,NONMAIS};
 	interface Voeu
@@ -151,18 +142,24 @@ module Etudes
 		boolean classable();
 	};
 	
+	interface Resultat
+	{
+		readonly attribute string codeObtention;
+		readonly attribute float moyenne;
+		readonly attribute long position;
+	};
+	
 	typedef sequence<Voeu> listVoeux;
-	typedef sequence<Resultat> listResultat;
+	typedef sequence<Resultat> listResultats;
 	interface Etudiant
 	{
 		readonly attribute string numEtudiant;
-		readonly attribute listResultat resultats;
+		readonly attribute listResultats resultats;
 		
 		readonly attribute listVoeux listeVoeux;
 		boolean estMeilleurQue(in Etudiant _aComparer) raises (diplomesDifferentsException);
 		boolean ResultatsValideForProposition(in Proposition p);
 		void addVoeuEtudiant(in Voeu voeuAAjouter) ;
-		long getPositionEtudiant();
 		Universite getUniversite();
 		float getMoyenneLicenceEtudiant();
 	};
